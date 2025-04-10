@@ -1,4 +1,4 @@
-package com.leavecalc;
+package com.leavecalc.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AnnualLeaveCalculatorLatest {
+public class LeaveCalculatorLatest {
 
     static Scanner sc = new Scanner(System.in);
     static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

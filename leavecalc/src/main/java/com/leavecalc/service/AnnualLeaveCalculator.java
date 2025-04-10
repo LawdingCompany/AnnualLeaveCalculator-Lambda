@@ -1,4 +1,4 @@
-package com.leavecalc;
+package com.leavecalc.service;
 
 public class AnnualLeaveCalculator {
 
