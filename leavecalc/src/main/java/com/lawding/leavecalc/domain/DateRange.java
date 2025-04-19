@@ -1,4 +1,4 @@
-package com.lawding.leavecalc.common;
+package com.lawding.leavecalc.domain;
 
 import java.time.LocalDate;
 

@@ -1,7 +1,5 @@
 package com.lawding.leavecalc.domain;
 
-import com.lawding.leavecalc.common.DateRange;
-import com.lawding.leavecalc.type.CalculationType;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -9,7 +7,7 @@ import java.util.List;
  * 연차 계산에 필요한 정보를 담은 객체입니다.
  * <p>
  *
- * @param calculationType       연차 산정 방식 (입사일, 회계연도)
+ * @param calculationType       연차 산정 방식 (1:입사일, 2:회계연도)
  * @param hireDate              입사일
  * @param referenceDate         기준일(연차 산정 기준일)
  * @param hasExcludedWorkPeriod 근무 제외 기간 여부

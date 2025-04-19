@@ -1,5 +1,6 @@
 package com.lawding.leavecalc.service;
 
+import com.lawding.leavecalc.strategy.CalculationStrategy;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -18,7 +19,4 @@ public class AnnualLeaveCalculator {
              @Method getDate() : String -> LocalDate 형식
              @Method countWeekdays() : 평일 수 세기
      */
-    LocalDate localDate = LocalDate.of(2022, 2, 2);
-
-    Period period = Period.of(2022, 3, 4);
 }
