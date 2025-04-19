@@ -1,4 +1,4 @@
-package com.leavecalc.dto;
+package com.lawding.leavecalc.dto;
 
 public class AnnualLeaveResponse {
 

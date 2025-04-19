@@ -1,4 +1,4 @@
-package com.leavecalc.service;
+package com.lawding.leavecalc.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -23,6 +23,7 @@ public class LeaveCalculatorLatest {
 
     // ExtraPeriod 클래스: 별도 처리 기간의 정보를 저장 / 비근무 기간 클래스
     static class ExtraPeriod {
+
         String type;  // "출근간주", "결근처리", "소정근로제외"
         LocalDate start;
         LocalDate end;
@@ -63,8 +64,9 @@ public class LeaveCalculatorLatest {
         while (true) {
             System.out.print(prompt + " " + choices + ": ");
             String input = sc.nextLine().trim();
-            if (choices.contains(input))
+            if (choices.contains(input)) {
                 return input;
+            }
             System.out.println("올바른 선택지를 입력해주세요: " + choices);
         }
     }
@@ -110,8 +112,9 @@ public class LeaveCalculatorLatest {
             System.out.println("16. 개인질병(업무상질병X)으로 인한 휴직기간");
             System.out.print("해당 별도 처리 기간의 종류(번호)를 입력하거나 '끝'을 입력하세요: ");
             String inp = sc.nextLine().trim();
-            if (inp.equalsIgnoreCase("끝"))
+            if (inp.equalsIgnoreCase("끝")) {
                 break;
+            }
             int num;
             try {
                 num = Integer.parseInt(inp);
@@ -124,9 +127,13 @@ public class LeaveCalculatorLatest {
                 continue;
             }
             String type = "";
-            if (num >= 1 && num <= 10) type = "출근간주";
-            else if (num >= 11 && num <= 13) type = "결근처리";
-            else if (num >= 14 && num <= 16) type = "소정근로제외";
+            if (num >= 1 && num <= 10) {
+                type = "출근간주";
+            } else if (num >= 11 && num <= 13) {
+                type = "결근처리";
+            } else if (num >= 14 && num <= 16) {
+                type = "소정근로제외";
+            }
             LocalDate start = getDate("해당 기간의 시작일 (YYYY-MM-DD): ");
             LocalDate end = getDate("해당 기간의 종료일 (YYYY-MM-DD): ");
             extraPeriods.add(new ExtraPeriod(type, start, end));
@@ -159,7 +166,8 @@ public class LeaveCalculatorLatest {
     }
 
     // 연차산정단위기간 계산: "입사일" 방식과 "회계연도" 방식 구분
-    static LocalDate[] computeAnnualCalcPeriod(LocalDate hireDate, LocalDate calcDate, String mode, String fiscalStartStr) {
+    static LocalDate[] computeAnnualCalcPeriod(LocalDate hireDate, LocalDate calcDate, String mode,
+        String fiscalStartStr) {
         if (mode.equals("입사일")) {
             if (calcDate.isBefore(hireDate.plusYears(1))) {
                 return new LocalDate[]{hireDate, calcDate};
@@ -175,7 +183,8 @@ public class LeaveCalculatorLatest {
     }
 
     // 1년 미만 입사일 기준: hireDate부터 calcDate까지를 1달 단위의 기간으로 나누어 개근 연차 산출 (소정근로제외 비례 적용)
-    static Object[] calculateEffectiveMonthlyLeave(LocalDate hireDate, LocalDate periodEnd, List<ExtraPeriod> extraPeriods) {
+    static Object[] calculateEffectiveMonthlyLeave(LocalDate hireDate, LocalDate periodEnd,
+        List<ExtraPeriod> extraPeriods) {
         double totalLeave = 0;
         List<String> breakdown = new ArrayList<>();
         LocalDate currentStart = hireDate;
@@ -192,7 +201,8 @@ public class LeaveCalculatorLatest {
                     }
                 }
             }
-            double periodLeave = totalWd > 0 ? 1.0 * ((totalWd - excludedWd) / (double) totalWd) : 0;
+            double periodLeave =
+                totalWd > 0 ? 1.0 * ((totalWd - excludedWd) / (double) totalWd) : 0;
             totalLeave += periodLeave;
             breakdown.add(currentStart.format(DateTimeFormatter.ofPattern("MM월 dd일")) +
                 " ~ " +
@@ -217,7 +227,8 @@ public class LeaveCalculatorLatest {
     }
 
     // AR 및 ASR 집계: extraPeriod 집계 (소정근로제외, 출근간주, 결근처리)
-    static Map<String, Integer> aggregateExtraPeriods(List<ExtraPeriod> extraPeriods, LocalDate[] annualPeriod) {
+    static Map<String, Integer> aggregateExtraPeriods(List<ExtraPeriod> extraPeriods,
+        LocalDate[] annualPeriod) {
         Map<String, Integer> extra = new HashMap<>();
         extra.put("출근간주", 0);
         extra.put("결근처리", 0);
@@ -241,7 +252,8 @@ public class LeaveCalculatorLatest {
 
 
     // ASR 계산: 전체 소정근로일에서 제외 평일 수 비율이 20% 이하이면 1.0, 초과 시 비례산출
-    static double computeActualScheduledWorkRatio(int originalWorkdays, Map<String, Integer> extra) {
+    static double computeActualScheduledWorkRatio(int originalWorkdays,
+        Map<String, Integer> extra) {
         double exclusionRatio = extra.get("소정근로제외") / (double) originalWorkdays;
         if (exclusionRatio <= 0.20) {
             return 1.0;
@@ -264,7 +276,8 @@ public class LeaveCalculatorLatest {
                 List<String> breakdown = (List<String>) result[1];
                 // 전체 기간 ASR
                 int overallWorkdays = countWeekdays(hireDate, calcDate);
-                Map<String, Integer> overallExtra = aggregateExtraPeriods(extraPeriods, new LocalDate[]{hireDate, calcDate});
+                Map<String, Integer> overallExtra = aggregateExtraPeriods(extraPeriods,
+                    new LocalDate[]{hireDate, calcDate});
                 double overallASR = computeActualScheduledWorkRatio(overallWorkdays, overallExtra);
                 leave = effectiveLeave * overallASR;
                 StringBuilder breakdownText = new StringBuilder();
@@ -282,14 +295,15 @@ public class LeaveCalculatorLatest {
                 if (!extraPeriods.isEmpty()) {
                     for (ExtraPeriod ep : extraPeriods) {
                         String periodType = "";
-                        if (ep.type.equals("출근간주"))
+                        if (ep.type.equals("출근간주")) {
                             periodType = "출근간주기간";
-                        else if (ep.type.equals("결근처리"))
+                        } else if (ep.type.equals("결근처리")) {
                             periodType = "결근 처리기간";
-                        else if (ep.type.equals("소정근로제외"))
+                        } else if (ep.type.equals("소정근로제외")) {
                             periodType = "소정근로 제외기간";
-                        else
+                        } else {
                             periodType = "알 수 없음";
+                        }
                         explanation += periodType + ": " + ep.start + " ~ " + ep.end + "\n";
                     }
                 } else {
@@ -297,7 +311,9 @@ public class LeaveCalculatorLatest {
                 }
                 explanation += "──────────────────────────────\n";
                 explanation += "(입사일 기준, 1년 미만인 경우 상세 산출 내역)\n" + breakdownText.toString() + "\n";
-                explanation += "전체 소정근로일 대비 제외 비율에 따라 ASR = " + String.format("%.1f", overallASR * 100) + "%가 적용되어, 최종 " + String.format("%.2f", leave) + "일 산출됨.";
+                explanation +=
+                    "전체 소정근로일 대비 제외 비율에 따라 ASR = " + String.format("%.1f", overallASR * 100)
+                        + "%가 적용되어, 최종 " + String.format("%.2f", leave) + "일 산출됨.";
             } else {
                 int serviceYears = Period.between(hireDate, calcDate).getYears();
                 if (finalAttendanceRate < 0.80) {
@@ -307,18 +323,26 @@ public class LeaveCalculatorLatest {
                     int basicLeave = 15;
                     int additional = (serviceYears - 1) / 2;
                     if (actualScheduledWorkRatio < 0.80) {
-                        additional = (int)(additional * actualScheduledWorkRatio);
+                        additional = (int) (additional * actualScheduledWorkRatio);
                         explanation = "출근율은 80% 이상이지만, 실질 소정근로일비율이 80% 미만이어서 가산 연차가 비례삭감됩니다.";
                     } else {
                         explanation = "출근율과 실질 소정근로일비율 모두 80% 이상이므로, 기본 및 가산 연차가 전액 지급됩니다.";
                     }
-                    if (additional > 10) additional = 10;
+                    if (additional > 10) {
+                        additional = 10;
+                    }
                     int total = basicLeave + additional;
-                    if (total > 25) total = 25;
+                    if (total > 25) {
+                        total = 25;
+                    }
                     leave = total * actualScheduledWorkRatio;
-                    explanation = "(입사일 기준, 1년 이상) 연차산정단위기간(" + annualCalcPeriod[0] + " ~ " + annualCalcPeriod[1] +
-                        ") 기준, 기본 15일과 가산 연차 " + additional + "일을 합해 " + total + "일에서 소정근로 제외 비율(" +
-                        String.format("%.1f", actualScheduledWorkRatio * 100) + "%)을 반영하여 " + String.format("%.2f", leave) + "일 산출됨.";
+                    explanation =
+                        "(입사일 기준, 1년 이상) 연차산정단위기간(" + annualCalcPeriod[0] + " ~ "
+                            + annualCalcPeriod[1] +
+                            ") 기준, 기본 15일과 가산 연차 " + additional + "일을 합해 " + total
+                            + "일에서 소정근로 제외 비율(" +
+                            String.format("%.1f", actualScheduledWorkRatio * 100) + "%)을 반영하여 "
+                            + String.format("%.2f", leave) + "일 산출됨.";
                 }
             }
         } else { // 회계연도 기준
@@ -335,20 +359,26 @@ public class LeaveCalculatorLatest {
                     "2. 새 회계연도 발생 연차: " + String.format("%.2f", part2) + "일\n" +
                     "총 산출 연차: " + String.format("%.2f", leave) + "일";
             } else {
-                annualCalcPeriod = computeAnnualCalcPeriod(hireDate, calcDate, "회계연도", fiscalStartStr);
+                annualCalcPeriod = computeAnnualCalcPeriod(hireDate, calcDate, "회계연도",
+                    fiscalStartStr);
                 int originalWorkdaysLocal = countWeekdays(annualCalcPeriod[0], annualCalcPeriod[1]);
-                System.out.println("계산된 연차산정단위기간: " + annualCalcPeriod[0] + " ~ " + annualCalcPeriod[1]);
+                System.out.println(
+                    "계산된 연차산정단위기간: " + annualCalcPeriod[0] + " ~ " + annualCalcPeriod[1]);
                 System.out.println("해당 기간 소정근로일 수: " + originalWorkdaysLocal + "일");
                 LocalDate nextPeriodStart = annualCalcPeriod[0].plusYears(1);
                 if (calcDate.isBefore(nextPeriodStart)) {
                     int monthlyComponent = calculateAnnualLeaveLessThanOneYear(hireDate, calcDate);
                     double newFiscalComponent = 15 * ((double) countWeekdays(
-                        (annualCalcPeriod[0].isAfter(hireDate) ? annualCalcPeriod[0] : hireDate), annualCalcPeriod[1])
+                        (annualCalcPeriod[0].isAfter(hireDate) ? annualCalcPeriod[0] : hireDate),
+                        annualCalcPeriod[1])
                         / originalWorkdaysLocal);
                     leave = monthlyComponent + newFiscalComponent;
                     explanation = "(회계연도 기준, 1년 미만)\n" +
-                        "개근 연차: " + String.format("%.2f", (double) monthlyComponent) + "일, 새 회계연도 발생 연차: " +
-                        String.format("%.2f", newFiscalComponent) + "일, 총 산출 연차: " + String.format("%.2f", leave) + "일";
+                        "개근 연차: " + String.format("%.2f", (double) monthlyComponent)
+                        + "일, 새 회계연도 발생 연차: " +
+                        String.format("%.2f", newFiscalComponent) + "일, 총 산출 연차: " + String.format(
+                        "%.2f",
+                        leave) + "일";
                 } else {
                     int serviceYears = Period.between(hireDate, calcDate).getYears();
                     int additional = (serviceYears - 1) / 2;
@@ -356,14 +386,20 @@ public class LeaveCalculatorLatest {
                         leave = 0;
                         explanation = "(회계연도 기준) 출근율이 80% 미만이므로, 연차 지급 대상이 아닙니다.";
                     } else {
-                        if (additional > 10) additional = 10;
+                        if (additional > 10) {
+                            additional = 10;
+                        }
                         int total = 15 + additional;
-                        if (total > 25) total = 25;
+                        if (total > 25) {
+                            total = 25;
+                        }
                         leave = total * actualScheduledWorkRatio;
-                        explanation = "(회계연도 기준, 1년 이상) 출근율이 80% 이상이므로, 기본 연차 15일과 추가 가산 연차 " + additional +
-                            "일을 합해 " + total + "일에서 소정근로 제외 비율(" +
-                            String.format("%.1f", actualScheduledWorkRatio * 100) + "%)을 반영하여 " +
-                            String.format("%.2f", leave) + "일 산출됨.";
+                        explanation =
+                            "(회계연도 기준, 1년 이상) 출근율이 80% 이상이므로, 기본 연차 15일과 추가 가산 연차 " + additional +
+                                "일을 합해 " + total + "일에서 소정근로 제외 비율(" +
+                                String.format("%.1f", actualScheduledWorkRatio * 100) + "%)을 반영하여 "
+                                +
+                                String.format("%.2f", leave) + "일 산출됨.";
                     }
                 }
             }
@@ -381,7 +417,9 @@ public class LeaveCalculatorLatest {
     static double computeFinalAttendanceRate(int originalWorkdays, Map<String, Integer> extra) {
         int numerator = originalWorkdays - extra.get("결근처리");
         int denominator = originalWorkdays - extra.get("소정근로제외");
-        if (denominator <= 0) return 1.0;
+        if (denominator <= 0) {
+            return 1.0;
+        }
         return (double) numerator / denominator;
     }
 
@@ -425,24 +463,34 @@ public class LeaveCalculatorLatest {
             @Method countWeekdays() : 평일 수 세기
 
              */
-            String calculationMethod = getChoice("Q1. 귀하(귀 사업장)의 연차유급휴가 산정방식은", Arrays.asList("입사일", "회계연도"));
+            String calculationMethod = getChoice("Q1. 귀하(귀 사업장)의 연차유급휴가 산정방식은",
+                Arrays.asList("입사일", "회계연도"));
             String fiscalStartStr = "";
-            if (calculationMethod.equals("회계연도"))
-                fiscalStartStr = getFiscalStartString("Q1-1. 귀 사업장의 회계연도 시작일(월/일)을 입력해주세요 (예: 1월 1일): ");
+            if (calculationMethod.equals("회계연도")) {
+                fiscalStartStr = getFiscalStartString(
+                    "Q1-1. 귀 사업장의 회계연도 시작일(월/일)을 입력해주세요 (예: 1월 1일): ");
+            }
             LocalDate hireDate = getDate("Q2. 입사일을 입력해주세요 (YYYY-MM-DD): ");
             LocalDate calcDate = getDate("Q3. 어느 시점을 기준으로 발생한 연차를 확인하고 싶나요? (YYYY-MM-dd): ");
-            String extraInput = getChoice("Q4. 육아휴직, 출산전후휴가, 육아기근로시간 단축 등 휴직 등으로 특별한 사유로 인하여 통상적으로 근무하지 않은 기간이 있나요?", Arrays.asList("예", "아니오"));
+            String extraInput = getChoice(
+                "Q4. 육아휴직, 출산전후휴가, 육아기근로시간 단축 등 휴직 등으로 특별한 사유로 인하여 통상적으로 근무하지 않은 기간이 있나요?",
+                Arrays.asList("예", "아니오"));
             List<ExtraPeriod> extraPeriods = new ArrayList<>();
-            if (extraInput.equals("예"))
+            if (extraInput.equals("예")) {
                 extraPeriods = getExtraPeriods();
+            }
 
             LocalDate[] annualCalcPeriod;
             if (calculationMethod.equals("회계연도")) // 연차유급휴가 산정 방식이 회계연도이면,
-                // 연차 산정 단위 기간 : 입사일, 연차 산정 기준 날짜, 회계연도
-                annualCalcPeriod = computeAnnualCalcPeriod(hireDate, calcDate, "회계연도", fiscalStartStr);
-            else
-                // 연차 산정 단위 기간 : 입사일, 연차 산정 기준 날짜, 입사일
+            // 연차 산정 단위 기간 : 입사일, 연차 산정 기준 날짜, 회계연도
+            {
+                annualCalcPeriod = computeAnnualCalcPeriod(hireDate, calcDate, "회계연도",
+                    fiscalStartStr);
+            } else
+            // 연차 산정 단위 기간 : 입사일, 연차 산정 기준 날짜, 입사일
+            {
                 annualCalcPeriod = computeAnnualCalcPeriod(hireDate, calcDate, "입사일", "");
+            }
 
             /*
 
@@ -494,7 +542,6 @@ public class LeaveCalculatorLatest {
 
             */
 
-
             // 평일 수 세기 => 공휴일은? 임시공휴일? 주말만 고려하면 되는건가?
             int originalWorkdays = countWeekdays(annualCalcPeriod[0], annualCalcPeriod[1]);
 
@@ -527,7 +574,8 @@ public class LeaveCalculatorLatest {
                 그 외) AR = (소정 근로일 수 - 결근처리 일 수) / (소정근로일 수 - 소정근로제외 일 수)
 
              */
-            double actualScheduledWorkRatio = computeActualScheduledWorkRatio(originalWorkdays, extra);
+            double actualScheduledWorkRatio = computeActualScheduledWorkRatio(originalWorkdays,
+                extra);
             /*
                 computeActualScheduledWorkRatio : ASR(실질 소정근로일 비율) 계산
                 @Param originalWorkdays : 소정근로일 수(연차 산정 기간에서의 평일 수)
@@ -539,7 +587,8 @@ public class LeaveCalculatorLatest {
 
              */
 
-            Object[] leaveResult = computeLeave(calculationMethod, hireDate, calcDate, extra, finalAttendanceRate,
+            Object[] leaveResult = computeLeave(calculationMethod, hireDate, calcDate, extra,
+                finalAttendanceRate,
                 actualScheduledWorkRatio, annualCalcPeriod, extraPeriods, fiscalStartStr);
             /*
                 computeLeave : 최종 연차 산출 함수
@@ -646,15 +695,18 @@ public class LeaveCalculatorLatest {
             if (!extraPeriods.isEmpty()) {
                 for (ExtraPeriod ep : extraPeriods) {
                     String periodType = "";
-                    if (ep.type.equals("출근간주"))
+                    if (ep.type.equals("출근간주")) {
                         periodType = "출근간주기간";
-                    else if (ep.type.equals("결근처리"))
+                    } else if (ep.type.equals("결근처리")) {
                         periodType = "결근 처리기간";
-                    else if (ep.type.equals("소정근로제외"))
+                    } else if (ep.type.equals("소정근로제외")) {
                         periodType = "소정근로 제외기간";
-                    else
+                    } else {
                         periodType = "알 수 없음";
-                    extraText.append(periodType).append(": ").append(ep.start).append(" ~ ").append(ep.end).append("\n");
+                    }
+                    extraText.append(periodType).append(": ").append(ep.start).append(" ~ ")
+                        .append(ep.end)
+                        .append("\n");
                 }
             } else {
                 extraText.append("없음");
@@ -675,7 +727,9 @@ public class LeaveCalculatorLatest {
 
             System.out.print("계속 계산하시겠습니까? (예/아니오): ");
             String cont = sc.nextLine().trim();
-            if (cont.equals("아니오")) break;
+          if (cont.equals("아니오")) {
+            break;
+          }
         }
     }
 }

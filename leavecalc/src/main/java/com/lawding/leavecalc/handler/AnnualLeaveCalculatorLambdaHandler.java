@@ -1,4 +1,4 @@
-package com.leavecalc.handler;
+package com.lawding.leavecalc.handler;
 
 public class AnnualLeaveCalculatorLambdaHandler {
 
