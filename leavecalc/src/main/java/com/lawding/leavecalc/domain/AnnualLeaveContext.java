@@ -13,6 +13,7 @@ import java.util.List;
  * @param hasExcludedWorkPeriod 근무 제외 기간 여부
  * @param excludedWorkPeriod    근무 제외 기간
  */
+
 public record AnnualLeaveContext(
     CalculationType calculationType,
     LocalDate hireDate,
