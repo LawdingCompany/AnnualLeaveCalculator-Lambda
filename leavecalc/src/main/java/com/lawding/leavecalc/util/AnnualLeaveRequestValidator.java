@@ -16,7 +16,7 @@ public class AnnualLeaveRequestValidator {
         if (request.getReferenceDate() == null || request.getReferenceDate().isBlank()) {
             throw new AnnualLeaveException(ErrorCode.REFERENCE_DATE_REQUIRED);
         }
-        if (request.getCaculationType() == 2 && (request.getFiscalYear() == null
+        if (request.getCalculationType() == 2 && (request.getFiscalYear() == null
             || request.getFiscalYear().isBlank())) {
             throw new AnnualLeaveException(ErrorCode.FISCAL_YEAR_REQUIRED);
         }
