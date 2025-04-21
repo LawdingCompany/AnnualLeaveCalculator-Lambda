@@ -2,6 +2,7 @@ package com.lawding.leavecalc.dto;
 
 import com.lawding.leavecalc.domain.DateRange;
 import java.util.List;
+import lombok.Getter;
 
 /**
  * 연차 계산을 위한 API 요청 객체입니다.
@@ -26,8 +27,7 @@ import java.util.List;
  * @see com.lawding.leavecalc.domain.DateRange
  */
 
-
-
+@Getter
 public class AnnualLeaveRequest{
     private int caculationType;
     private String hireDate;
