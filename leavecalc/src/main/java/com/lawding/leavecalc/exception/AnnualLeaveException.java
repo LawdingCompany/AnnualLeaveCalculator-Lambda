@@ -1,5 +1,8 @@
 package com.lawding.leavecalc.exception;
 
+import lombok.Getter;
+
+@Getter
 public class AnnualLeaveException extends RuntimeException {
 
     private final ErrorCode errorCode;
@@ -9,7 +12,4 @@ public class AnnualLeaveException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
-        return errorCode;
-    }
 }

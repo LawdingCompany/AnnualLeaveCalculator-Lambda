@@ -12,8 +12,8 @@ import lombok.Builder;
  * @param fiscalYear            회계연도(nullable)
  * @param hireDate              입사일
  * @param referenceDate         기준일(연차 산정 기준일)
- * @param hasExcludedWorkPeriod 근무 제외 기간 여부
  * @param excludedWorkPeriod    근무 제외 기간
+ * @param companyHolidays       회사 공휴일
  */
 
 @Builder
@@ -22,8 +22,9 @@ public record AnnualLeaveContext(
     LocalDate fiscalYear,
     LocalDate hireDate,
     LocalDate referenceDate,
-    boolean hasExcludedWorkPeriod,
-    List<DateRange> excludedWorkPeriod
+    List<DateRange> excludedWorkPeriod,
+    List<LocalDate> companyHolidays
+
 ) {
 
 }

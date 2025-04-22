@@ -18,6 +18,7 @@ import lombok.Getter;
  *     <li><b>fiscalYearStartDate</b>: 회계연도 기준일 (calculationType이 2일 경우 필요)</li>
  *     <li><b>hasExcludedWorkPeriod</b>: 근무 제외 기간 존재 여부</li>
  *     <li><b>excludedWorkPeriod</b>: 근무 제외 기간 리스트 (DateRange 객체 리스트)</li>
+ *     <li><b>companyHolidays</b>: 회사 공휴일</li>
  * </ul>
  *
  * @author jaeyun
@@ -31,6 +32,6 @@ public class AnnualLeaveRequest{
     private String fiscalYear; // nullable
     private String hireDate;
     private String referenceDate;
-    private boolean hasExcludedWorkPeriod;
     private List<DateRange> excludedWorkPeriod; // nullable
+    private List<String> companyHolidays; // nullable
 }
