@@ -20,8 +20,13 @@ dependencies {
     // https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-log4j2
     implementation 'com.amazonaws:aws-lambda-java-log4j2:1.5.1'
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    implementation 'software.amazon.awssdk:ssm:2.25.21' // 최신 버전 사용
+    implementation 'software.amazon.awssdk:regions:2.25.21'
+    implementation 'software.amazon.awssdk:auth:2.25.21'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation 'mysql:mysql-connector-java:8.0.33'
 }
 
 test {
