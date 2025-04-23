@@ -1,5 +1,7 @@
 package com.lawding.leavecalc.util;
 
+import com.lawding.leavecalc.exception.AnnualLeaveException;
+import com.lawding.leavecalc.exception.ErrorCode;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ssm.SsmClient;
 import software.amazon.awssdk.services.ssm.model.GetParameterRequest;
@@ -11,10 +13,17 @@ public class ParameterStoreUtils {
         .build();
 
     public static String getSecureParameter(String name) {
-        GetParameterRequest request = GetParameterRequest.builder().name(name).withDecryption(true)
-            .build();
-        GetParameterResponse response = ssmClient.getParameter(request);
-        return response.parameter().value();
+        try {
+            GetParameterRequest request = GetParameterRequest.builder().name(name)
+                .withDecryption(true)
+                .build();
+            GetParameterResponse response = ssmClient.getParameter(request);
+            return response.parameter().value();
+        } catch (Exception e) {
+            throw new AnnualLeaveException(ErrorCode.PARAMETER_STORE_ERROR);
+        }
+
     }
+
 
 }

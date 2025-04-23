@@ -1,2 +1,8 @@
-package com.lawding.leavecalc.dto;public class DateRangeRequest {
+package com.lawding.leavecalc.dto;
+
+import lombok.Getter;
+
+@Getter
+public record DateRangeRequest(String startDate, String endDate) {
+
 }

@@ -26,12 +26,11 @@ import lombok.Getter;
  */
 
 @Getter
-@Builder
 public class AnnualLeaveRequest{
     private int calculationType;
     private String fiscalYear; // nullable
     private String hireDate;
     private String referenceDate;
-    private List<DateRange> excludedWorkPeriod; // nullable
+    private List<DateRangeRequest> excludedWorkPeriod; // nullable
     private List<String> companyHolidays; // nullable
 }

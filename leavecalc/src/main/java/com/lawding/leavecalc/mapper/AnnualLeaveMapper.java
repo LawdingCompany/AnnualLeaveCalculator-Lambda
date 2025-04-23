@@ -1,9 +1,12 @@
 package com.lawding.leavecalc.mapper;
 
+import static com.lawding.leavecalc.util.DateParseUtils.*;
+
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.CalculationType;
 import com.lawding.leavecalc.dto.AnnualLeaveRequest;
 import java.time.LocalDate;
+import java.util.List;
 import org.apache.logging.log4j.core.util.datetime.DateParser;
 
 
@@ -21,16 +24,10 @@ public class AnnualLeaveMapper {
             .fiscalYear(parseNullable(request.getFiscalYear()))
             .hireDate(LocalDate.parse(request.getHireDate()))
             .referenceDate(LocalDate.parse(request.getReferenceDate()))
-            .hasExcludedWorkPeriod(request.isHasExcludedWorkPeriod())
-            .excludedWorkPeriod(request.getExcludedWorkPeriod())
+            .excludedWorkPeriod(convertToDateRanges(request.getExcludedWorkPeriod()))
+            .companyHolidays(convertToLocalDates(request.getCompanyHolidays()))
             .build();
     }
 
-    public static LocalDate parseNullable(String dateStr) {
-        if (dateStr == null || dateStr.isBlank()) {
-            return null;
-        }
-        return LocalDate.parse(dateStr);
-    }
 
 }
