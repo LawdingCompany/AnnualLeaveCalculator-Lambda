@@ -18,7 +18,6 @@ public class AnnualLeaveCalculatorLambdaHandlerTest {
             .calculationType(1) // 입사일 기준
             .hireDate("2023-01-01")
             .referenceDate("2024-01-01")
-            .hasExcludedWorkPeriod(false)
             .excludedWorkPeriod(List.of())
             .build();
 

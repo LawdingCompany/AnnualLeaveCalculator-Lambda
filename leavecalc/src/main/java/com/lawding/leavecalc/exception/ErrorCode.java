@@ -9,6 +9,7 @@ public enum ErrorCode {
 
     PARAMETER_STORE_ERROR("E200","시스템 설정값 조회에 실패했습니다."),
     DATABASE_CONNECTION_FAILED("E201","데이터베이스 연결에 실패했습니다."),
+    DATABASE_QUERY_FAILED("E202", "공휴일 조회에 실패했습니다."),
     INTERNAL_SERVER_ERROR("E999", "서버 오류가 발생했습니다.");
 
 

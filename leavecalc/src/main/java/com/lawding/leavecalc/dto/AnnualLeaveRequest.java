@@ -26,6 +26,7 @@ import lombok.Getter;
  */
 
 @Getter
+@Builder
 public class AnnualLeaveRequest{
     private int calculationType;
     private String fiscalYear; // nullable
