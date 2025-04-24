@@ -62,8 +62,8 @@ public class AnnualLeaveHelper {
     }
 
     /**
-     * @param startDate
-     * @param endDate
+     * @param startDate 산정 시작일
+     * @param endDate 산정 종료일
      * @param context
      * @return 소정 근로일 수 = 전체 기간 일수 - 주말(토,일) - 법정 공휴일 - 회사 휴일(창립기념일)
      */
