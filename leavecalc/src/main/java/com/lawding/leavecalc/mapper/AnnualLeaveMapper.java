@@ -4,13 +4,21 @@ import static com.lawding.leavecalc.util.DateParseUtils.*;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.CalculationType;
+import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.dto.AnnualLeaveRequest;
+import com.lawding.leavecalc.dto.NonWorkingPeriodRequest;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.core.util.datetime.DateParser;
 
 
 public class AnnualLeaveMapper {
+
+    private AnnualLeaveMapper() {
+    }
 
     /**
      * AnnualLeaveRequest를 도메인 컨텍스트인 AnnualLeaveContext로 변환합니다.
@@ -24,9 +32,27 @@ public class AnnualLeaveMapper {
             .fiscalYear(parseNullable(request.getFiscalYear()))
             .hireDate(LocalDate.parse(request.getHireDate()))
             .referenceDate(LocalDate.parse(request.getReferenceDate()))
-            .excludedWorkPeriod(convertToDateRanges(request.getExcludedWorkPeriod()))
+            .nonWorkingPeriods(groupByNonWorkingType(request.getNonWorkingPeriods()))
             .companyHolidays(convertToLocalDates(request.getCompanyHolidays()))
             .build();
+    }
+
+    public static Map<Integer, List<DatePeriod>> groupByNonWorkingType(
+        List<NonWorkingPeriodRequest> nonWorkingPeriodRequests
+    ) {
+        return Optional.ofNullable(nonWorkingPeriodRequests)
+            .orElse(List.of()) // null이면 빈 리스트
+            .stream()
+            .collect(Collectors.groupingBy(
+                NonWorkingPeriodRequest::type,
+                Collectors.mapping(
+                    period -> new DatePeriod(
+                        LocalDate.parse(period.startDate()),
+                        LocalDate.parse(period.endDate())
+                    ),
+                    Collectors.toList()
+                )
+            ));
     }
 
 

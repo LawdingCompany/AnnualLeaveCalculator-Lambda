@@ -8,7 +8,7 @@ public class CalculationStrategyFactory {
     private static final FiscalYearStrategy FISCAL_YEAR_STRATEGY = new FiscalYearStrategy();
 
     public static CalculationStrategy from(AnnualLeaveContext context) {
-        return switch (context.calculationType()) {
+        return switch (context.getCalculationType()) {
             case HIRE_DATE -> HIRE_DATE_STRATEGY;
             case FISCAL_YEAR -> FISCAL_YEAR_STRATEGY;
         };

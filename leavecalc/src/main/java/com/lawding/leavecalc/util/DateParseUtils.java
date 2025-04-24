@@ -1,7 +1,7 @@
 package com.lawding.leavecalc.util;
 
-import com.lawding.leavecalc.domain.DateRange;
-import com.lawding.leavecalc.dto.DateRangeRequest;
+import com.lawding.leavecalc.domain.NonWorkingPeriod;
+import com.lawding.leavecalc.dto.NonWorkingPeriodRequest;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,18 +20,6 @@ public class DateParseUtils {
         }
         return dates.stream()
             .map(LocalDate::parse)
-            .toList();
-    }
-
-    public static List<DateRange> convertToDateRanges(List<DateRangeRequest> requests) {
-        if (requests == null) {
-            return null;
-        }
-        return requests.stream()
-            .map(request -> new DateRange(
-                LocalDate.parse(request.startDate()),
-                LocalDate.parse(request.endDate())
-            ))
             .toList();
     }
 }

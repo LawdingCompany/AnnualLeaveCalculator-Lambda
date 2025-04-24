@@ -11,15 +11,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AnnualLeaveCalculatorLambdaHandlerTest {
+
     @Test
     void shouldReturnCorrectResponse_WhenValidRequest() {
         // given
-        AnnualLeaveRequest request = AnnualLeaveRequest.builder()
-            .calculationType(1) // 입사일 기준
-            .hireDate("2023-01-01")
-            .referenceDate("2024-01-01")
-            .excludedWorkPeriod(List.of())
-            .build();
 
 //        Context fakeContext = new FakeLambdaContext();
 //
