@@ -26,8 +26,7 @@ public final class HireDateStrategy implements CalculationStrategy {
     @Override
     public AnnualLeaveResult annualLeaveCalculate(AnnualLeaveContext annualLeaveContext) {
         /**
-         *
-         * @param calculationType       연차 산정 방식 (1:입사일, 2:회계연도)
+
          * @param hireDate              입사일
          * @param referenceDate         기준일(연차 산정 기준일)
          * @param excludedWorkPeriod    근무 제외 기간
@@ -62,5 +61,7 @@ public final class HireDateStrategy implements CalculationStrategy {
         return AnnualLeaveResult.builder()
             .annualLeaveDays(annualLeaveDays)
             .build();
+
+
     }
 }
