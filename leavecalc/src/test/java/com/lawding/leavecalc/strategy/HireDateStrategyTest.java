@@ -15,7 +15,7 @@ public class HireDateStrategyTest {
     private final HireDateStrategy strategy = new HireDateStrategy();
 
     @Test
-    void 개근한_1년미만_근로자는_월마다_연차가_1개씩_발생한다() {
+    void 입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다() {
         // given
         LocalDate hireDate = LocalDate.of(2024, 1, 1);
         LocalDate referenceDate = LocalDate.of(2024, 7, 1);
@@ -35,7 +35,7 @@ public class HireDateStrategyTest {
     }
 
     @Test
-    void 개근한_1년미만_근로자는_월마다_연차가_1개씩_발생한다_경계값() {
+    void 입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다_경계값() {
         // given
         LocalDate hireDate = LocalDate.of(2024, 1, 1);
         LocalDate referenceDate = LocalDate.of(2024, 6, 30);
@@ -55,7 +55,7 @@ public class HireDateStrategyTest {
     }
 
     @Test
-    void 결근이_있는_달은_연차가_발생하지_않는다() {
+    void 입사일_1년미만_결근이_있는_달은_연차가_발생하지_않는다() {
         // given
         LocalDate hireDate = LocalDate.of(2024, 1, 1);
         LocalDate referenceDate = LocalDate.of(2024, 7, 1);

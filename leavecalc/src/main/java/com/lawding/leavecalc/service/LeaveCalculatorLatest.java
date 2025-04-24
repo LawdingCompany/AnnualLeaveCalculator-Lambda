@@ -169,7 +169,7 @@ public class LeaveCalculatorLatest {
     static LocalDate[] computeAnnualCalcPeriod(LocalDate hireDate, LocalDate calcDate, String mode,
         String fiscalStartStr) {
         if (mode.equals("입사일")) {
-            if (calcDate.isBefore(hireDate.plusYears(1))) {
+            if (calcDate.isBefore(hireDate.plusYears(1))) { // 2025-4-5 2024-6-2
                 return new LocalDate[]{hireDate, calcDate};
             } else {
                 int n = Period.between(hireDate, calcDate).getYears();

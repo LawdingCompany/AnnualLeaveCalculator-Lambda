@@ -5,7 +5,6 @@ import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
-import com.lawding.leavecalc.domain.NonWorkingPeriod;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ public final class HireDateStrategy implements CalculationStrategy {
     @Override
     public AnnualLeaveResult annualLeaveCalculate(AnnualLeaveContext annualLeaveContext) {
         /**
-
          * @param hireDate              입사일
          * @param referenceDate         기준일(연차 산정 기준일)
          * @param excludedWorkPeriod    근무 제외 기간
@@ -43,7 +41,7 @@ public final class HireDateStrategy implements CalculationStrategy {
             // 입사일 1년 미만
             LocalDate periodStart = hireDate;
             List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-            while (true) { // 한달 기간으로 개근 확인
+            while (true) { // 한달 단위로 개근 확인
                 LocalDate periodEnd = periodStart.plusMonths(1).minusDays(1);
                 LocalDate accrualDate = periodEnd.plusDays(1);
                 if (accrualDate.isAfter(referenceDate)) {
@@ -55,8 +53,12 @@ public final class HireDateStrategy implements CalculationStrategy {
                 periodStart = accrualDate;
             }
         } else {
-
+            annualLeaveDays = calculateLeaveByServiceYears(hireDate, referenceDate);
             // 입사일 1년 이상
+
+            double attendanceRate; // 출근율
+            double prescribeWorkingRatio; // 소정근로비율
+
         }
         return AnnualLeaveResult.builder()
             .annualLeaveDays(annualLeaveDays)
