@@ -29,7 +29,7 @@ public class AnnualLeaveMapper {
     public static AnnualLeaveContext toContext(AnnualLeaveRequest request) {
         return AnnualLeaveContext.builder()
             .calculationType(CalculationType.fromCode(request.getCalculationType()))
-            .fiscalYear(parseNullable(request.getFiscalYear()))
+            .fiscalYear(parseNullableMonthDay(request.getFiscalYear()))
             .hireDate(LocalDate.parse(request.getHireDate()))
             .referenceDate(LocalDate.parse(request.getReferenceDate()))
             .nonWorkingPeriods(groupByNonWorkingType(request.getNonWorkingPeriods()))

@@ -1,6 +1,7 @@
 package com.lawding.leavecalc.domain;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.List;
 import java.util.Map;
 import lombok.Builder;
@@ -21,7 +22,7 @@ import lombok.Getter;
 @Builder
 public class AnnualLeaveContext {
     private CalculationType calculationType;
-    private LocalDate fiscalYear;
+    private MonthDay fiscalYear;
     private LocalDate hireDate;
     private LocalDate referenceDate;
     private Map<Integer, List<DatePeriod>> nonWorkingPeriods;

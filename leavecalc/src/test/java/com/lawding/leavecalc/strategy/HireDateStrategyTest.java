@@ -3,16 +3,28 @@ package com.lawding.leavecalc.strategy;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
+import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class HireDateStrategyTest {
 
-    private final HireDateStrategy strategy = new HireDateStrategy();
+    @Mock
+    HolidayJdbcRepository holidayRepository;
+
+    @InjectMocks
+    HireDateStrategy hireDateStrategy;
 
     @Test
     void 입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다() {
@@ -27,8 +39,11 @@ public class HireDateStrategyTest {
             .companyHolidays(List.of())
             .build();
 
+//        when(holidayRepository.findWeekdayHolidays(any()))
+//            .thenReturn(List.of());
+
         // when
-        AnnualLeaveResult result = strategy.annualLeaveCalculate(context);
+        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
         //then
         assertEquals(6, result.getAnnualLeaveDays());
@@ -48,7 +63,7 @@ public class HireDateStrategyTest {
             .build();
 
         // when
-        AnnualLeaveResult result = strategy.annualLeaveCalculate(context);
+        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
         //then
         assertEquals(5, result.getAnnualLeaveDays());
@@ -72,7 +87,7 @@ public class HireDateStrategyTest {
             .build();
 
         // when
-        AnnualLeaveResult result = strategy.annualLeaveCalculate(context);
+        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
         //then
         assertEquals(4, result.getAnnualLeaveDays());

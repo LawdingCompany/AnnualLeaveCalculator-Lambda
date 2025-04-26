@@ -7,6 +7,7 @@ import lombok.Getter;
 @Builder
 public class AnnualLeaveResult {
 
-    private int annualLeaveDays;
+    private double annualLeaveDays;
+    private String explanation;
 
 }

@@ -1,6 +1,7 @@
 package com.lawding.leavecalc.repository;
 
 import com.lawding.leavecalc.db.RdsConnector;
+import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.exception.AnnualLeaveException;
 import com.lawding.leavecalc.exception.ErrorCode;
 import java.sql.Connection;
@@ -9,29 +10,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HolidayJdbcRepository {
 
-    private static final String COUNT_HOLIDAY_SQL = """
-            SELECT COUNT(*) FROM holidays
+    private static final String SQL_FIND_HOLIDAYS = """
+            SELECT holiday_date, holiday_name FROM holidays
             WHERE holiday_date BETWEEN ? AND ?
-              AND DAYOFWEEK(holiday_date) NOT IN (1, 7)
         """;
 
-    public int countWeekdayHolidays(LocalDate startDate, LocalDate endDate) {
+    public List<LocalDate> findWeekdayHolidays(DatePeriod period) {
         try (Connection conn = RdsConnector.getConnection();
-            PreparedStatement ps = conn.prepareStatement(COUNT_HOLIDAY_SQL)) {
+            PreparedStatement ps = conn.prepareStatement(SQL_FIND_HOLIDAYS)) {
 
-            ps.setDate(1, Date.valueOf(startDate));
-            ps.setDate(2, Date.valueOf(endDate));
+            ps.setDate(1, Date.valueOf(period.startDate()));
+            ps.setDate(2, Date.valueOf(period.endDate().plusDays(1)));
 
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<LocalDate> holidays = new ArrayList<>();
+                while (rs.next()) {
+                    holidays.add(rs.getDate("holiday_date").toLocalDate());
+                }
+                return holidays;
             }
         } catch (SQLException e) {
             throw new AnnualLeaveException(ErrorCode.DATABASE_QUERY_FAILED);
         }
-        return 0;
     }
 }
