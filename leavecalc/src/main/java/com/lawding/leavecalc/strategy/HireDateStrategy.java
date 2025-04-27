@@ -54,11 +54,12 @@ public final class HireDateStrategy implements CalculationStrategy {
             annualLeaveDays = monthlyAccruedLeaves(hireDate, referenceDate, excludedPeriods);
             explanation = "산정 방식(입사일)에 따라 계산한 결과, 산정일 기준 1년 미만이므로 매월 개근 판단하여 연차가 부여됌";
         } else { // 입사일 1년 이상
+            // 입사일 ~ 산정 기준일 => [2022-03-02], [2025-06-02] => [2024-03-02 - 2025-03-01]
             int servicesYears = calculateServiceYears(hireDate, referenceDate);
             int addtionalLeave = calculateAdditionalLeave(servicesYears);
-            DatePeriod previousAccrualPeriod = getPreviousAccrualPeriod(hireDate, referenceDate);
+            DatePeriod previousAccrualPeriod = getPreviousAccrualPeriod(hireDate, referenceDate); // [2024-03-02 - 2025-03-01]
             List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(previousAccrualPeriod);
-            int prescribedWorkingDays = calculatePrescribedWorkingDays(previousAccrualPeriod,
+            int prescribedWorkingDays = calculatePrescribedWorkingDays(previousAccrualPeriod, // [2024-03-02 - 2025-03-01]
                 companyHolidays, holidays);
             double attendanceRate = calculateAttendanceRate(prescribedWorkingDays,
                 nonWorkingPeriods, companyHolidays, holidays);
@@ -71,7 +72,8 @@ public final class HireDateStrategy implements CalculationStrategy {
                 explanation = "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 미만이므로 "
                               + "매월 개근 판단하여 연차가 부여됌";
             } else {
-                if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) { // PWR < 0.8
+                if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) { // PWR1 < 0.8
+                    // ***(기본 연차 + 가산연차)*PWR1
                     addtionalLeave = (int) Math.floor(addtionalLeave * prescribeWorkingRatio);
                     explanation =
                         "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 이상, 소정근로비율(PWR) 80% 미만이므로 "
@@ -135,7 +137,7 @@ public final class HireDateStrategy implements CalculationStrategy {
      * @param nonWorkingPeriods     타입(1,2,3)에 따라 비근무 기간을 저정한 배열
      *                              <p>
      *                              (소정근로제외일 수 / 소정근로일 수) <= 0.2 이면 PWR = 1.0
-     * @return PWR(소정근로비율) = (소정근로일 수 - 소정근로제외일 수) / 소정근로일 수
+     * @return PWR1(소정근로비율) = (소정근로일 수 - 소정근로제외일 수) / 소정근로일 수
      */
     private static double calculatePrescribedWorkingRatio(int prescribedWorkingDays,
         Map<Integer, List<DatePeriod>> nonWorkingPeriods, List<LocalDate> companyHolidays,
@@ -148,5 +150,6 @@ public final class HireDateStrategy implements CalculationStrategy {
         }
         int numerator = prescribedWorkingDays - excludeWorkingDays;
         return formatDouble((double) numerator / prescribedWorkingDays);
+        // 그냥 그 자체로 처리 올림,내림,반올림x
     }
 }

@@ -105,7 +105,8 @@ public class AnnualLeaveHelper {
         if (denominator <= 0) {
             return 0;
         }
-        return formatDouble((double) numerator / denominator);
+        return formatDouble((double) numerator / denominator); // 출근율 : 0.848483482
+        // 그냥 그 자체로 처리 올림,내림,반올림x
 
     }
 

@@ -10,7 +10,6 @@ import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.time.MonthDay;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +38,10 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         double proRatedLeave = 0;
         String explanation = "";
         LocalDate firstEligibleFiscalStartDate = calculateFirstEligibleFiscalYearStart(hireDate,
-            fiscalYear);
+            fiscalYear); // 첫 회계연도 정규 연차 발생일
         if (referenceDate.isBefore(firstEligibleFiscalStartDate)) {
+            // 기준일이 첫 회계연도 정규 연차 발생일보다 전이다.
+            // [입사일~회계연도 종료일][회계연도 시작일 ~ 회계연도 종료일]
             // 기준일이 정규 연차가 처음으로 적용되는 회계연도 시작일보다 전이라면,
             LocalDate nextFiscalYearStartDate = getNextFiscalStart(hireDate, fiscalYear);
             LocalDate nextFiscalYearEndDate = nextFiscalYearStartDate.plusYears(1).minusDays(1);
@@ -118,13 +119,28 @@ public final class FiscalYearStrategy implements CalculationStrategy {
      * @param hireDate   입사일
      * @param fiscalYear 회계연도 시작일("MM-dd")
      * @return 정규 연차가 처음 적용되는 회계연도 시작일
+     * 첫 회계연도 정규 연차 발생일
+     * 입사일 = 회계연도 시작일 => 다음 해 회계연도 시작일
+     * 입사일 != 회계연도 시작일 => 다다음해 회계연도 시작일
+     * (> <)
+     *
+     * 입사 1주년 구해
+     * 1주년에 해당하는 회계연도를 구해
+     * 1/1
+     * = !=
+     *
+     * <- 6/1 ->
+     * <
+     * =
+     * >
+     * 입사 1주년  > 회계연도시작일 =>
      */
-    private static LocalDate calculateFirstEligibleFiscalYearStart(LocalDate hireDate,
+    private static LocalDate calculateFirstEligibleFiscalYearStart(LocalDate hireDate, // 2024-03-02                   // 입사일 : 2024-07-01
         MonthDay fiscalYear) {
-        LocalDate oneYearAnniversaryDate = hireDate.plusYears(1); // 2025-01-01
-        LocalDate nextFiscalYear = fiscalYear.atYear(
-            oneYearAnniversaryDate.getYear()); // 2025-02-01
-        if (oneYearAnniversaryDate.isAfter(nextFiscalYear)) {
+        LocalDate oneYearAnniversaryDate = hireDate.plusYears(1); // 2025-03-02
+        LocalDate nextFiscalYear = fiscalYear.atYear( // 2025-06-01
+            oneYearAnniversaryDate.getYear());
+        if (oneYearAnniversaryDate.isAfter(nextFiscalYear)) { // 2025-03-02, 2025-06-01  < 2025-06-01 => 첫 회계연도 정규 연차 발생일 = 2025-06-01  // 입사1주년 : 2025-07-01 >  2025-06-01 => 2026-06-01
             // 입사 1주년 > 회계연도 시작일 => 다음해 회계연도 시작일
             nextFiscalYear = nextFiscalYear.plusYears(1);
         }
@@ -138,9 +154,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
      * @return 근속연수
      */
     private static int calculateServiceYears(LocalDate referenceDate,
-        LocalDate firstEligibleFiscalStartDate) {
+        LocalDate firstEligibleFiscalStartDate) { // 첫 회계연도 정규 연차 발생일 // 첫 2025년(1년차)  / 2027년=?3년차  // 6-1  => 2025-06-01                   2026-06-01      00     20270601 00
         if (referenceDate.isBefore(firstEligibleFiscalStartDate)) {
-            return 0;
+            return 0; // ㅇ연도로만 구분x 전 후 비교해야댐
         }
         return referenceDate.getYear() - firstEligibleFiscalStartDate.getYear() + 1;
     }
@@ -175,6 +191,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         int numerator = caculateDaysBetween(workPeriod);
         int denominator = caculateDaysBetween(totalPeriod);
         return formatDouble((double) numerator / denominator);
+        // PWR2로 변경, 0.94834283834 올림하지말라!
     }
 
     private static DatePeriod getPreviousAccrualPeriod(LocalDate referenceDate,
