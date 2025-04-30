@@ -41,28 +41,30 @@ public final class HireDateStrategy implements CalculationStrategy {
         } else {
             // 입사일 1년 이상
             int servicesYears = calculateServiceYears(hireDate, referenceDate);
-            // refactor : serviceYears, addtionalLeave 나누지않고 한 번에 가산연차를 계산하는 방식으로 도입 고려
             int addtionalLeave = calculateAdditionalLeave(servicesYears);
-            DatePeriod previousAccrualPeriod = getPreviousAccrualPeriod(hireDate,
+            DatePeriod accrualPeriod = getAccrualPeriod(hireDate,
                 referenceDate);
-            List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(previousAccrualPeriod);
-            int prescribedWorkingDays = calculatePrescribedWorkingDays(previousAccrualPeriod,
+            List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
+            int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
                 companyHolidays, holidays);
-            List<DatePeriod> absentPeriods = trimPeriodsByRange(
-                nonWorkingPeriods.getOrDefault(2, List.of()), previousAccrualPeriod);
-            List<DatePeriod> excludedWorkPeriods = trimPeriodsByRange(
-                nonWorkingPeriods.getOrDefault(3, List.of()), previousAccrualPeriod);
+            int absentDays = calculatePrescribedWorkingDaysWithinPeriods(
+                nonWorkingPeriods.getOrDefault(2, List.of()), accrualPeriod,
+                companyHolidays, holidays);
+            int excludedWorkingDays = calculatePrescribedWorkingDaysWithinPeriods(
+                nonWorkingPeriods.getOrDefault(3, List.of()), accrualPeriod,
+                companyHolidays,
+                holidays);
             double attendanceRate = calculateAttendanceRate(prescribedWorkingDays,
-                absentPeriods, excludedWorkPeriods, companyHolidays, holidays);
+                absentDays, excludedWorkingDays);
             double prescribeWorkingRatio = calculatePrescribedWorkingRatio(prescribedWorkingDays,
-                excludedWorkPeriods, companyHolidays, holidays);
+                excludedWorkingDays);
             if (attendanceRate < MINIMUM_WORK_RATIO) {
                 // AR < 0.8 => 월차 (직전 연차 산정 기간에 대한 개근 판단에 따라 연차 부여)
                 List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-                annualLeaveDays = monthlyAccruedLeaves(previousAccrualPeriod.startDate(),
-                    previousAccrualPeriod.endDate(), excludedPeriods);
+                annualLeaveDays = monthlyAccruedLeaves(accrualPeriod.startDate(),
+                    accrualPeriod.endDate(), excludedPeriods);
                 explanation = "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 미만이므로 "
-                              + "매월 개근 판단하여 연차가 부여됌";
+                    + "매월 개근 판단하여 연차가 부여됌";
             } else {
                 if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) {
                     // PWR < 0.8 => (기본연차 + 가산연차) * PWR
@@ -70,13 +72,13 @@ public final class HireDateStrategy implements CalculationStrategy {
                         (BASE_ANNUAL_LEAVE + addtionalLeave) * prescribeWorkingRatio);
                     explanation =
                         "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 이상, 소정근로비율(PWR) 80% 미만이므로 "
-                        + "소정근로비율(PWR)만큼 가산 연차를 계산해 적용합니다.";
+                            + "소정근로비율(PWR)만큼 가산 연차를 계산해 적용합니다.";
                 } else {
                     // 기본연차 + 가산연차
                     annualLeaveDays = BASE_ANNUAL_LEAVE + addtionalLeave;
                     explanation =
                         "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 이상, 소정근로비율(PWR) 80% 이상이므로 "
-                        + "근속연수에 따른 연차가 지급됩니다.";
+                            + "근속연수에 따른 연차가 지급됩니다.";
                 }
             }
 
@@ -108,10 +110,10 @@ public final class HireDateStrategy implements CalculationStrategy {
      * @param referenceDate 기준일
      * @return 연차 산정 단위 기간 [시작일, 종료일]
      */
-    private static DatePeriod getPreviousAccrualPeriod(LocalDate hireDate,
+    private static DatePeriod getAccrualPeriod(LocalDate hireDate,
         LocalDate referenceDate) {
-        int years = calculateServiceYears(hireDate, referenceDate);
-        LocalDate start = hireDate.plusYears(years - 1);
+        int years = calculateServiceYears(hireDate, referenceDate) - 1;
+        LocalDate start = hireDate.plusYears(years);
         LocalDate end = start.plusYears(1).minusDays(1);
         return new DatePeriod(start, end);
     }

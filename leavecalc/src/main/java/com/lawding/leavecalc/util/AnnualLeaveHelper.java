@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AnnualLeaveHelper {
 
@@ -45,23 +46,6 @@ public class AnnualLeaveHelper {
         return serviceYears < 1 ? 0 : Math.min((serviceYears - 1) / 2, MAX_ADDTIONAL_LEAVE);
     }
 
-    /**
-     * 소정근로일을 계산하는 함수
-     *
-     * @param period            [시작일, 종료일]
-     * @param companyHolidays   회사 휴일(창립기념일)
-     * @param statutoryHolidays 법정 공휴일을 저장한 배열
-     * @return 소정 근로일 수 = 전체 기간 일수 - 주말(토,일) - 법정 공휴일 - 회사 휴일
-     */
-    public static int calculatePrescribedWorkingDays(DatePeriod period,
-        List<LocalDate> companyHolidays, List<LocalDate> statutoryHolidays) {
-        Set<LocalDate> excludedDays = new HashSet<>(statutoryHolidays);
-        excludedDays.addAll(companyHolidays);
-        return (int) period.startDate().datesUntil(period.endDate().plusDays(1))
-            .filter(AnnualLeaveHelper::isWeekday) // 주말(토, 일)
-            .filter(date -> !excludedDays.contains(date)) // 법정 공휴일 & 회사 휴일
-            .count();
-    }
 
     /**
      * 해당 날짜가 주말(토,일)인지 아닌지 판단하는 함수
@@ -74,46 +58,17 @@ public class AnnualLeaveHelper {
         return day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY;
     }
 
-    /**
-     * @param periods           기간들이 저장되어 있는 배열(List)
-     * @param companyHolidays   회사 휴일(창립기념일)
-     * @param statutoryHolidays 법정 공휴일을 저장한 배열
-     * @return sum(해당 기간의 소정근로일 수 ( 기간 - 주말 - 법정 공휴일 - 회사 휴일))
-     */
-    public static int calculateTotalDaysFromPeriods(List<DatePeriod> periods,
-        List<LocalDate> companyHolidays, List<LocalDate> statutoryHolidays) {
-        Set<LocalDate> excludedDays = new HashSet<>(statutoryHolidays);
-        excludedDays.addAll(companyHolidays);
-
-        return periods.stream()
-            .mapToInt(period ->
-                (int) period.startDate().datesUntil(period.endDate().plusDays(1)) // 종료일 포함
-                    .filter(AnnualLeaveHelper::isWeekday)                         // 주말 제외
-                    .filter(date -> !excludedDays.contains(date))                // 공휴일 제외
-                    .count()
-            )
-            .sum();
-    }
 
     /**
-     *
-     * @param prescribedWorkingDays     소정근로일 수(연차 산정 기간에서의 근무날 수)
-     * @param absentPeriods             결근처리 리스트
-     * @param excludedWorkPeriods       소정근로제외 리스트
-     * @param companyHolidays           회사 휴일 리스트
-     * @param statutoryHolidays         법정 공휴일 리스트
+     * @param prescribedWorkingDays 소정근로일 수(연차 산정 기간에서의 근무날 수)
+     * @param absentDays            결근처리일 수
+     * @param excludedWorkingDays   소정근로일제외일수
      * @return AR(출근율) = (소정 근로일 수 - 소정근로 제외 일수 - 결근처리 일 수) / (소정근로일 수 - 소정근로제외 일 수)
      */
     public static double calculateAttendanceRate(int prescribedWorkingDays,
-        List<DatePeriod> absentPeriods, List<DatePeriod> excludedWorkPeriods,
-        List<LocalDate> companyHolidays,
-        List<LocalDate> statutoryHolidays) {
-        int absentDays = calculateTotalDaysFromPeriods(absentPeriods, companyHolidays,
-            statutoryHolidays); // 결근 처리된 소정 근로일 수
-        int excludeWorkingDays = calculateTotalDaysFromPeriods(excludedWorkPeriods, companyHolidays,
-            statutoryHolidays); // 소정근로제외일 처리 된 소정 근로일 수
-        int numerator = prescribedWorkingDays - excludeWorkingDays - absentDays;
-        int denominator = prescribedWorkingDays - excludeWorkingDays;
+        int absentDays, int excludedWorkingDays) {
+        int numerator = prescribedWorkingDays - excludedWorkingDays - absentDays;
+        int denominator = prescribedWorkingDays - excludedWorkingDays;
         if (denominator <= 0) {
             return 0;
         }
@@ -171,45 +126,62 @@ public class AnnualLeaveHelper {
     }
 
     /**
-     * @param periods 특이사항있는 근무 기간이 들어있는 리스트
-     * @param range   연차 산정 기간
-     * @return 연차 산정 기간에 맞는 기간을 추출해 배열에 저장
+     * 소정근로일을 계산하는 함수
+     *
+     * @param period            [시작일, 종료일]
+     * @param companyHolidays   회사 휴일(창립기념일)
+     * @param statutoryHolidays 법정 공휴일을 저장한 배열
+     * @return 소정 근로일 수 = 전체 기간 일수 - 주말(토,일) - 법정 공휴일 - 회사 휴일
      */
-    public static List<DatePeriod> trimPeriodsByRange(List<DatePeriod> periods, DatePeriod range) {
-        return periods.stream()
-            .map(period -> trimPeriod(period, range))
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+    public static int calculatePrescribedWorkingDays(DatePeriod period,
+        List<LocalDate> companyHolidays, List<LocalDate> statutoryHolidays) {
+        Set<LocalDate> excludedDays = new HashSet<>(statutoryHolidays);
+        excludedDays.addAll(companyHolidays);
+        return (int) period.startDate().datesUntil(period.endDate().plusDays(1))
+            .filter(AnnualLeaveHelper::isWeekday) // 주말(토, 일)
+            .filter(date -> !excludedDays.contains(date)) // 법정 공휴일 & 회사 휴일
+            .count();
     }
 
-    private static DatePeriod trimPeriod(DatePeriod period, DatePeriod range) {
-        LocalDate periodStart = period.startDate();
-        LocalDate periodEnd = period.endDate();
-        LocalDate rangeStart = range.startDate();
-        LocalDate rangeEnd = range.endDate();
+    /**
+     * @param periods           기간들을 저장하고 있는 리스트
+     * @param standard          연차 산정 기간
+     * @param companyHolidays   회사 휴일
+     * @param statutoryHolidays 법정 공휴일
+     * @return 연차 산정 기간 내 해당하는 기간들에 대한 소정근로일(전체 일수 - 주말 - 회사 휴일 - 법정 공휴일)을 계산
+     */
+    public static int calculatePrescribedWorkingDaysWithinPeriods(List<DatePeriod> periods,
+        DatePeriod standard,
+        List<LocalDate> companyHolidays, List<LocalDate> statutoryHolidays) {
+        Set<LocalDate> holidays = Stream.concat(companyHolidays.stream(),
+                statutoryHolidays.stream())
+            .collect(Collectors.toSet());
 
-        if (periodEnd.isBefore(rangeStart) || periodStart.isAfter(rangeEnd)) {
-            return null;
-        }
+        Set<LocalDate> dates = periods.stream()
+            .map(p -> intersectPeriod(p, standard))
+            .filter(Objects::nonNull)
+            .flatMap(p -> p.startDate().datesUntil(p.endDate().plusDays(1)))
+            .filter(d -> isWeekday(d) && !holidays.contains(d))
+            .collect(Collectors.toSet());
 
-        LocalDate trimmedStart = periodStart.isBefore(rangeStart) ? rangeStart : periodStart;
-        LocalDate trimmedEnd = periodEnd.isAfter(rangeEnd) ? rangeEnd : periodEnd;
+        return dates.size();
+    }
 
-        return new DatePeriod(trimmedStart, trimmedEnd);
+    private static DatePeriod intersectPeriod(DatePeriod p1, DatePeriod p2) {
+        LocalDate start = p1.startDate().isAfter(p2.startDate()) ? p1.startDate() : p2.startDate();
+        LocalDate end = p1.endDate().isBefore(p2.endDate()) ? p1.endDate() : p2.endDate();
+        return end.isBefore(start) ? null : new DatePeriod(start, end);
     }
 
 
     /**
-     * @param prescribedWorkingDays 소정근로일 수(연차 산정 기간에서의 근무날 수)
-     * @param nonWorkingPeriods     타입(1,2,3)에 따라 비근무 기간을 저정한 배열
+     * @param prescribedWorkingDays     소정근로일 수(연차 산정 기간에서의 근무날 수)
+     * @param excludedWorkingDays       소정근로제외일 수
      * @return PWR(소정근로비율) = (소정근로일 수 - 소정근로제외일 수) / 소정근로일 수
      */
     public static double calculatePrescribedWorkingRatio(int prescribedWorkingDays,
-        List<DatePeriod> excludedWorkPeriods, List<LocalDate> companyHolidays,
-        List<LocalDate> statutoryHolidays) {
-        int excludeWorkingDays = calculateTotalDaysFromPeriods(excludedWorkPeriods, companyHolidays,
-            statutoryHolidays);
-        int numerator = prescribedWorkingDays - excludeWorkingDays;
+        int excludedWorkingDays) {
+        int numerator = prescribedWorkingDays - excludedWorkingDays;
         return (double) numerator / prescribedWorkingDays;
     }
 

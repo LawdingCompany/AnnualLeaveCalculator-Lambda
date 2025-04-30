@@ -2,14 +2,15 @@ package com.lawding.leavecalc.strategy;
 
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
-import static com.lawding.leavecalc.util.AnnualLeaveHelper.caculateDaysBetween;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
+import com.lawding.leavecalc.util.AnnualLeaveHelper;
 import java.time.LocalDate;
 import java.time.MonthDay;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -35,11 +36,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         List<LocalDate> companyHolidays = annualLeaveContext.getCompanyHolidays();
         double annualLeaveDays = 0;
         int monthlyLeave = 0;
-        double proRatedLeave = 0;
         String explanation = "";
         LocalDate firstRegularFiscalYearStartDate = calculateFirstRegularFiscalYearStartDate(
-            hireDate,
-            fiscalYear); // 첫 정기 회계연도
+            hireDate, fiscalYear); // 첫 정기 회계연도
         if (referenceDate.isBefore(firstRegularFiscalYearStartDate)) {
             // 기준일 < 첫 정기 회계연도
             LocalDate nextFiscalYearStartDate = getNextFiscalStart(hireDate, fiscalYear);
@@ -51,71 +50,92 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                 explanation = "산정 방식(회계연도)에 따라 계산한 결과, 산정일 기준 1년 미만이므로 매월 개근 판단하여 연차가 부여됌";
             } else {
                 // 기준일이 입사일 다음 회계연도 기간 중에 있다면 => 월차 + 비례연차
-                LocalDate endDate =
-                    referenceDate.isAfter(hireDate.plusYears(1)) ? hireDate.plusYears(1)
-                        : referenceDate;
-                monthlyLeave = monthlyAccruedLeaves(hireDate, endDate, excludedPeriods);
-                LocalDate prevFiscalYearStartDate = nextFiscalYearStartDate.minusYears(1);
+                // 입사 후 1년 미만, 입사 후 1년 이상
+                if (isLessThanOneYear(hireDate, referenceDate)) {
+                    monthlyLeave = monthlyAccruedLeaves(hireDate, referenceDate, excludedPeriods);
+                } else {
+                    monthlyLeave = monthlyAccruedLeaves(hireDate,
+                        hireDate.plusYears(1).minusDays(1), excludedPeriods);
+                }
                 LocalDate prevFiscalYearEndDate = nextFiscalYearStartDate.minusDays(1);
                 // 연차 산정 기간 [입사일, 회계연도 종료일]
-                DatePeriod period = new DatePeriod(hireDate, prevFiscalYearEndDate);
-                List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(period);
-                int prescribedWorkingDays = calculatePrescribedWorkingDays(period, companyHolidays,
+                DatePeriod accrualPeriod = new DatePeriod(hireDate, prevFiscalYearEndDate);
+                List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
+                int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
+                    companyHolidays, holidays);
+                int absentDays = calculatePrescribedWorkingDaysWithinPeriods(
+                    nonWorkingPeriods.getOrDefault(2, List.of()), accrualPeriod,
+                    companyHolidays, holidays);
+                int excludedWorkingDays = calculatePrescribedWorkingDaysWithinPeriods(
+                    nonWorkingPeriods.getOrDefault(3, List.of()), accrualPeriod,
+                    companyHolidays,
                     holidays);
                 double attendanceRate = calculateAttendanceRate(prescribedWorkingDays,
-                    nonWorkingPeriods, companyHolidays, holidays);
+                    absentDays, excludedWorkingDays);
                 if (attendanceRate >= MINIMUM_WORK_RATIO) {
                     // 여기의 PWR은 다른 PWR과 다름.
                     // 기존의 PWR = 같은 산정 기간의 소정근로비율
                     // 이 경우의 PWR = [입사일, 회계연도 종료일] - 이에 해당하는 소정근로제외일 수 / [회계연도 시작일 - 회계연도 종료일]의 소정근로일
-                    double prescribeWorkingRatio = calculatePrescribedWorkingRatio()
-                }
+                    LocalDate prevFiscalYearStartDate = nextFiscalYearStartDate.minusYears(1);
+                    DatePeriod prevFiscalYear = new DatePeriod(prevFiscalYearStartDate,
+                        prevFiscalYearEndDate);
+                    List<LocalDate> holidaysByPrevFiscalYear = holidayRepository.findWeekdayHolidays(
+                        prevFiscalYear);
+                    int prescribedWorkingDaysByPrevFiscalYear = calculatePrescribedWorkingDays(
+                        prevFiscalYear, companyHolidays, holidaysByPrevFiscalYear);
 
+                    double prescribeWorkingRatio = calculatePrescribedWorkingRatio(
+                        prescribedWorkingDays, excludedWorkingDays,
+                        prescribedWorkingDaysByPrevFiscalYear);
+                    double proRatedLeave = formatDouble(BASE_ANNUAL_LEAVE * prescribeWorkingRatio);
+
+                    if (isLessThanOneYear(hireDate, referenceDate)) {
+                        annualLeaveDays = monthlyLeave + proRatedLeave;
+                    } else {
+                        annualLeaveDays = proRatedLeave;
+                    }
+                } else {
+                    annualLeaveDays = monthlyLeave;
+                    explanation = "산정 방식(회계연도)에 따라 계산한 결과, 출근율(AR)이 80% 미만이므로 매월 개근 판단하여 연차가 부여됌";
+                }
             }
         } else {
             // 기준일 >= 첫 정기 회계연도
-            int serviceYears = calculateServiceYears(referenceDate,
-                firstRegularFiscalYearStartDate);
-            int additionalLeave = calculateAdditionalLeave(serviceYears);
-            DatePeriod period = getPreviousAccrualPeriod(referenceDate, fiscalYear);
-            List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(period);
-            int prescribedWorkingDays = calculatePrescribedWorkingDays(period, companyHolidays,
+            DatePeriod accrualPeriod = getAccrualPeriod(referenceDate, fiscalYear);
+            List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
+            int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
+                companyHolidays,
                 holidays);
-            double attendanceRate = calculateAttendanceRate(prescribedWorkingDays,
-                nonWorkingPeriods, companyHolidays, holidays);
+            int absentDays = calculatePrescribedWorkingDaysWithinPeriods(
+                nonWorkingPeriods.getOrDefault(2, List.of()), accrualPeriod,
+                companyHolidays, holidays);
+            int excludedWorkingDays = calculatePrescribedWorkingDaysWithinPeriods(
+                nonWorkingPeriods.getOrDefault(3, List.of()), accrualPeriod,
+                companyHolidays,
+                holidays);
+            double attendanceRate = calculateAttendanceRate(prescribedWorkingDays, absentDays,
+                excludedWorkingDays);
             if (attendanceRate < MINIMUM_WORK_RATIO) {
-                // AR < 0.8 => 월차
-                List<DatePeriod> excludePeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-                annualLeaveDays = monthlyAccruedLeaves(period.startDate(), period.endDate(),
-                    excludePeriods);
+                List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
+                monthlyLeave = monthlyAccruedLeaves(accrualPeriod.startDate(),
+                    accrualPeriod.endDate(), excludedPeriods);
+                explanation = "월차";
             } else {
-                double prescribeWorkingRatio = calculatePrescribedWorkingRatio(
-                    prescribedWorkingDays, nonWorkingPeriods, companyHolidays, holidays);
+                double prescribeWorkingRatio = AnnualLeaveHelper.calculatePrescribedWorkingRatio(
+                    prescribedWorkingDays, excludedWorkingDays);
+                int serviceYears = calculateServiceYears(referenceDate,
+                    firstRegularFiscalYearStartDate);
+                int additionalLeave = calculateAdditionalLeave(serviceYears);
                 if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) {
-                    // PWR2 < 0.8 => (기본연차 + 가산연차) * PWR1
-
+                    annualLeaveDays = formatDouble(
+                        (BASE_ANNUAL_LEAVE + additionalLeave) * prescribeWorkingRatio);
+                    explanation = "(기본연차(15) + 가산연차) * PWR";
+                } else {
+                    annualLeaveDays = BASE_ANNUAL_LEAVE + additionalLeave;
+                    explanation = "기본연차(15) + 가산연차";
                 }
             }
-//            if (attendanceRate >= MINIMUM_WORK_RATIO) {
-//                // AR >= 0.8
-//                double prescribeWorkingRatio = calculatePrescribedWorkingRatio(
-//                    prescribedWokringDays, nonWorkingPeriods, companyHolidays, holidays);
-//                annualLeaveDays = (BASE_ANNUAL_LEAVE + additionalLeave) * prescribeWorkingRatio;
-//                explanation =
-//                    referenceDate + " 기준 사용하실 수 있는 연차를 산정하는 기간은" + period.startDate() + " ~ "
-//                    + period.endDate()
-//                    + "입니다. 해당 기간 내 근무 형태 분석 결과, 출근율(AR) 80% 이상이므로 근속연수에 따른 연차에 PWR(소정근로비율)을 적용해 총 연차는 "
-//                    + annualLeaveDays + "개 입니다.";
-//            } else {
-//                List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-//                annualLeaveDays = monthlyAccruedLeaves(period.startDate(), period.endDate(),
-//                    excludedPeriods);
-//                explanation =
-//                    referenceDate + " 기준 사용하실 수 있는 연차를 산정하는 기간은" + period.startDate() + " ~ "
-//                    + period.endDate()
-//                    + "입니다. 해당 기간 내 근무 형태 분석 결과, 출근율(AR) 80% 미만이므로 매월 개근 여부에 따라 월차가 부여하는 방식으로 분석한 결과 "
-//                    + annualLeaveDays + "개 입니다.";
-//            }
+
         }
 
         return AnnualLeaveResult.builder()
@@ -124,6 +144,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
             .build();
     }
 
+}
 
     /**
      * 입사 1주년 이후 처음으로 정규 연차가 발생하는 회계연도 시작일을 계산하는 함수
@@ -140,9 +161,8 @@ public final class FiscalYearStrategy implements CalculationStrategy {
      * <p>
      * <- 6/1 -> < = > 입사 1주년  > 회계연도시작일 =>
      */
-    private static LocalDate calculateFirstRegularFiscalYearStartDate(LocalDate hireDate,
-        // 2024-03-02                   // 입사일 : 2024-07-01
-        MonthDay fiscalYear) {
+    private static LocalDate calculateFirstRegularFiscalYearStartDate(LocalDate
+        hireDate, MonthDay fiscalYear) {
         LocalDate oneYearAnniversaryDate = hireDate.plusYears(1); // 2025-03-02
         LocalDate nextFiscalYear = fiscalYear.atYear( // 2025-06-01
             oneYearAnniversaryDate.getYear());
@@ -178,7 +198,6 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         return hireDate.isBefore(fiscalStart) ? fiscalStart : fiscalStart.plusYears(1);
     }
 
-
     /**
      * @param date1 날짜1
      * @param date2 날짜2
@@ -188,19 +207,8 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         return date1.isBefore(date2) ? date1 : date2;
     }
 
-    /**
-     * @param workPeriod  근속기간 총일수
-     * @param totalPeriod 회계연도
-     * @return 비례연차 비율
-     */
-    private static double calculateProRate(DatePeriod workPeriod, DatePeriod totalPeriod) {
-        int numerator = caculateDaysBetween(workPeriod);
-        int denominator = caculateDaysBetween(totalPeriod);
-        return formatDouble((double) numerator / denominator);
-        // PWR2로 변경, 0.94834283834 올림하지말라!
-    }
 
-    private static DatePeriod getPreviousAccrualPeriod(LocalDate referenceDate,
+    private static DatePeriod getAccrualPeriod(LocalDate referenceDate,
         MonthDay fiscalYear) {
         LocalDate prevFiscalYearStartDate = fiscalYear.atYear(referenceDate.getYear());
         if (prevFiscalYearStartDate.isAfter(referenceDate)) {
@@ -212,12 +220,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         return new DatePeriod(prevFiscalYearStartDate, prevFiscalYearEndDate);
     }
 
-
-    private static double calculatePrescribedWorkingRatio(DatePeriod numerator,
-        DatePeriod denominator, Map<Integer, List<DatePeriod>> nonWorkingPeriods,
-        List<LocalDate> companyHolidays,
-        List<LocalDate> statutoryHolidays) {
-        List<DatePeriod> excludedWorkPeriods = nonWorkingPeriods.getOrDefault(3, List.of());
-        int excludeWorkingDays= calculateTotalDaysFromPeriods(excludedWorkPeriods)
+    private static double calculatePrescribedWorkingRatio(int prescribedWorkingDays,
+        int excludedWorkingDays, int prescribedWorkingDaysByPrevFiscalYear) {
+        int numerator = prescribedWorkingDays - excludedWorkingDays;
+        return (double) numerator / prescribedWorkingDaysByPrevFiscalYear;
     }
 }
