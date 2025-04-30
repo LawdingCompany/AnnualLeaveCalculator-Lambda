@@ -32,10 +32,6 @@ public class AnnualLeaveHelper {
         return referenceDate.isBefore(hireDate.plusYears(1));
     }
 
-    public static int caculateDaysBetween(DatePeriod period) {
-        return (int) ChronoUnit.DAYS.between(period.startDate(), period.endDate());
-    }
-
     /**
      * 근속연수에 따른 가산 연차를 계산하는 함수
      *
@@ -53,7 +49,7 @@ public class AnnualLeaveHelper {
      * @param date 날짜
      * @return 주말이 아닌지 판단
      */
-    private static boolean isWeekday(LocalDate date) {
+    static boolean isWeekday(LocalDate date) {
         DayOfWeek day = date.getDayOfWeek();
         return day != DayOfWeek.SATURDAY && day != DayOfWeek.SUNDAY;
     }
@@ -189,8 +185,8 @@ public class AnnualLeaveHelper {
 
 
     /**
-     * @param prescribedWorkingDays     소정근로일 수(연차 산정 기간에서의 근무날 수)
-     * @param excludedWorkingDays       소정근로제외일 수
+     * @param prescribedWorkingDays 소정근로일 수(연차 산정 기간에서의 근무날 수)
+     * @param excludedWorkingDays   소정근로제외일 수
      * @return PWR(소정근로비율) = (소정근로일 수 - 소정근로제외일 수) / 소정근로일 수
      */
     public static double calculatePrescribedWorkingRatio(int prescribedWorkingDays,
