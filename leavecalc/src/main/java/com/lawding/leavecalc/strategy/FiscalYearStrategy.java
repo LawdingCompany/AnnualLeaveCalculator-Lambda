@@ -46,7 +46,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
             List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
             if (referenceDate.isBefore(nextFiscalYearStartDate)) {
                 // 기준일이 입사일과 같은 회계연도이면 => 월차
-                monthlyLeave = monthlyAccruedLeaves(hireDate, referenceDate, excludedPeriods);
+                annualLeaveDays = monthlyAccruedLeaves(hireDate, referenceDate, excludedPeriods);
                 explanation = "산정 방식(회계연도)에 따라 계산한 결과, 산정일 기준 1년 미만이므로 매월 개근 판단하여 연차가 부여됌";
             } else {
                 // 기준일이 입사일 다음 회계연도 기간 중에 있다면 => 월차 + 비례연차
@@ -91,6 +91,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
 
                     if (isLessThanOneYear(hireDate, referenceDate)) {
                         annualLeaveDays = monthlyLeave + proRatedLeave;
+                        System.out.println("소정 근로일 수 : " + prescribedWorkingDaysByPrevFiscalYear);
+                        System.out.println("입사일 - 회계연도 종료일 : " + prescribedWorkingDays);
+                        System.out.println(monthlyLeave + ", " + proRatedLeave);
                     } else {
                         annualLeaveDays = proRatedLeave;
                     }
@@ -117,7 +120,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                 excludedWorkingDays);
             if (attendanceRate < MINIMUM_WORK_RATIO) {
                 List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-                monthlyLeave = monthlyAccruedLeaves(accrualPeriod.startDate(),
+                annualLeaveDays = monthlyAccruedLeaves(accrualPeriod.startDate(),
                     accrualPeriod.endDate(), excludedPeriods);
                 explanation = "월차";
             } else {
@@ -144,7 +147,6 @@ public final class FiscalYearStrategy implements CalculationStrategy {
             .build();
     }
 
-}
 
     /**
      * 입사 1주년 이후 처음으로 정규 연차가 발생하는 회계연도 시작일을 계산하는 함수
@@ -196,15 +198,6 @@ public final class FiscalYearStrategy implements CalculationStrategy {
     private static LocalDate getNextFiscalStart(LocalDate hireDate, MonthDay fiscalYear) {
         LocalDate fiscalStart = fiscalYear.atYear(hireDate.getYear());
         return hireDate.isBefore(fiscalStart) ? fiscalStart : fiscalStart.plusYears(1);
-    }
-
-    /**
-     * @param date1 날짜1
-     * @param date2 날짜2
-     * @return 날짜1, 날짜2 중 가장 최근 날짜를 리턴
-     */
-    private static LocalDate minDate(LocalDate date1, LocalDate date2) {
-        return date1.isBefore(date2) ? date1 : date2;
     }
 
 

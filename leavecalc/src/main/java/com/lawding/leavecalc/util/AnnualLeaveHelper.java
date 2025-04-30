@@ -86,20 +86,34 @@ public class AnnualLeaveHelper {
         List<DatePeriod> excludedPeriods) {
         int accruedLeaves = 0;
         LocalDate periodStart = startDate;
+
         while (accruedLeaves < MAX_MONTHLY_LEAVE) {
             LocalDate periodEnd = periodStart.plusMonths(1).minusDays(1);
             LocalDate accrualDate = periodEnd.plusDays(1);
 
-            if (accrualDate.isAfter(endDate)) {
-                break;
+            if (periodEnd.isAfter(endDate)) {
+                break; // 평가 기준일을 넘은 개근 구간은 보지 않음
             }
+
+            System.out.println(periodStart + " ~ " + periodEnd + ": 까지 계산할게요");
+
             if (isFullAttendance(periodStart, periodEnd, excludedPeriods)) {
-                accruedLeaves++;
+                System.out.println(periodStart + "~" + periodEnd + "까지 개근했어요.");
+
+                // 연차는 accrualDate에 발생하는데, referenceDate 이전일 때만 인정
+                if (!accrualDate.isAfter(endDate)) {
+                    accruedLeaves++;
+                } else {
+                    System.out.println("→ 개근했지만 " + accrualDate + " 연차 발생일이 기준일 이후입니다. 부여 안 함");
+                }
             }
+
             periodStart = accrualDate;
         }
+
         return accruedLeaves;
     }
+
 
     /**
      * [시작일, 종료일] 에 결근한 날이 있는지 확인하며 개근을 판단하는 함수

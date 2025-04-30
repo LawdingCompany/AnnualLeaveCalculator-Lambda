@@ -44,6 +44,8 @@ public final class HireDateStrategy implements CalculationStrategy {
             int addtionalLeave = calculateAdditionalLeave(servicesYears);
             DatePeriod accrualPeriod = getAccrualPeriod(hireDate,
                 referenceDate);
+            System.out.println(
+                "연차 산정 기간 : " + accrualPeriod.startDate() + " ~ " + accrualPeriod.endDate());
             List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
             int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
                 companyHolidays, holidays);
