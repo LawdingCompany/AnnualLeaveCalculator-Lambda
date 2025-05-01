@@ -76,7 +76,10 @@ public class AnnualLeaveHelper {
      * @param startDate       시작일
      * @param endDate         종료일
      * @param excludedPeriods 결근 처리 기간을 저장한 배열
-     * @return 개근 여부 판단에 따른 월차 발생 개수 (최대 11개)
+     * @return 종료일 다음 날에 발생하는 월차 계산 함수 (최대 11개)
+     * <p>
+     * 해당 함수는 종료일을 포함해서 계산하기에 해당 월차는 종료일 + 1일 후의 발생하는 월차를 계산한다. 즉, referenceDate를 종료일로 넣을 경우,
+     * referenceDate.plusDays(1)일 후에 발생하는 월차를 계산하므로 endDate = referenceDate.minusDays(1)이다.
      */
     public static int monthlyAccruedLeaves(LocalDate startDate, LocalDate endDate,
         List<DatePeriod> excludedPeriods) {
@@ -85,26 +88,14 @@ public class AnnualLeaveHelper {
 
         while (accruedLeaves < MAX_MONTHLY_LEAVE) {
             LocalDate periodEnd = periodStart.plusMonths(1).minusDays(1);
-            LocalDate accrualDate = periodEnd.plusDays(1);
 
             if (periodEnd.isAfter(endDate)) {
-                break; // 평가 기준일을 넘은 개근 구간은 보지 않음
+                break;
             }
-
-            System.out.println(periodStart + " ~ " + periodEnd + ": 까지 계산할게요");
-
             if (isFullAttendance(periodStart, periodEnd, excludedPeriods)) {
-                System.out.println(periodStart + "~" + periodEnd + "까지 개근했어요.");
-
-                // 연차는 accrualDate에 발생하는데, referenceDate 이전일 때만 인정
-                if (!accrualDate.isAfter(endDate)) {
-                    accruedLeaves++;
-                } else {
-                    System.out.println("→ 개근했지만 " + accrualDate + " 연차 발생일이 기준일 이후입니다. 부여 안 함");
-                }
+                accruedLeaves++;
             }
-
-            periodStart = accrualDate;
+            periodStart = periodEnd.plusDays(1);
         }
 
         return accruedLeaves;
@@ -158,7 +149,7 @@ public class AnnualLeaveHelper {
      * @param standard          연차 산정 기간
      * @param companyHolidays   회사 휴일
      * @param statutoryHolidays 법정 공휴일
-     * @return 연차 산정 기간 내 해당하는 기간들에 대한 소정근로일(전체 일수 - 주말 - 회사 휴일 - 법정 공휴일)을 계산
+     * @return 연차 산정 기간과 겹치는 결근/소정근로제외일 중 소정근로일(주말·공휴일 제외) 계산
      */
     public static int calculatePrescribedWorkingDaysWithinPeriods(List<DatePeriod> periods,
         DatePeriod standard,
@@ -191,6 +182,9 @@ public class AnnualLeaveHelper {
      */
     public static double calculatePrescribedWorkingRatio(int prescribedWorkingDays,
         int excludedWorkingDays) {
+        if (prescribedWorkingDays <= 0) {
+            return 0;
+        }
         int numerator = prescribedWorkingDays - excludedWorkingDays;
         return (double) numerator / prescribedWorkingDays;
     }
