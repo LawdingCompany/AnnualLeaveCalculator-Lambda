@@ -69,7 +69,7 @@ public class HireDateStrategyTest {
         void returns6WhenPerfectAttendance() {
             // Given
             LocalDate hireDate = LocalDate.of(2024, 7, 1);
-            LocalDate referenceDate = LocalDate.of(2025, 1, 10);
+            LocalDate referenceDate = LocalDate.of(2025, 1, 1);
             List<DatePeriod> excludedPeriods = List.of();
             AnnualLeaveContext context = AnnualLeaveContext.builder()
                 .hireDate(hireDate)
@@ -149,6 +149,35 @@ public class HireDateStrategyTest {
             // Then
             assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
         }
+        @Test
+        @DisplayName("6개월 중 결근이 있는 날이 휴일(주말/공휴일)이면 6개의 월차가 발생한다.")
+        void return5WhenOneMonthHasAbsenceWithin6Months() {
+            // Given
+            LocalDate hireDate = LocalDate.of(2024, 7, 1);
+            LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+            List<DatePeriod> excludedPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 8, 3), // 토
+                    LocalDate.of(2024, 8, 4)  // 일
+                ),
+                new DatePeriod(
+                    LocalDate.of(2024, 8, 15), // 공휴일
+                    LocalDate.of(2024, 8, 15)
+                )
+            );
+            AnnualLeaveContext context = AnnualLeaveContext.builder()
+                .hireDate(hireDate)
+                .referenceDate(referenceDate)
+                .nonWorkingPeriods(Map.of(2, excludedPeriods))
+                .companyHolidays(List.of())
+                .build();
+            // When
+            AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+            // Then
+            assertEquals(6, result.getCalculationDetail().getTotalLeaveDays());
+        }
+
     }
 
     @Test
