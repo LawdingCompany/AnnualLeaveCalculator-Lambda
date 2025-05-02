@@ -10,7 +10,6 @@ import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import com.lawding.leavecalc.util.AnnualLeaveHelper;
 import java.time.LocalDate;
 import java.time.MonthDay;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +41,6 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         if (referenceDate.isBefore(firstRegularFiscalYearStartDate)) {
             // 기준일 < 첫 정기 회계연도
             LocalDate nextFiscalYearStartDate = getNextFiscalStart(hireDate, fiscalYear);
-            LocalDate nextFiscalYearEndDate = nextFiscalYearStartDate.plusYears(1).minusDays(1);
             List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
             if (referenceDate.isBefore(nextFiscalYearStartDate)) {
                 // 기준일이 입사일과 같은 회계연도이면 => 월차

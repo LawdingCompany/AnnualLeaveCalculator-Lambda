@@ -2,7 +2,6 @@ package com.lawding.leavecalc.util;
 
 import com.lawding.leavecalc.domain.DatePeriod;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
