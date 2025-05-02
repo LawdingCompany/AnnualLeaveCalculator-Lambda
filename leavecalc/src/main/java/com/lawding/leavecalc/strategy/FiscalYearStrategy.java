@@ -4,7 +4,7 @@ import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
-import com.lawding.leavecalc.domain.AnnualLeaveResult;
+import com.lawding.leavecalc.domain.result.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import com.lawding.leavecalc.util.AnnualLeaveHelper;

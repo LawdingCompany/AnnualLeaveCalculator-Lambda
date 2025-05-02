@@ -4,8 +4,10 @@ import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
-import com.lawding.leavecalc.domain.AnnualLeaveResult;
+import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
+import com.lawding.leavecalc.domain.result.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
+import com.lawding.leavecalc.domain.result.AnnualLeaveResultType;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.time.Period;
@@ -37,16 +39,21 @@ public final class HireDateStrategy implements CalculationStrategy {
             // 입사일 1년 미만 => 월차
             List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
             DatePeriod period = new DatePeriod(hireDate, referenceDate.minusDays(1));
-            annualLeaveDays = monthlyAccruedLeaves(period, excludedPeriods);
-            explanation = "산정 방식(입사일)에 따라 계산한 결과, 산정일 기준 1년 미만이므로 매월 개근 판단하여 연차가 부여됌";
+            MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(period, excludedPeriods);
+            explanation = "근무기간이 1년 미만인 근로자는 1개월 개근시 1일 발생 (근로기준법 제60조 제2항)";
+            AnnualLeaveResult result = AnnualLeaveResult.builder()
+                .type(AnnualLeaveResultType.MONTHLY)
+                .hireDate(hireDate)
+                .referenceDate(referenceDate)
+                .calculationDetail(monthlyLeaveDetail)
+                .explanation(explanation)
+                .build();
         } else {
             // 입사일 1년 이상
             int servicesYears = calculateServiceYears(hireDate, referenceDate);
             int addtionalLeave = calculateAdditionalLeave(servicesYears);
             DatePeriod accrualPeriod = getAccrualPeriod(hireDate,
                 referenceDate);
-            System.out.println(
-                "연차 산정 기간 : " + accrualPeriod.startDate() + " ~ " + accrualPeriod.endDate());
             List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
             int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
                 companyHolidays, holidays);
@@ -85,11 +92,7 @@ public final class HireDateStrategy implements CalculationStrategy {
             }
 
         }
-        return AnnualLeaveResult.builder()
-            .annualLeaveDays(annualLeaveDays)
-            .explanation(explanation)
-            .build();
-
+        return result;
 
     }
 
@@ -119,6 +122,4 @@ public final class HireDateStrategy implements CalculationStrategy {
         LocalDate end = start.plusYears(1).minusDays(1);
         return new DatePeriod(start, end);
     }
-
-
 }

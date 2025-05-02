@@ -3,7 +3,7 @@ package com.lawding.leavecalc.strategy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
-import com.lawding.leavecalc.domain.AnnualLeaveResult;
+import com.lawding.leavecalc.domain.result.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;

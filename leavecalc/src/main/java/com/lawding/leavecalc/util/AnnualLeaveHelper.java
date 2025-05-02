@@ -3,13 +3,12 @@ package com.lawding.leavecalc.util;
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
 import com.lawding.leavecalc.domain.DatePeriod;
+import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -73,31 +72,40 @@ public class AnnualLeaveHelper {
     }
 
     /**
-     * @param period       [시작일, 종료일]
+     * @param period          [시작일, 종료일]
      * @param excludedPeriods 결근 처리 기간을 저장한 배열
      * @return 종료일 다음 날에 발생하는 월차 계산 함수 (최대 11개)
      * <p>
      * 해당 함수는 종료일을 포함해서 계산하기에 해당 월차는 종료일 + 1일 후의 발생하는 월차를 계산한다. 즉, referenceDate를 종료일로 넣을 경우,
      * referenceDate.plusDays(1)일 후에 발생하는 월차를 계산하므로 endDate = referenceDate.minusDays(1)이다.
      */
-    public static int monthlyAccruedLeaves(DatePeriod period,
+    public static MonthlyLeaveDetail monthlyAccruedLeaves(DatePeriod period,
         List<DatePeriod> excludedPeriods) {
-        int accruedLeaves = 0;
-        LocalDate periodStart = period.startDate();
+        List<MonthlyLeaveDetail.MonthlyLeaveGrantRecord> records = new ArrayList<>();
+        int totalMonthlyLeaves = 0;
+        LocalDate currentStart = period.startDate();
 
-        while (accruedLeaves < MAX_MONTHLY_LEAVE) {
-            LocalDate periodEnd = periodStart.plusMonths(1).minusDays(1);
+        while (totalMonthlyLeaves < MAX_MONTHLY_LEAVE && !currentStart.isAfter(period.endDate())) {
+            LocalDate currentEnd = currentStart.plusMonths(1).minusDays(1);
 
-            if (periodEnd.isAfter(period.endDate())) {
-                break;
+            boolean fullAttendance = isFullAttendance(currentStart, currentEnd, excludedPeriods);
+            double granted = fullAttendance ? 1 : 0;
+
+            records.add(MonthlyLeaveDetail.MonthlyLeaveGrantRecord.builder()
+                .period(new DatePeriod(currentStart, currentEnd))
+                .monthlyLeave(granted)
+                .build());
+
+            if (fullAttendance) {
+                totalMonthlyLeaves++;
             }
-            if (isFullAttendance(periodStart, periodEnd, excludedPeriods)) {
-                accruedLeaves++;
-            }
-            periodStart = periodEnd.plusDays(1);
+            currentStart = currentEnd.plusDays(1);
         }
 
-        return accruedLeaves;
+        return MonthlyLeaveDetail.builder()
+            .records(records)
+            .totalLeaveDays(totalMonthlyLeaves)
+            .build();
     }
 
 
