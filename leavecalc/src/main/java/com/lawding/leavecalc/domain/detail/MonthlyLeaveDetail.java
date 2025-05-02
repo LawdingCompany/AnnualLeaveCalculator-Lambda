@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class MonthlyLeaveDetail implements CalculationDetail {
-
+    // 월차
     private final List<MonthlyLeaveGrantRecord> records;
     private final double totalLeaveDays;
 

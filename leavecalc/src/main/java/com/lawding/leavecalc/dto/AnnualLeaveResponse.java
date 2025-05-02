@@ -1,6 +1,6 @@
 package com.lawding.leavecalc.dto;
 
-import com.lawding.leavecalc.domain.result.AnnualLeaveResult;
+import com.lawding.leavecalc.domain.AnnualLeaveResult;
 
 public class AnnualLeaveResponse {
 

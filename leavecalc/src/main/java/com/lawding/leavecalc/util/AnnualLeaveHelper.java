@@ -7,6 +7,7 @@ import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -85,9 +86,12 @@ public class AnnualLeaveHelper {
         int totalMonthlyLeaves = 0;
         LocalDate currentStart = period.startDate();
 
-        while (totalMonthlyLeaves < MAX_MONTHLY_LEAVE && !currentStart.isAfter(period.endDate())) {
+        while (totalMonthlyLeaves < MAX_MONTHLY_LEAVE) {
             LocalDate currentEnd = currentStart.plusMonths(1).minusDays(1);
 
+            if (currentEnd.isAfter(period.endDate())) {
+                break;
+            }
             boolean fullAttendance = isFullAttendance(currentStart, currentEnd, excludedPeriods);
             double granted = fullAttendance ? 1 : 0;
 
@@ -196,5 +200,56 @@ public class AnnualLeaveHelper {
         return (double) numerator / prescribedWorkingDays;
     }
 
+    /**
+     * @param periods           기간이 들어있는 리스트
+     * @param companyHolidays   회사 휴일
+     * @param statutoryHolidays 법정 공휴일
+     * @return 기간 리스트에서 소정근로일(주말, 법정공휴일, 회사 휴일)을 제외한 실제 출근일만 추출해 DatePeriod 단위로 반환
+     */
+    public static List<DatePeriod> filterWorkingDayOnlyPeriods(List<DatePeriod> periods,
+        List<LocalDate> companyHolidays, List<LocalDate> statutoryHolidays) {
+        if (periods.isEmpty()) {
+            return List.of();
+        }
+        Set<LocalDate> holidays = new HashSet<>();
+        holidays.addAll(companyHolidays);
+        holidays.addAll(statutoryHolidays);
+
+        List<LocalDate> workingDays = periods.stream()
+            .flatMap(p -> p.startDate().datesUntil(p.endDate().plusDays(1)))
+            .filter(date -> isWeekday(date) && !holidays.contains(date))
+            .distinct()
+            .sorted()
+            .toList();
+
+        return convertDatePeriod(workingDays);
+    }
+
+
+    /**
+     * @param dates 날짜가 들어있는 리스트
+     * @return 정렬된 LocalDate 리스트를 연속된 날짜 단위로 묶어 DatePeriod 리스트로 변환합니다.
+     */
+    private static List<DatePeriod> convertDatePeriod(List<LocalDate> dates) {
+        List<DatePeriod> periods = new ArrayList<>();
+        if (dates.isEmpty()) {
+            return periods;
+        }
+        List<LocalDate> sortedDates = dates.stream().sorted().toList();
+
+        LocalDate start = sortedDates.get(0);
+        LocalDate prev = start;
+
+        for (int i = 1; i < sortedDates.size(); i++) {
+            LocalDate current = sortedDates.get(i);
+            if (!current.equals(prev.plusDays(1))) {
+                periods.add(new DatePeriod(start, prev));
+                start = current;
+            }
+            prev = current;
+        }
+        periods.add(new DatePeriod(start, prev));
+        return periods;
+    }
 
 }

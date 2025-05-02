@@ -3,11 +3,14 @@ package com.lawding.leavecalc.strategy;
 import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
+import com.lawding.leavecalc.constant.AnnualLeaveMessages.*;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
+import com.lawding.leavecalc.domain.detail.AdjustedAnnualLeaveDetail;
+import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
-import com.lawding.leavecalc.domain.result.AnnualLeaveResult;
+import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
-import com.lawding.leavecalc.domain.result.AnnualLeaveResultType;
+import com.lawding.leavecalc.domain.AnnualLeaveResultType;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.time.Period;
@@ -33,27 +36,26 @@ public final class HireDateStrategy implements CalculationStrategy {
         LocalDate referenceDate = annualLeaveContext.getReferenceDate();
         Map<Integer, List<DatePeriod>> nonWorkingPeriods = annualLeaveContext.getNonWorkingPeriods();
         List<LocalDate> companyHolidays = annualLeaveContext.getCompanyHolidays();
-        double annualLeaveDays = 0;
-        String explanation = "";
+        AnnualLeaveResult result = null;
         if (isLessThanOneYear(hireDate, referenceDate)) {
             // 입사일 1년 미만 => 월차
-            List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
+            List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(
+                new DatePeriod(hireDate, referenceDate));
+            List<DatePeriod> excludedPeriods =
+                filterWorkingDayOnlyPeriods(nonWorkingPeriods.getOrDefault(2, List.of()),
+                    companyHolidays, holidays);
             DatePeriod period = new DatePeriod(hireDate, referenceDate.minusDays(1));
             MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(period, excludedPeriods);
-            explanation = "근무기간이 1년 미만인 근로자는 1개월 개근시 1일 발생 (근로기준법 제60조 제2항)";
-            AnnualLeaveResult result = AnnualLeaveResult.builder()
+            result = AnnualLeaveResult.builder()
                 .type(AnnualLeaveResultType.MONTHLY)
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
                 .calculationDetail(monthlyLeaveDetail)
-                .explanation(explanation)
+                .explanation(HireDate.LESS_THAN_ONE_YEAR)
                 .build();
         } else {
             // 입사일 1년 이상
-            int servicesYears = calculateServiceYears(hireDate, referenceDate);
-            int addtionalLeave = calculateAdditionalLeave(servicesYears);
-            DatePeriod accrualPeriod = getAccrualPeriod(hireDate,
-                referenceDate);
+            DatePeriod accrualPeriod = getAccrualPeriod(hireDate, referenceDate);
             List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
             int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
                 companyHolidays, holidays);
@@ -70,24 +72,55 @@ public final class HireDateStrategy implements CalculationStrategy {
                 excludedWorkingDays);
             if (attendanceRate < MINIMUM_WORK_RATIO) {
                 // AR < 0.8 => 월차 (직전 연차 산정 기간에 대한 개근 판단에 따라 연차 부여)
-                List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-                annualLeaveDays = monthlyAccruedLeaves(accrualPeriod, excludedPeriods);
-                explanation = "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 미만이므로 "
-                    + "매월 개근 판단하여 연차가 부여됌";
+                List<DatePeriod> excludedPeriods =
+                    filterWorkingDayOnlyPeriods(nonWorkingPeriods.getOrDefault(2, List.of()),
+                        companyHolidays, holidays);
+                MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(accrualPeriod,
+                    excludedPeriods);
+                result = AnnualLeaveResult.builder()
+                    .type(AnnualLeaveResultType.MONTHLY)
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .calculationDetail(monthlyLeaveDetail)
+                    .explanation(HireDate.AR_UNDER_80_AFTER_ONE_YEAR)
+                    .build();
             } else {
+                int servicesYears = calculateServiceYears(hireDate, referenceDate);
+                int addtionalLeave = calculateAdditionalLeave(servicesYears);
                 if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) {
                     // PWR < 0.8 => (기본연차 + 가산연차) * PWR
-                    annualLeaveDays = formatDouble(
+                    double totalLeaveDays = formatDouble(
                         (BASE_ANNUAL_LEAVE + addtionalLeave) * prescribeWorkingRatio);
-                    explanation =
-                        "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 이상, 소정근로비율(PWR) 80% 미만이므로 "
-                            + "소정근로비율(PWR)만큼 가산 연차를 계산해 적용합니다.";
+                    AdjustedAnnualLeaveDetail adjustedAnnualLeaveDetail = AdjustedAnnualLeaveDetail.builder()
+                        .baseAnnualLeave(BASE_ANNUAL_LEAVE)
+                        .additionalLeave(addtionalLeave)
+                        .prescribedWorkingDays(prescribedWorkingDays)
+                        .excludedWorkingDays(excludedWorkingDays)
+                        .prescribeWorkingRatio(totalLeaveDays)
+                        .totalLeaveDays(totalLeaveDays)
+                        .build();
+                    result = AnnualLeaveResult.builder()
+                        .type(AnnualLeaveResultType.ADJUSTED)
+                        .hireDate(hireDate)
+                        .referenceDate(referenceDate)
+                        .calculationDetail(adjustedAnnualLeaveDetail)
+                        .explanation(HireDate.PWR_UNDER_80_AFTER_ONE_YEAR)
+                        .build();
                 } else {
                     // 기본연차 + 가산연차
-                    annualLeaveDays = BASE_ANNUAL_LEAVE + addtionalLeave;
-                    explanation =
-                        "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 이상, 소정근로비율(PWR) 80% 이상이므로 "
-                            + "근속연수에 따른 연차가 지급됩니다.";
+                    double totalLeaveDays = BASE_ANNUAL_LEAVE + addtionalLeave;
+                    FullAnnualLeaveDetail fullAnnualLeaveDetail = FullAnnualLeaveDetail.builder()
+                        .baseAnnualLeave(BASE_ANNUAL_LEAVE)
+                        .additionalLeave(addtionalLeave)
+                        .totalLeaveDays(totalLeaveDays)
+                        .build();
+                    result = AnnualLeaveResult.builder()
+                        .type(AnnualLeaveResultType.FULL)
+                        .hireDate(hireDate)
+                        .referenceDate(referenceDate)
+                        .calculationDetail(fullAnnualLeaveDetail)
+                        .explanation(HireDate.AR_AND_PWR_OVER_80_AFTER_ONE_YEAR)
+                        .build();
                 }
             }
 

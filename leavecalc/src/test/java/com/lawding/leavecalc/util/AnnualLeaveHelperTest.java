@@ -1,6 +1,7 @@
 package com.lawding.leavecalc.util;
 
 import com.lawding.leavecalc.domain.DatePeriod;
+import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -276,10 +277,10 @@ public class AnnualLeaveHelperTest {
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(6, monthlyLeave);
+            assertEquals(6, monthlyLeave.getTotalLeaveDays());
         }
 
         @Test
@@ -293,10 +294,10 @@ public class AnnualLeaveHelperTest {
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(5, monthlyLeave);
+            assertEquals(5, monthlyLeave.getTotalLeaveDays());
         }
 
         @Test
@@ -310,10 +311,10 @@ public class AnnualLeaveHelperTest {
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(6, monthlyLeave);
+            assertEquals(6, monthlyLeave.getTotalLeaveDays());
         }
 
         @Test
@@ -327,10 +328,10 @@ public class AnnualLeaveHelperTest {
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(11, monthlyLeave);
+            assertEquals(11, monthlyLeave.getTotalLeaveDays());
         }
 
         @Test
@@ -348,10 +349,10 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(11, monthlyLeave);
+            assertEquals(11, monthlyLeave.getTotalLeaveDays());
         }
 
         @Test
@@ -374,10 +375,10 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(10, monthlyLeave);
+            assertEquals(10, monthlyLeave.getTotalLeaveDays());
         }
 
         @Test
@@ -401,10 +402,10 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(10, monthlyLeave);
+            assertEquals(10, monthlyLeave.getTotalLeaveDays());
         }
 
         @Test
@@ -423,10 +424,10 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
-            assertEquals(0, monthlyLeave);
+            assertEquals(0, monthlyLeave.getTotalLeaveDays());
         }
 
 
@@ -681,10 +682,11 @@ public class AnnualLeaveHelperTest {
             int excludedWorkingDays = 0;
 
             // When
-            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,excludedWorkingDays);
+            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,
+                excludedWorkingDays);
 
             // Then
-            assertEquals(1,result);
+            assertEquals(1, result);
         }
 
         @Test
@@ -695,10 +697,114 @@ public class AnnualLeaveHelperTest {
             int excludedWorkingDays = 246;
 
             // When
-            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,excludedWorkingDays);
+            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,
+                excludedWorkingDays);
 
             // Then
-            assertEquals(0,result);
+            assertEquals(0, result);
+        }
+    }
+
+    @Nested
+    @DisplayName("기간 내 소정근로일만 추출해 DatePeriod 단위로 변환하는 함수")
+    class filterWorkingDayOnlyPeriodsTest {
+
+        @Test
+        @DisplayName("빈 리스트를 넣은 경우 빈 리스트를 반환한다")
+        void returnsEmptyList_whenInputIsEmpty() {
+            // Given
+            List<DatePeriod> periods = List.of();
+            List<LocalDate> companyHolidays = List.of();
+            List<LocalDate> statutoryHolidays = List.of();
+            // When
+            List<DatePeriod> result = filterWorkingDayOnlyPeriods(periods, companyHolidays,
+                statutoryHolidays);
+            // Then
+
+            assertTrue(result.isEmpty());
+        }
+
+        @Test
+        @DisplayName("2025년 5월의 소정근로일은 20일(주말 9일, 공휴일 2일)이다.")
+        void returns20WhenWorkingDaysInMay2025() {
+            // Given
+            List<DatePeriod> periods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2025, 5, 1),
+                    LocalDate.of(2025, 5, 6)
+                ),
+                new DatePeriod(
+                    LocalDate.of(2025, 5, 7),
+                    LocalDate.of(2025, 5, 31)
+                )
+            );
+            List<LocalDate> statutoryHolidays = List.of(
+                LocalDate.of(2025, 5, 5),
+                LocalDate.of(2025, 5, 6)
+            );
+            List<LocalDate> companyHolidays = List.of();
+            // When
+            List<DatePeriod> result = filterWorkingDayOnlyPeriods(periods, companyHolidays,
+                statutoryHolidays);
+            // Then
+            List<LocalDate> actualDates = result.stream()
+                .flatMap(p -> p.startDate().datesUntil(p.endDate().plusDays(1)))
+                .sorted()
+                .toList();
+
+            List<LocalDate> expectedDates = LocalDate.of(2025, 5, 1)
+                .datesUntil(LocalDate.of(2025, 5, 31).plusDays(1))
+                .filter(AnnualLeaveHelper::isWeekday)
+                .filter(d -> !statutoryHolidays.contains(d))
+                .sorted()
+                .toList();
+
+            assertEquals(expectedDates, actualDates);
+            assertEquals(20,actualDates.size());
+        }
+
+        @Test
+        @DisplayName("2025년 5.1 ~ 5.10 , 5.16 ~ 5.20 까지 소정근로일은 8일이다.")
+        void returns8WorkingDays_whenPeriodsAreMay1To10AndMay16To20_2025() {
+            // Given
+            List<DatePeriod> periods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2025, 5, 1),
+                    LocalDate.of(2025, 5, 10)
+                ),
+                new DatePeriod(
+                    LocalDate.of(2025, 5, 16),
+                    LocalDate.of(2025, 5, 20)
+                )
+            );
+            List<LocalDate> statutoryHolidays = List.of(
+                LocalDate.of(2025, 5, 5),
+                LocalDate.of(2025, 5, 6)
+            );
+            List<LocalDate> companyHolidays = List.of();
+            // When
+            List<DatePeriod> result = filterWorkingDayOnlyPeriods(periods, companyHolidays,
+                statutoryHolidays);
+            // Then
+            List<LocalDate> actualDates = result.stream()
+                .flatMap(p -> p.startDate().datesUntil(p.endDate().plusDays(1)))
+                .sorted()
+                .toList();
+
+            List<LocalDate> expectedDates = List.of(
+                LocalDate.of(2025, 5, 1),
+                LocalDate.of(2025, 5, 2),
+                LocalDate.of(2025, 5, 7),
+                LocalDate.of(2025, 5, 8),
+                LocalDate.of(2025, 5, 9),
+                LocalDate.of(2025, 5, 16),
+                LocalDate.of(2025, 5, 19),
+                LocalDate.of(2025, 5, 20)
+            );
+
+
+            assertEquals(expectedDates, actualDates);
+            assertEquals(8,actualDates.size());
         }
     }
 }

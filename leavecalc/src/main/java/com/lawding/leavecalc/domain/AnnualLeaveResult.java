@@ -1,4 +1,4 @@
-package com.lawding.leavecalc.domain.result;
+package com.lawding.leavecalc.domain;
 
 
 import com.lawding.leavecalc.domain.detail.CalculationDetail;

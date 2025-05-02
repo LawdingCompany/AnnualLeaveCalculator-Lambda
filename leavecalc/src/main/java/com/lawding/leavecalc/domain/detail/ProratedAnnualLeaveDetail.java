@@ -1,5 +1,11 @@
 package com.lawding.leavecalc.domain.detail;
 
-public class ProratedAnnualLeaveDetail implements CalculationDetail {
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
+@Builder
+public class ProratedAnnualLeaveDetail implements CalculationDetail {
+    // 15 * PWR
+    private final double totalLeaveDays;
 }

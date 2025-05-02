@@ -3,7 +3,7 @@ package com.lawding.leavecalc.strategy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
-import com.lawding.leavecalc.domain.result.AnnualLeaveResult;
+import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
@@ -46,7 +46,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(5, result.getAnnualLeaveDays());
+        assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(5, result.getAnnualLeaveDays());
+        assertEquals(5,  result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15, result.getAnnualLeaveDays());
+        assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(17, result.getAnnualLeaveDays());
+        assertEquals(17,  result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -146,7 +146,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(17, result.getAnnualLeaveDays());
+        assertEquals(17,  result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -171,7 +171,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15, result.getAnnualLeaveDays());
+        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15, result.getAnnualLeaveDays());
+        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -221,7 +221,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15, result.getAnnualLeaveDays());
+        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -246,7 +246,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(11, result.getAnnualLeaveDays());
+        assertEquals(11, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -271,7 +271,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15, result.getAnnualLeaveDays());
+        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -300,6 +300,6 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15, result.getAnnualLeaveDays());
+        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
     }
 }
