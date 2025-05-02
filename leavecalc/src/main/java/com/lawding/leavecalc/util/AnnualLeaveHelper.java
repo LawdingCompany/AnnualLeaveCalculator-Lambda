@@ -73,23 +73,22 @@ public class AnnualLeaveHelper {
     }
 
     /**
-     * @param startDate       시작일
-     * @param endDate         종료일
+     * @param period       [시작일, 종료일]
      * @param excludedPeriods 결근 처리 기간을 저장한 배열
      * @return 종료일 다음 날에 발생하는 월차 계산 함수 (최대 11개)
      * <p>
      * 해당 함수는 종료일을 포함해서 계산하기에 해당 월차는 종료일 + 1일 후의 발생하는 월차를 계산한다. 즉, referenceDate를 종료일로 넣을 경우,
      * referenceDate.plusDays(1)일 후에 발생하는 월차를 계산하므로 endDate = referenceDate.minusDays(1)이다.
      */
-    public static int monthlyAccruedLeaves(LocalDate startDate, LocalDate endDate,
+    public static int monthlyAccruedLeaves(DatePeriod period,
         List<DatePeriod> excludedPeriods) {
         int accruedLeaves = 0;
-        LocalDate periodStart = startDate;
+        LocalDate periodStart = period.startDate();
 
         while (accruedLeaves < MAX_MONTHLY_LEAVE) {
             LocalDate periodEnd = periodStart.plusMonths(1).minusDays(1);
 
-            if (periodEnd.isAfter(endDate)) {
+            if (periodEnd.isAfter(period.endDate())) {
                 break;
             }
             if (isFullAttendance(periodStart, periodEnd, excludedPeriods)) {

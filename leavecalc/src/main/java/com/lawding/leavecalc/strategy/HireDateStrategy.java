@@ -9,6 +9,7 @@ import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,8 @@ public final class HireDateStrategy implements CalculationStrategy {
         if (isLessThanOneYear(hireDate, referenceDate)) {
             // 입사일 1년 미만 => 월차
             List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-            annualLeaveDays = monthlyAccruedLeaves(hireDate, referenceDate, excludedPeriods);
+            DatePeriod period = new DatePeriod(hireDate, referenceDate.minusDays(1));
+            annualLeaveDays = monthlyAccruedLeaves(period, excludedPeriods);
             explanation = "산정 방식(입사일)에 따라 계산한 결과, 산정일 기준 1년 미만이므로 매월 개근 판단하여 연차가 부여됌";
         } else {
             // 입사일 1년 이상
@@ -63,8 +65,7 @@ public final class HireDateStrategy implements CalculationStrategy {
             if (attendanceRate < MINIMUM_WORK_RATIO) {
                 // AR < 0.8 => 월차 (직전 연차 산정 기간에 대한 개근 판단에 따라 연차 부여)
                 List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-                annualLeaveDays = monthlyAccruedLeaves(accrualPeriod.startDate(),
-                    accrualPeriod.endDate(), excludedPeriods);
+                annualLeaveDays = monthlyAccruedLeaves(accrualPeriod, excludedPeriods);
                 explanation = "산정 방식(입사일)에 따라 계산한 결과, 기준일 직전 연차 산정 기간에 대해 출근율(AR) 80% 미만이므로 "
                     + "매월 개근 판단하여 연차가 부여됌";
             } else {

@@ -2,6 +2,7 @@ package com.lawding.leavecalc.util;
 
 import com.lawding.leavecalc.domain.DatePeriod;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -269,12 +270,14 @@ public class AnnualLeaveHelperTest {
         @DisplayName("6개월간 결근 처리일이 없다면, 월차 6개")
         void returnsFiveMonthlyLeavesWhenOneDayShortOfSixMonths() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 6, 30);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 6, 30)
+            );
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(6, monthlyLeave);
@@ -284,12 +287,14 @@ public class AnnualLeaveHelperTest {
         @DisplayName("6개월 -1일간 결근 처리일이 없다면, 월차 5개")
         void returnsSixMonthlyLeavesWhenNoAbsenceOrExcludedPeriodInSixMonths() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 6, 29);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 6, 29)
+            );
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(5, monthlyLeave);
@@ -299,12 +304,14 @@ public class AnnualLeaveHelperTest {
         @DisplayName("6개월 +1일간 결근 처리일이 없다면, 월차 6개")
         void returnsSixMonthlyLeavesWhenMoreThanSixMonthsByOneDay() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 7, 1);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 7, 1)
+            );
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(6, monthlyLeave);
@@ -314,12 +321,14 @@ public class AnnualLeaveHelperTest {
         @DisplayName("1년간 결근 처리일이 없다면, 월차 11개")
         void returnsElevenWhenNoAbsenceOrExcludedPeriodInOneYear() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 12, 31);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31)
+            );
             List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(11, monthlyLeave);
@@ -329,8 +338,10 @@ public class AnnualLeaveHelperTest {
         @DisplayName("1년간 결근 처리일이 N월에 있다면, 월차 11개")
         void returnsElevenWhenAbsentDaysAreOneInOneYearPeriod() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 12, 31);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31)
+            );
             List<DatePeriod> excludedPeriods = List.of(new DatePeriod(
                     LocalDate.of(2024, 5, 1),
                     LocalDate.of(2024, 5, 1)
@@ -338,7 +349,7 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(11, monthlyLeave);
@@ -348,8 +359,10 @@ public class AnnualLeaveHelperTest {
         @DisplayName("1년간 결근 처리일이 5, 8월에 있다면, 월차 10개")
         void returnsTenWhenAbsentDaysOccurInMayAndAugust() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 12, 31);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31)
+            );
             List<DatePeriod> excludedPeriods = List.of(
                 new DatePeriod(
                     LocalDate.of(2024, 5, 2),
@@ -362,7 +375,7 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(10, monthlyLeave);
@@ -372,8 +385,11 @@ public class AnnualLeaveHelperTest {
         @DisplayName("1년간 결근 처리일이 연달아(5, 6월)있다면, 월차 10개")
         void returnsTenWhenAbsentDaysOccurInMayAndJune() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 12, 31);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31)
+            );
+
             List<DatePeriod> excludedPeriods = List.of(
                 new DatePeriod(
                     LocalDate.of(2024, 5, 2),
@@ -386,7 +402,7 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(10, monthlyLeave);
@@ -396,8 +412,10 @@ public class AnnualLeaveHelperTest {
         @DisplayName("1년간 결근 처리일이 모든 달에 있으면, 월차 0개")
         void returnsZeroWhenAbsentDaysExistInEveryMonth() {
             // Given
-            LocalDate startDate = LocalDate.of(2024, 1, 1);
-            LocalDate endDate = LocalDate.of(2024, 12, 31);
+            DatePeriod period = new DatePeriod(
+                LocalDate.of(2024, 1, 1),
+                LocalDate.of(2024, 12, 31)
+            );
             List<DatePeriod> excludedPeriods = List.of(
                 new DatePeriod(
                     LocalDate.of(2024, 1, 1),
@@ -406,7 +424,7 @@ public class AnnualLeaveHelperTest {
             );
 
             // When
-            int monthlyLeave = monthlyAccruedLeaves(startDate, endDate, excludedPeriods);
+            int monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
 
             // Then
             assertEquals(0, monthlyLeave);
