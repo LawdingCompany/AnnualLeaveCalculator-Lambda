@@ -16,7 +16,7 @@ import java.util.List;
 public class HolidayJdbcRepository {
 
     private static final String SQL_FIND_HOLIDAYS = """
-            SELECT holiday_date, holiday_name FROM holidays
+            SELECT DISTINCT holiday_date FROM holidays
             WHERE holiday_date BETWEEN ? AND ?
         """;
 

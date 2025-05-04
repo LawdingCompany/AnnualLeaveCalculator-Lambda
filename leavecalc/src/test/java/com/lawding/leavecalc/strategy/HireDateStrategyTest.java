@@ -3,6 +3,7 @@ package com.lawding.leavecalc.strategy;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
+import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.util.List;
@@ -62,7 +63,7 @@ public class HireDateStrategyTest {
 
     @Nested
     @DisplayName("입사일 1년 미만인 경우(월차)")
-    class LessThanOneYearHireTests {
+    class LessThanOneYearHireDateTests {
 
         @Test
         @DisplayName("6개월간(+a일) 개근한 근로자는 6개의 월차가 발생한다.")
@@ -70,11 +71,11 @@ public class HireDateStrategyTest {
             // Given
             LocalDate hireDate = LocalDate.of(2024, 7, 1);
             LocalDate referenceDate = LocalDate.of(2025, 1, 1);
-            List<DatePeriod> excludedPeriods = List.of();
+            List<DatePeriod> absentPeriods = List.of();
             AnnualLeaveContext context = AnnualLeaveContext.builder()
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
-                .nonWorkingPeriods(Map.of(2, excludedPeriods))
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
                 .companyHolidays(List.of())
                 .build();
             // When
@@ -91,11 +92,11 @@ public class HireDateStrategyTest {
             // Given
             LocalDate hireDate = LocalDate.of(2024, 7, 1);
             LocalDate referenceDate = LocalDate.of(2024, 12, 31);
-            List<DatePeriod> excludedPeriods = List.of();
+            List<DatePeriod> absentPeriods = List.of();
             AnnualLeaveContext context = AnnualLeaveContext.builder()
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
-                .nonWorkingPeriods(Map.of(2, excludedPeriods))
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
                 .companyHolidays(List.of())
                 .build();
             // When
@@ -111,11 +112,11 @@ public class HireDateStrategyTest {
             // Given
             LocalDate hireDate = LocalDate.of(2024, 7, 1);
             LocalDate referenceDate = LocalDate.of(2025, 6, 10);
-            List<DatePeriod> excludedPeriods = List.of();
+            List<DatePeriod> absentPeriods = List.of();
             AnnualLeaveContext context = AnnualLeaveContext.builder()
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
-                .nonWorkingPeriods(Map.of(2, excludedPeriods))
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
                 .companyHolidays(List.of())
                 .build();
             // When
@@ -131,7 +132,7 @@ public class HireDateStrategyTest {
             // Given
             LocalDate hireDate = LocalDate.of(2024, 7, 1);
             LocalDate referenceDate = LocalDate.of(2025, 1, 1);
-            List<DatePeriod> excludedPeriods = List.of(
+            List<DatePeriod> absentPeriods = List.of(
                 new DatePeriod(
                     LocalDate.of(2024, 8, 2),
                     LocalDate.of(2024, 8, 8)
@@ -140,7 +141,7 @@ public class HireDateStrategyTest {
             AnnualLeaveContext context = AnnualLeaveContext.builder()
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
-                .nonWorkingPeriods(Map.of(2, excludedPeriods))
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
                 .companyHolidays(List.of())
                 .build();
             // When
@@ -149,13 +150,14 @@ public class HireDateStrategyTest {
             // Then
             assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
         }
+
         @Test
         @DisplayName("6개월 중 결근이 있는 날이 휴일(주말/공휴일)이면 6개의 월차가 발생한다.")
-        void return5WhenOneMonthHasAbsenceWithin6Months() {
+        void return6WhenAbsenceIsOnHolidayWithin6Months() {
             // Given
             LocalDate hireDate = LocalDate.of(2024, 7, 1);
             LocalDate referenceDate = LocalDate.of(2025, 1, 1);
-            List<DatePeriod> excludedPeriods = List.of(
+            List<DatePeriod> absentPeriods = List.of(
                 new DatePeriod(
                     LocalDate.of(2024, 8, 3), // 토
                     LocalDate.of(2024, 8, 4)  // 일
@@ -168,7 +170,7 @@ public class HireDateStrategyTest {
             AnnualLeaveContext context = AnnualLeaveContext.builder()
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
-                .nonWorkingPeriods(Map.of(2, excludedPeriods))
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
                 .companyHolidays(List.of())
                 .build();
             // When
@@ -180,190 +182,618 @@ public class HireDateStrategyTest {
 
     }
 
-    @Test
-    void 입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다() {
-        // given
-        LocalDate hireDate = LocalDate.of(2024, 7, 1);
-        LocalDate referenceDate = LocalDate.of(2025, 1, 1);
-        List<DatePeriod> excludedPeriods = List.of();
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
 
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+    @Nested
+    @DisplayName("입사일 1년 이상인 경우")
+    class AfterThanOneYearHireDateTests {
 
-        //then
-        assertEquals(6, result.getCalculationDetail().getTotalLeaveDays());
+        @Test
+        @DisplayName("AR & PWR 80% 이상인 1년 차 근로자의 연차 개수는 15개이다.")
+        void return15WhenFirstYearEmployeeHasARAndPWROver80Percent() {
+            // Given
+            LocalDate hireDate = LocalDate.of(2024, 1, 1);
+            LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+            List<DatePeriod> absentPeriods = List.of();
+            AnnualLeaveContext context = AnnualLeaveContext.builder()
+                .hireDate(hireDate)
+                .referenceDate(referenceDate)
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
+                .companyHolidays(List.of())
+                .build();
+            // When
+            AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+            // Then
+            FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
+            DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
+
+            assertEquals(LocalDate.of(2024, 1, 1), accrualPeriod.startDate());
+            assertEquals(LocalDate.of(2024, 12, 31), accrualPeriod.endDate());
+            assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+        }
+
+        @Test
+        @DisplayName("AR & PWR 80% 이상인 3년 차 근로자의 연차 개수는 16개이다.")
+        void return16WhenThreeYearsEmployeeHasARAndPWROver80Percent() {
+            // Given
+            LocalDate hireDate = LocalDate.of(2024, 1, 1);
+            LocalDate referenceDate = LocalDate.of(2027, 1, 1);
+            List<DatePeriod> absentPeriods = List.of();
+            AnnualLeaveContext context = AnnualLeaveContext.builder()
+                .hireDate(hireDate)
+                .referenceDate(referenceDate)
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
+                .companyHolidays(List.of())
+                .build();
+            // When
+            AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+            // Then
+            FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
+            DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
+
+            assertEquals(LocalDate.of(2026, 1, 1), accrualPeriod.startDate());
+            assertEquals(LocalDate.of(2026, 12, 31), accrualPeriod.endDate());
+            assertEquals(16, result.getCalculationDetail().getTotalLeaveDays());
+        }
+
+        @Test
+        @DisplayName("AR & PWR 80% 이상인 23년 차 근로자의 연차 개수는 25개(최대)이다.")
+        void return25WhenTwentyFiveYearsEmployeeHasARAndPWROver80Percent() {
+            // Given
+            LocalDate hireDate = LocalDate.of(2001, 1, 1);
+            LocalDate referenceDate = LocalDate.of(2024, 1, 1);
+            List<DatePeriod> absentPeriods = List.of();
+            AnnualLeaveContext context = AnnualLeaveContext.builder()
+                .hireDate(hireDate)
+                .referenceDate(referenceDate)
+                .nonWorkingPeriods(Map.of(2, absentPeriods))
+                .companyHolidays(List.of())
+                .build();
+            // When
+            AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+            // Then
+            FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
+            DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
+
+            assertEquals(LocalDate.of(2023, 1, 1), accrualPeriod.startDate());
+            assertEquals(LocalDate.of(2023, 12, 31), accrualPeriod.endDate());
+            assertEquals(25, result.getCalculationDetail().getTotalLeaveDays());
+        }
+
+        @Nested
+        @DisplayName("출근율(AR) 분기(경계값) 테스트")
+        class AttendanceRateBoundaryTests {
+
+            @Test
+            @DisplayName("2024년 6 ~ 8월 중 소정근로일 50일을 결근한 경우, 출근율(AR)이 79.67%이므로 월차는 9개다.")
+            void return9WhenEmployeeHasARUnder80Percent() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(List.of())
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 6 ~ 8월 중 결근 기간(소정근로일 50일)을 겹쳐서 기간 기재한 경우, 출근율(AR)이 79.67%이므로 월차는 9개다.")
+            void return9WhenEmployeeHasARUnder80PercentAndOverlapDuration50s() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 7, 29)
+                    ),
+                    new DatePeriod(
+                        LocalDate.of(2024, 7, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(List.of())
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 외 회사 휴일이 1일인 경우, 출근율(AR)이 79.59%이므로 월차는 9개다.")
+            void return9WhenEmployeeHasARUnder80PercentCase1() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 14)
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 외 회사 휴일이 2일(주말 1일)인 경우, 출근율(AR)이 79.59%이므로 월차는 9개다.")
+            void return9WhenEmployeeHasARUnder80PercentCase2() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 14),
+                    LocalDate.of(2024, 8, 17)   // 토
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 외 회사 휴일이 2일(공휴일 1일)인 경우, 출근율(AR)이 79.59%이므로 월차는 9개다.")
+            void return9WhenEmployeeHasARUnder80PercentCase3() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 14),
+                    LocalDate.of(2024, 8, 15) // 법정공휴일
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 회사 휴일이 1일인 경우, 출근율(AR)이 80%이므로 연차는 15개다.")
+            void return15WhenEmployeeHasARIsExactly80PercentCase1() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 1)
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 회사 휴일이 2일(주말 1일)인 경우, 출근율(AR)이 80%이므로 연차는 15개다.")
+            void return15WhenEmployeeHasARIsExactly80PercentCase2() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 1),
+                    LocalDate.of(2024, 8, 3) // 토요일
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 회사 휴일이 2일(법정공휴일 1일)인 경우, 출근율(AR)이 80%이므로 연차는 15개다.")
+            void return15WhenEmployeeHasARIsExactly80PercentCase3() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 6, 6), // 법정공휴일
+                    LocalDate.of(2024, 8, 1)
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(2, absentPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+            }
+        }
+
+        @Nested
+        @DisplayName("소정근로비율(PWR) 분기(경계값) 테스트")
+        class PrescribeWorkingRatioBoundaryTests {
+
+            @Test
+            @DisplayName("1년차 근로자의 소정근로제외일 수가 50일인 경우, 소정근로비율(PWR)은 79.67%이므로 비례삭감하여 적용한다.")
+            void returnProratedLeaveWhenFirstYearAndPWRIsUnder80Percent() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of();
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(11.96, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("3년차 근로자의 소정근로제외일 수가 50일인 경우, 소정근로비율(PWR)은 79.67%이므로 비례삭감하여 적용한다.")
+            void returnProratedLeaveWhenThirdYearAndPWRIsUnder80Percent() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2022, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of();
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(12.75, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("23년차 근로자의 소정근로제외일 수가 50일인 경우, 소정근로비율(PWR)은 79.67%이므로 비례삭감하여 적용한다.")
+            void returnProratedLeaveWhenTwentyThirdYearAndPWRIsUnder80Percent() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2002, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of();
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(19.92, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 6 ~ 8월 중 소정근로제외 기간(소정근로일 50일)을 겹쳐서 기간 기재한 경우, 소정근로비율(PWR)이 79.67%이므로 비례삭감하여 적용한다.")
+            void returnProratedLeaveWhenOverlappingExcludedPeriodsEqual50Days() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 7, 29)
+                    ),
+                    new DatePeriod(
+                        LocalDate.of(2024, 7, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(List.of())
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(11.96, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 외 회사 휴일이 1일인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
+            void returnProratedLeaveWhenPWRIsUnder80PercentWith1CompanyHoliday() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 14)
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 외 회사 휴일이 2일(주말 1일)인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
+            void returnProratedLeaveWhenPWRIsUnder80PercentWith2CompanyHolidaysIncludingWeekend() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 14),
+                    LocalDate.of(2024, 8, 17)   // 토
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 외 회사 휴일이 2일(공휴일 1일)인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
+            void returnProratedLeaveWhenPWRIsUnder80PercentWith1PublicHoliday() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 14),
+                    LocalDate.of(2024, 8, 15) // 법정공휴일
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 내 회사 휴일이 1일인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
+            void return15WhenPWRIsExactly80With1CompanyHolidayInExcludedPeriod() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 1)
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 회사 휴일이 2일(주말 1일)인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
+            void return15WhenPWRIsExactly80With2CompanyHolidaysIncludingWeekend() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 8, 1),
+                    LocalDate.of(2024, 8, 3) // 토요일
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 회사 휴일이 2일(법정공휴일 1일)인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
+            void return15WhenPWRIsExactly80With1PublicHolidayInExcludedPeriod() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<LocalDate> companyHolidays = List.of(
+                    LocalDate.of(2024, 6, 6), // 법정공휴일
+                    LocalDate.of(2024, 8, 1)
+                );
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(3, excludedPeriods))
+                    .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+            }
+        }
     }
 
-    @Test
-    void 입사일_1년미만_개근한_근로자는_월차_최댓값() {
-        // given
-        LocalDate hireDate = LocalDate.of(2024, 1, 1);
-        LocalDate referenceDate = LocalDate.of(2024, 12, 31);
-        List<DatePeriod> excludedPeriods = List.of();
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
-
-//        when(holidayRepository.findWeekdayHolidays(any()))
-//            .thenReturn(List.of());
-
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
-
-        //then
-        assertEquals(11, result.getCalculationDetail().getTotalLeaveDays());
-    }
-
-    @Test
-    void 입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다_경계값() {
-        // given
-        LocalDate hireDate = LocalDate.of(2024, 1, 1);
-        LocalDate referenceDate = LocalDate.of(2024, 6, 30);
-        List<DatePeriod> excludedPeriods = List.of();
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
-
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
-
-        //then
-        assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
-    }
-
-    @Test
-    void 입사일_1년미만_결근이_있는_달은_연차가_발생하지_않는다() {
-        // given
-        LocalDate hireDate = LocalDate.of(2024, 1, 1);
-        LocalDate referenceDate = LocalDate.of(2024, 7, 1);
-        List<DatePeriod> excludedPeriods = List.of(new DatePeriod(
-                LocalDate.of(2024, 4, 2),
-                LocalDate.of(2024, 5, 20)
-            )
-        );
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
-
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
-
-        //then
-        assertEquals(4, result.getCalculationDetail().getTotalLeaveDays());
-    }
-
-    @Test
-    void 입사일_1년이상_근로자의_일반적인_연차_개수_가산연차없음() {
-        // given
-        LocalDate hireDate = LocalDate.of(2022, 7, 1);
-        LocalDate referenceDate = LocalDate.of(2025, 1, 1);
-        List<DatePeriod> excludedPeriods = List.of();
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
-
-//        when(holidayRepository.findWeekdayHolidays(any()))
-//            .thenReturn(List.of());
-
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
-
-        //then
-        assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
-    }
-
-    @Test
-    void 입사일_1년이상_근로자의_일반적인_연차_개수_가산연차있음() {
-        // given
-        LocalDate hireDate = LocalDate.of(2018, 7, 1);
-        LocalDate referenceDate = LocalDate.of(2025, 1, 1);
-        List<DatePeriod> excludedPeriods = List.of();
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
-
-//        when(holidayRepository.findWeekdayHolidays(any()))
-//            .thenReturn(List.of());
-
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
-
-        //then
-        assertEquals(17, result.getCalculationDetail().getTotalLeaveDays());
-    }
-
-    @Test
-    void 입사일_1년미만_결근이있는경우_그게주말인경우_고려해야함() {
-        // given
-        LocalDate hireDate = LocalDate.of(2024, 7, 1);
-        LocalDate referenceDate = LocalDate.of(2025, 4, 1);
-        List<DatePeriod> excludedPeriods = List.of(
-            new DatePeriod(
-                LocalDate.of(2024, 7, 7), // 일요일
-                LocalDate.of(2024, 7, 7)
-            )
-        );
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
-
-//        when(holidayRepository.findWeekdayHolidays(any()))
-//            .thenReturn(List.of());
-
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
-
-        //then
-        assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
-    }
-
-
-    @Test
-    void 입사일_1년이상_출근율이_80퍼미만일때() {
-        // given
-        LocalDate hireDate = LocalDate.of(2024, 1, 1);
-        LocalDate referenceDate = LocalDate.of(2025, 4, 1);
-        List<DatePeriod> excludedPeriods = List.of(
-            new DatePeriod(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 4, 30))
-        );
-        AnnualLeaveContext context = AnnualLeaveContext.builder()
-            .hireDate(hireDate)
-            .referenceDate(referenceDate)
-            .nonWorkingPeriods(Map.of(2, excludedPeriods))
-            .companyHolidays(List.of())
-            .build();
-
-//        when(holidayRepository.findWeekdayHolidays(any()))
-//            .thenReturn(List.of());
-
-        // when
-        AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
-
-        //then
-        assertEquals(8, result.getCalculationDetail().getTotalLeaveDays());
-    }
 }

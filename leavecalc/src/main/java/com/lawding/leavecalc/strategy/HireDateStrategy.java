@@ -41,11 +41,11 @@ public final class HireDateStrategy implements CalculationStrategy {
             // 입사일 1년 미만 => 월차
             List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(
                 new DatePeriod(hireDate, referenceDate));
-            List<DatePeriod> excludedPeriods =
+            List<DatePeriod> absentPeriods =
                 filterWorkingDayOnlyPeriods(nonWorkingPeriods.getOrDefault(2, List.of()),
                     companyHolidays, holidays);
             DatePeriod period = new DatePeriod(hireDate, referenceDate.minusDays(1));
-            MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(period, absentPeriods);
             result = AnnualLeaveResult.builder()
                 .type(AnnualLeaveResultType.MONTHLY)
                 .hireDate(hireDate)
@@ -72,11 +72,11 @@ public final class HireDateStrategy implements CalculationStrategy {
                 excludedWorkingDays);
             if (attendanceRate < MINIMUM_WORK_RATIO) {
                 // AR < 0.8 => 월차 (직전 연차 산정 기간에 대한 개근 판단에 따라 연차 부여)
-                List<DatePeriod> excludedPeriods =
+                List<DatePeriod> absentPeriods =
                     filterWorkingDayOnlyPeriods(nonWorkingPeriods.getOrDefault(2, List.of()),
                         companyHolidays, holidays);
                 MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(accrualPeriod,
-                    excludedPeriods);
+                    absentPeriods);
                 result = AnnualLeaveResult.builder()
                     .type(AnnualLeaveResultType.MONTHLY)
                     .hireDate(hireDate)
@@ -110,6 +110,7 @@ public final class HireDateStrategy implements CalculationStrategy {
                     // 기본연차 + 가산연차
                     double totalLeaveDays = BASE_ANNUAL_LEAVE + addtionalLeave;
                     FullAnnualLeaveDetail fullAnnualLeaveDetail = FullAnnualLeaveDetail.builder()
+                        .accrualPeriod(accrualPeriod)
                         .baseAnnualLeave(BASE_ANNUAL_LEAVE)
                         .additionalLeave(addtionalLeave)
                         .totalLeaveDays(totalLeaveDays)
