@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="test : 산정방식(입사일) 테스트 코드 작성 완료&#10;&#10;- HireDateStrategyTest 코드 작성 완료&#10;- 입사일 1년 미만인 경우 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 출근율(AR)별 분기 및 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 소정근로일(PWR)별 분기 및 경계값 테스트 완료&#10;- 각각의 경우의 수에 대해 주말, 법정 공휴일, 회사 휴일 모두 대입한 경우 테스트 완료">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/constant/AnnualLeaveMessages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/constant/AnnualLeaveMessages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/AdjustedAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/AdjustedAnnualLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/FullAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/FullAnnualLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyProratedAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyProratedAnnualLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/ProratedAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/ProratedAnnualLeaveDetail.java" afterDir="false" />
+    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveHelperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveHelperTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -347,7 +346,7 @@
       <workItem from="1746186309787" duration="14536000" />
       <workItem from="1746211118511" duration="244000" />
       <workItem from="1746261375273" duration="2157000" />
-      <workItem from="1746355311315" duration="21092000" />
+      <workItem from="1746355311315" duration="23849000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
       <option name="closed" value="true" />
@@ -421,7 +420,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746375341985</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행">
+      <option name="closed" value="true" />
+      <created>1746392200773</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1746392200773</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,18 +457,8 @@
     <MESSAGE value="feat : 산정방식(입사일)의 결과 상세 정보 추가 &amp; 기간 리스트 중 소정근로일만 추출하는 함수 추가 및 테스트 코드 작성&#10;&#10;- 기간 리스트(결근처리, 소정근로제외일)에 대해 실제 출근일만 추출하는 함수 추가&#10;- 개근 여부 판단 함수 정확성 증가&#10;- 산정 결과 유형(5가지) 중 3가지에 대해 결과 상세 정보 출력 객체 생성" />
     <MESSAGE value="test : 산정방식(입사일) 테스트 코드 작성" />
     <MESSAGE value="test : 산정방식(입사일) 테스트 코드 작성 완료&#10;&#10;- HireDateStrategyTest 코드 작성 완료&#10;- 입사일 1년 미만인 경우 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 출근율(AR)별 분기 및 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 소정근로일(PWR)별 분기 및 경계값 테스트 완료&#10;- 각각의 경우의 수에 대해 주말, 법정 공휴일, 회사 휴일 모두 대입한 경우 테스트 완료" />
-    <option name="LAST_COMMIT_MESSAGE" value="test : 산정방식(입사일) 테스트 코드 작성 완료&#10;&#10;- HireDateStrategyTest 코드 작성 완료&#10;- 입사일 1년 미만인 경우 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 출근율(AR)별 분기 및 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 소정근로일(PWR)별 분기 및 경계값 테스트 완료&#10;- 각각의 경우의 수에 대해 주말, 법정 공휴일, 회사 휴일 모두 대입한 경우 테스트 완료" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>91</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

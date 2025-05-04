@@ -1,6 +1,8 @@
 package com.lawding.leavecalc.strategy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;
@@ -10,11 +12,15 @@ import java.time.LocalDate;
 import java.time.MonthDay;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 @ExtendWith(MockitoExtension.class)
 public class FiscalYearStrategyTest {
 
@@ -23,6 +29,66 @@ public class FiscalYearStrategyTest {
 
     @InjectMocks
     FiscalYearStrategy fiscalYearStrategy;
+
+    private static List<LocalDate> getHolidayList() {
+        return List.of(
+            LocalDate.of(2024, 1, 1),
+            LocalDate.of(2024, 2, 9),
+            LocalDate.of(2024, 2, 10),
+            LocalDate.of(2024, 2, 11),
+            LocalDate.of(2024, 2, 12),
+            LocalDate.of(2024, 3, 1),
+            LocalDate.of(2024, 4, 10),
+            LocalDate.of(2024, 5, 5),
+            LocalDate.of(2024, 5, 6),
+            LocalDate.of(2024, 5, 15),
+            LocalDate.of(2024, 6, 6),
+            LocalDate.of(2024, 8, 15),
+            LocalDate.of(2024, 9, 16),
+            LocalDate.of(2024, 9, 17),
+            LocalDate.of(2024, 9, 18),
+            LocalDate.of(2024, 10, 1),
+            LocalDate.of(2024, 10, 3),
+            LocalDate.of(2024, 10, 9),
+            LocalDate.of(2024, 12, 25)
+        );
+    }
+
+    @BeforeEach
+    void setUp() {
+        when(holidayRepository.findWeekdayHolidays(any(DatePeriod.class))).thenReturn(
+            getHolidayList());
+    }
+
+    @Nested
+    @DisplayName("산정기준일이 첫 정기 회계연도 이전인 경우")
+    class BeforeFirstRegularFiscalYearTests {
+
+        @Test
+        @DisplayName("산정기준일이 입사일과 같은 회계연도인 경우")
+        void returnMonthlyLeaveWhenReferenceDateIsInSameFiscalYear(){
+            // Given
+            LocalDate hireDate = LocalDate.of(2024, 7, 1);
+            LocalDate referenceDate = LocalDate.of(2024, 12, 1);
+            MonthDay fiscalYear = MonthDay.of(1, 1);
+            List<DatePeriod> excludedPeriods = List.of();
+            AnnualLeaveContext context = AnnualLeaveContext.builder()
+                .hireDate(hireDate)
+                .referenceDate(referenceDate)
+                .fiscalYear(fiscalYear)
+                .nonWorkingPeriods(Map.of(2, excludedPeriods))
+                .companyHolidays(List.of())
+                .build();
+
+
+            // When
+            AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
+
+            //Then
+            assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
+        }
+
+    }
 
     @Test
     void 입사일_1년미만_첫_회계연도_도래_이전_회계연도_시작일과_동일하지_않은_경우() {
@@ -71,7 +137,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(5,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -121,7 +187,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(17,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(17, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -146,7 +212,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(17,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(17, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -171,7 +237,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -196,7 +262,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -221,7 +287,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -271,7 +337,7 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
     }
 
     @Test
@@ -300,6 +366,6 @@ public class FiscalYearStrategyTest {
         AnnualLeaveResult result = fiscalYearStrategy.annualLeaveCalculate(context);
 
         //then
-        assertEquals(15,  result.getCalculationDetail().getTotalLeaveDays());
+        assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
     }
 }

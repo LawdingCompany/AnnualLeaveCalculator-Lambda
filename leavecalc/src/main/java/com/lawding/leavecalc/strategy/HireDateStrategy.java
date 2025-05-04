@@ -37,7 +37,7 @@ public final class HireDateStrategy implements CalculationStrategy {
         Map<Integer, List<DatePeriod>> nonWorkingPeriods = annualLeaveContext.getNonWorkingPeriods();
         List<LocalDate> companyHolidays = annualLeaveContext.getCompanyHolidays();
         AnnualLeaveResult result = null;
-        if (isLessThanOneYear(hireDate, referenceDate)) {
+        if (isBeforeOneYearFromHireDate(hireDate, referenceDate)) {
             // 입사일 1년 미만 => 월차
             List<LocalDate> holidaysWithinMonthlyLeaveAccrualPeriod = holidayRepository.findWeekdayHolidays(
                 new DatePeriod(hireDate, referenceDate));

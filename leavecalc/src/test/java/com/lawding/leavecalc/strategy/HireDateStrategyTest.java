@@ -63,7 +63,7 @@ public class HireDateStrategyTest {
 
     @Nested
     @DisplayName("입사일 1년 미만인 경우(월차)")
-    class LessThanOneYearHireDateTests {
+    class BeforeOneYearFromHireDateTests {
 
         @Test
         @DisplayName("6개월간(+a일) 개근한 근로자는 6개의 월차가 발생한다.")
@@ -82,8 +82,8 @@ public class HireDateStrategyTest {
             AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
             // Then
-            assertEquals(6, result.getCalculationDetail().getTotalLeaveDays());
             verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
+            assertEquals(6, result.getCalculationDetail().getTotalLeaveDays());
         }
 
         @Test
@@ -103,6 +103,7 @@ public class HireDateStrategyTest {
             AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
             // Then
+            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
             assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
         }
 
@@ -123,6 +124,7 @@ public class HireDateStrategyTest {
             AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
             // Then
+            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
             assertEquals(11, result.getCalculationDetail().getTotalLeaveDays());
         }
 
@@ -148,6 +150,7 @@ public class HireDateStrategyTest {
             AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
             // Then
+            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
             assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
         }
 
@@ -177,6 +180,7 @@ public class HireDateStrategyTest {
             AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
             // Then
+            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
             assertEquals(6, result.getCalculationDetail().getTotalLeaveDays());
         }
 
@@ -207,6 +211,7 @@ public class HireDateStrategyTest {
             FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
             DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
 
+            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
             assertEquals(LocalDate.of(2024, 1, 1), accrualPeriod.startDate());
             assertEquals(LocalDate.of(2024, 12, 31), accrualPeriod.endDate());
             assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
@@ -232,6 +237,7 @@ public class HireDateStrategyTest {
             FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
             DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
 
+            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
             assertEquals(LocalDate.of(2026, 1, 1), accrualPeriod.startDate());
             assertEquals(LocalDate.of(2026, 12, 31), accrualPeriod.endDate());
             assertEquals(16, result.getCalculationDetail().getTotalLeaveDays());
@@ -257,6 +263,7 @@ public class HireDateStrategyTest {
             FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
             DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
 
+            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
             assertEquals(LocalDate.of(2023, 1, 1), accrualPeriod.startDate());
             assertEquals(LocalDate.of(2023, 12, 31), accrualPeriod.endDate());
             assertEquals(25, result.getCalculationDetail().getTotalLeaveDays());
@@ -289,6 +296,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -319,6 +327,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -348,6 +357,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -378,6 +388,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -408,6 +419,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -437,6 +449,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -467,6 +480,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -497,6 +511,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
             }
         }
@@ -529,6 +544,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(11.96, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -556,6 +572,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(12.75, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -583,6 +600,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(19.92, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -613,6 +631,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(11.96, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -642,6 +661,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -672,6 +692,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -702,6 +723,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -731,6 +753,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -761,6 +784,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -791,6 +815,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
             }
         }

@@ -48,7 +48,7 @@ public class AnnualLeaveHelperTest {
             LocalDate referenceDate = LocalDate.of(2025, 1, 31);
 
             // when
-            boolean result = isLessThanOneYear(hireDate, referenceDate);
+            boolean result = isBeforeOneYearFromHireDate(hireDate, referenceDate);
 
             // then
             assertTrue(result);
@@ -62,7 +62,7 @@ public class AnnualLeaveHelperTest {
             LocalDate referenceDate = LocalDate.of(2025, 2, 1);
 
             // when
-            boolean result = isLessThanOneYear(hireDate, referenceDate);
+            boolean result = isBeforeOneYearFromHireDate(hireDate, referenceDate);
 
             // then
             assertFalse(result);
@@ -76,7 +76,7 @@ public class AnnualLeaveHelperTest {
             LocalDate referenceDate = LocalDate.of(2025, 2, 2);
 
             // when
-            boolean result = isLessThanOneYear(hireDate, referenceDate);
+            boolean result = isBeforeOneYearFromHireDate(hireDate, referenceDate);
 
             // then
             assertFalse(result);

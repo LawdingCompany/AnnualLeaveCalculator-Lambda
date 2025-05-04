@@ -46,7 +46,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         if (referenceDate.isBefore(firstRegularFiscalYearStartDate)) {
             // 기준일 < 첫 정기 회계연도
             DatePeriod nextFiscalYear = getNextFiscalYears(hireDate, fiscalYear);
-            DatePeriod monthlyLeaveAccrualPeriod = isLessThanOneYear(hireDate, referenceDate)
+            DatePeriod monthlyLeaveAccrualPeriod = isBeforeOneYearFromHireDate(hireDate, referenceDate)
                 ? new DatePeriod(hireDate, referenceDate.minusDays(1))
                 : new DatePeriod(hireDate, hireDate.plusYears(1).minusDays(1));
             List<LocalDate> holidaysWithinMonthlyLeaveAccrualPeriod = holidayRepository.findWeekdayHolidays(
@@ -102,7 +102,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                         prescribedWorkingDaysByPrevFiscalYear);
                     double proratedLeave = formatDouble(BASE_ANNUAL_LEAVE * prescribeWorkingRatio);
 
-                    if (isLessThanOneYear(hireDate, referenceDate)) {
+                    if (isBeforeOneYearFromHireDate(hireDate, referenceDate)) {
                         MonthlyProratedAnnualLeaveDetail monthlyProratedAnnualLeaveDetail =
                             MonthlyProratedAnnualLeaveDetail.builder()
                                 .monthlyLeaveAccrualPeriod(monthlyLeaveAccrualPeriod)

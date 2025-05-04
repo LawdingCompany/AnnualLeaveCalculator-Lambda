@@ -7,7 +7,6 @@ import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +27,7 @@ public class AnnualLeaveHelper {
      * @param referenceDate 기준일
      * @return 근속연수가 1년 미만인가
      */
-    public static boolean isLessThanOneYear(LocalDate hireDate, LocalDate referenceDate) {
+    public static boolean isBeforeOneYearFromHireDate(LocalDate hireDate, LocalDate referenceDate) {
         return referenceDate.isBefore(hireDate.plusYears(1));
     }
 
