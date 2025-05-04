@@ -1,9 +1,9 @@
 package com.lawding.leavecalc.strategy;
 
+import static com.lawding.leavecalc.constant.AnnualLeaveMessages.*;
 import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
-import com.lawding.leavecalc.constant.AnnualLeaveMessages.*;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.detail.AdjustedAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
@@ -39,33 +39,33 @@ public final class HireDateStrategy implements CalculationStrategy {
         AnnualLeaveResult result = null;
         if (isLessThanOneYear(hireDate, referenceDate)) {
             // 입사일 1년 미만 => 월차
-            List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(
+            List<LocalDate> holidaysWithinMonthlyLeaveAccrualPeriod = holidayRepository.findWeekdayHolidays(
                 new DatePeriod(hireDate, referenceDate));
             List<DatePeriod> absentPeriods =
                 filterWorkingDayOnlyPeriods(nonWorkingPeriods.getOrDefault(2, List.of()),
-                    companyHolidays, holidays);
-            DatePeriod period = new DatePeriod(hireDate, referenceDate.minusDays(1));
-            MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(period, absentPeriods);
+                    companyHolidays, holidaysWithinMonthlyLeaveAccrualPeriod);
+            DatePeriod monthlyLeaveAccrualPeriod = new DatePeriod(hireDate, referenceDate.minusDays(1));
+            MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(monthlyLeaveAccrualPeriod, absentPeriods);
             result = AnnualLeaveResult.builder()
                 .type(AnnualLeaveResultType.MONTHLY)
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
                 .calculationDetail(monthlyLeaveDetail)
-                .explanation(HireDate.LESS_THAN_ONE_YEAR)
+                .explanation(LESS_THAN_ONE_YEAR)
                 .build();
         } else {
             // 입사일 1년 이상
             DatePeriod accrualPeriod = getAccrualPeriod(hireDate, referenceDate);
-            List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
+            List<LocalDate> holidaysWithinAccrualPeriod = holidayRepository.findWeekdayHolidays(accrualPeriod);
             int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
-                companyHolidays, holidays);
+                companyHolidays, holidaysWithinAccrualPeriod);
             int absentDays = calculatePrescribedWorkingDaysWithinPeriods(
                 nonWorkingPeriods.getOrDefault(2, List.of()), accrualPeriod,
-                companyHolidays, holidays);
+                companyHolidays, holidaysWithinAccrualPeriod);
             int excludedWorkingDays = calculatePrescribedWorkingDaysWithinPeriods(
                 nonWorkingPeriods.getOrDefault(3, List.of()), accrualPeriod,
                 companyHolidays,
-                holidays);
+                holidaysWithinAccrualPeriod);
             double attendanceRate = calculateAttendanceRate(prescribedWorkingDays,
                 absentDays, excludedWorkingDays);
             double prescribeWorkingRatio = calculatePrescribedWorkingRatio(prescribedWorkingDays,
@@ -74,7 +74,7 @@ public final class HireDateStrategy implements CalculationStrategy {
                 // AR < 0.8 => 월차 (직전 연차 산정 기간에 대한 개근 판단에 따라 연차 부여)
                 List<DatePeriod> absentPeriods =
                     filterWorkingDayOnlyPeriods(nonWorkingPeriods.getOrDefault(2, List.of()),
-                        companyHolidays, holidays);
+                        companyHolidays, holidaysWithinAccrualPeriod);
                 MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(accrualPeriod,
                     absentPeriods);
                 result = AnnualLeaveResult.builder()
@@ -82,21 +82,22 @@ public final class HireDateStrategy implements CalculationStrategy {
                     .hireDate(hireDate)
                     .referenceDate(referenceDate)
                     .calculationDetail(monthlyLeaveDetail)
-                    .explanation(HireDate.AR_UNDER_80_AFTER_ONE_YEAR)
+                    .explanation(AR_UNDER_80_AFTER_ONE_YEAR)
                     .build();
             } else {
-                int servicesYears = calculateServiceYears(hireDate, referenceDate);
-                int addtionalLeave = calculateAdditionalLeave(servicesYears);
+                int serviceYears = calculateServiceYears(hireDate, referenceDate);
+                int additionalLeave = calculateAdditionalLeave(serviceYears);
                 if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) {
                     // PWR < 0.8 => (기본연차 + 가산연차) * PWR
                     double totalLeaveDays = formatDouble(
-                        (BASE_ANNUAL_LEAVE + addtionalLeave) * prescribeWorkingRatio);
+                        (BASE_ANNUAL_LEAVE + additionalLeave) * prescribeWorkingRatio);
                     AdjustedAnnualLeaveDetail adjustedAnnualLeaveDetail = AdjustedAnnualLeaveDetail.builder()
                         .baseAnnualLeave(BASE_ANNUAL_LEAVE)
-                        .additionalLeave(addtionalLeave)
+                        .serviceYears(serviceYears)
+                        .additionalLeave(additionalLeave)
                         .prescribedWorkingDays(prescribedWorkingDays)
                         .excludedWorkingDays(excludedWorkingDays)
-                        .prescribeWorkingRatio(totalLeaveDays)
+                        .prescribeWorkingRatio(prescribeWorkingRatio)
                         .totalLeaveDays(totalLeaveDays)
                         .build();
                     result = AnnualLeaveResult.builder()
@@ -104,15 +105,16 @@ public final class HireDateStrategy implements CalculationStrategy {
                         .hireDate(hireDate)
                         .referenceDate(referenceDate)
                         .calculationDetail(adjustedAnnualLeaveDetail)
-                        .explanation(HireDate.PWR_UNDER_80_AFTER_ONE_YEAR)
+                        .explanation(AR_OVER_80_PWR_UNDER_80_AFTER_ONE_YEAR)
                         .build();
                 } else {
                     // 기본연차 + 가산연차
-                    double totalLeaveDays = BASE_ANNUAL_LEAVE + addtionalLeave;
+                    double totalLeaveDays = BASE_ANNUAL_LEAVE + additionalLeave;
                     FullAnnualLeaveDetail fullAnnualLeaveDetail = FullAnnualLeaveDetail.builder()
                         .accrualPeriod(accrualPeriod)
                         .baseAnnualLeave(BASE_ANNUAL_LEAVE)
-                        .additionalLeave(addtionalLeave)
+                        .serviceYears(serviceYears)
+                        .additionalLeave(additionalLeave)
                         .totalLeaveDays(totalLeaveDays)
                         .build();
                     result = AnnualLeaveResult.builder()
@@ -120,7 +122,7 @@ public final class HireDateStrategy implements CalculationStrategy {
                         .hireDate(hireDate)
                         .referenceDate(referenceDate)
                         .calculationDetail(fullAnnualLeaveDetail)
-                        .explanation(HireDate.AR_AND_PWR_OVER_80_AFTER_ONE_YEAR)
+                        .explanation(AR_AND_PWR_OVER_80_AFTER_ONE_YEAR)
                         .build();
                 }
             }
