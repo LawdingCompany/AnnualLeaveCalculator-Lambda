@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행">
+    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="refactor : 산정방식(입사일/회계연도) 계산 로직 수정 &amp; 공통 로직 분리&#10;&#10;- 공통 로직(월차 계산) 분리 후 구조화&#10;- 결근처리일 계산시 소정근로제외기간을 고려하지 않는 오류 수정">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveHelperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveHelperTest.java" afterDir="false" />
@@ -75,6 +73,9 @@
     "Gradle.AfterThanOneYearHireDateTests.return9WhenEmployeeHasARUnder80PercentCase2.executor": "Run",
     "Gradle.AfterThanOneYearHireDateTests.return9WhenEmployeeHasARUnder80PercentCase3.executor": "Run",
     "Gradle.AfterThanOneYearHireDateTests.return9WhenFirstYearEmployeeHasARUnder80Percent.executor": "Run",
+    "Gradle.BeforeFirstRegularFiscalYearTests.return5WhenReferenceDateIsInSameFiscalYear.executor": "Run",
+    "Gradle.BeforeFirstRegularFiscalYearTests.returnMonthlyLeaveWhenReferenceDateIsInSameFiscalYear.executor": "Run",
+    "Gradle.Build leavecalc.executor": "Run",
     "Gradle.HireDateStrategyTest.executor": "Run",
     "Gradle.HireDateStrategyTest.입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다.executor": "Run",
     "Gradle.HireDateStrategyTest.입사일_1년미만_개근한_근로자는_월차_최댓값.executor": "Run",
@@ -95,6 +96,27 @@
     "Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest2.executor": "Run",
     "Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest3.executor": "Run",
     "Gradle.leavecalc.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$BeforeOneYearFromHireDateTest.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculateAttendanceRateTest.returnsCorrectAttendanceRateGivenAllParameters.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculateExcludedWorkingDaysTest.return7WhenExcludedPeriodHas2Weekdays.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculateExcludedWorkingDaysTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return7WhenCompanyHolidayHas2Weekdays.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return7WhenExcludedPeriodHas2Weekdays.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return7WhenExcludedPeriodOverlapsWithCompanyHoliday.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenCompanyHolidaysIncludeWeekends.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenCompanyHolidaysIncludeWeekends2.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenExcludedPeriodIncludesWeekends.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenExcludedPeriodIncludesWeekends1.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod1.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod2.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysTest.returns244WorkingDaysIn2024WhenWeekendsAndAllHolidaysAreExcluded.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysTest.returns246WorkingDaysIn2024WhenWeekendsAndStatutoryHolidaysAreExcluded.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysTest.returns262WhenCountingWeekdaysIn2024.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysWithinExcludedPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$IsWeekdayTest.returnTrueWhenIsWeekDays.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$MonthlyAccruedLeavesTest.returnsFiveMonthlyLeavesWhenOneDayShortOfSixMonths.executor": "Run",
+    "JUnit.AnnualLeaveHelperTest$MonthlyAccruedLeavesTest.returnsZeroWhenAbsentDaysExistInEveryMonth.executor": "Run",
     "JUnit.AnnualLeaveHelperTest$calculateAdditionalLeaveTest.executor": "Run",
     "JUnit.AnnualLeaveHelperTest$calculateAdditionalLeaveTest.returnOneWhenThreeOrFourYears.executor": "Run",
     "JUnit.AnnualLeaveHelperTest$calculateAdditionalLeaveTest.returnTenWhenOverTwentyOneYears.executor": "Run",
@@ -142,8 +164,38 @@
     "JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsZeroWhenAbsentDaysExistInEveryMonth.executor": "Run",
     "JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.test.executor": "Run",
     "JUnit.AnnualLeaveHelperTest.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateAndHireDateAreInSameFiscalYear.return4WhenOneMonthHasAbsenceDuringAccrualPeriod.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateAndHireDateAreInSameFiscalYear.return5WhenFullyAttendedInSameFiscalYear.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return17Point57WhenOneDayAbsenceBeforeOneYear.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return17Point57WhenOneDayAbsenceBeforeOneYear1.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return18Point57WhenReferenceDateBeforeOneYear1.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return4WhenReferenceDateIsBeforeOneYearAndOneMonthAbsent.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return4WhenReferenceDateIsBeforeOneYearAndOneMonthAbsent1.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests.return4WhenOneMonthHasAbsenceDuringAccrualPeriod.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests.return4WhenReferenceDateIsInSameFiscalYear.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenARIs80Point67.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenARIs80Point671.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenARIs80Point672.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenReferenceDateIsFirstFiscalYearStartDate.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return16WhenInThirdFiscalYearCase1.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return16WhenInThirdFiscalYearCase2.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return16WhenInThirdFiscalYearCase3.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1.executor": "Run",
+    "JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1.executor": "Run",
+    "JUnit.FiscalYearStrategyTest.executor": "Run",
+    "JUnit.FiscalYearStrategyTest.return15WhenReferenceDateIsFirstFiscalYearStartDate.executor": "Run",
     "JUnit.FiscalYearStrategyTest.test.executor": "Run",
     "JUnit.FiscalYearStrategyTest.입사일_1년미만_첫_회계연도_도래_이전_회계연도_시작일과_동일하지_않은_경우.executor": "Run",
+    "JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase1.executor": "Run",
+    "JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase4.executor": "Run",
+    "JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80Percent.executor": "Run",
+    "JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentAndOverlapDuration50s.executor": "Run",
+    "JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase1.executor": "Run",
+    "JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase2.executor": "Run",
+    "JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase3.executor": "Run",
     "JUnit.HireDateStrategyTest$LessThanOneYearHireTests.executor": "Run",
     "JUnit.HireDateStrategyTest$LessThanOneYearHireTests.return5WhenOneMonthHasAbsenceWithin6Months.executor": "Run",
     "JUnit.HireDateStrategyTest$LessThanOneYearHireTests.returns6WhenPerfectAttendance.executor": "Run",
@@ -165,7 +217,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editing.templates",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -180,134 +232,93 @@
       <recent name="com.lawding.leavecalc.strategy" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.HireDateStrategyTest">
-    <configuration name="HireDateStrategyTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.lawding.leavecalc.strategy.HireDateStrategyTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
+  <component name="RunManager" selected="JUnit.FiscalYearStrategyTest">
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="leavecalc.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIs80AndOneExcludedDay" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase1" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.lawding.leavecalc.strategy.HireDateStrategyTest$AfterThanOneYearHireDateTests$PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase1&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="leavecalc.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase2" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.lawding.leavecalc.strategy.HireDateStrategyTest$AfterThanOneYearHireDateTests$PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase2&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="leavecalc.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase2" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.lawding.leavecalc.strategy.HireDateStrategyTest$AfterThanOneYearHireDateTests$PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase2&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="leavecalc.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase3" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;com.lawding.leavecalc.strategy.HireDateStrategyTest$AfterThanOneYearHireDateTests$PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase3&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
+    <configuration name="FiscalYearStrategyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="leavecalc.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.HireDateStrategyTest" />
-        <item itemvalue="Gradle.PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase2" />
-        <item itemvalue="Gradle.PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase1" />
-        <item itemvalue="Gradle.PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase3" />
-        <item itemvalue="Gradle.PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase2" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" />
       </list>
     </recent_temporary>
   </component>
@@ -346,7 +357,8 @@
       <workItem from="1746186309787" duration="14536000" />
       <workItem from="1746211118511" duration="244000" />
       <workItem from="1746261375273" duration="2157000" />
-      <workItem from="1746355311315" duration="23849000" />
+      <workItem from="1746355311315" duration="24667000" />
+      <workItem from="1746433613050" duration="28640000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
       <option name="closed" value="true" />
@@ -428,7 +440,31 @@
       <option name="project" value="LOCAL" />
       <updated>1746392200773</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="test : 산정방식(입사일) 테스트 verify 함수 추가">
+      <option name="closed" value="true" />
+      <created>1746395897271</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1746395897271</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor : 날짜 계산 유틸 함수 수정 및 공통 로직 구조화&#10;&#10;- 공통 로직 내부 유틸 함수로 분리&#10;- 소정근로일,결근처리일, 소정근로제외일 계산 함수 최적화&#10;- 결근처리 계산 중 소정근로제외일 고려하지 않는 오류 수정">
+      <option name="closed" value="true" />
+      <created>1746465849884</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746465849884</updated>
+    </task>
+    <task id="LOCAL-00013" summary="refactor : 산정방식(입사일/회계연도) 계산 로직 수정 &amp; 공통 로직 분리&#10;&#10;- 공통 로직(월차 계산) 분리 후 구조화&#10;- 결근처리일 계산시 소정근로제외기간을 고려하지 않는 오류 수정">
+      <option name="closed" value="true" />
+      <created>1746465927114</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1746465927114</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -458,7 +494,10 @@
     <MESSAGE value="test : 산정방식(입사일) 테스트 코드 작성" />
     <MESSAGE value="test : 산정방식(입사일) 테스트 코드 작성 완료&#10;&#10;- HireDateStrategyTest 코드 작성 완료&#10;- 입사일 1년 미만인 경우 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 출근율(AR)별 분기 및 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 소정근로일(PWR)별 분기 및 경계값 테스트 완료&#10;- 각각의 경우의 수에 대해 주말, 법정 공휴일, 회사 휴일 모두 대입한 경우 테스트 완료" />
     <MESSAGE value="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행" />
+    <MESSAGE value="test : 산정방식(입사일) 테스트 verify 함수 추가" />
+    <MESSAGE value="refactor : 날짜 계산 유틸 함수 수정 및 공통 로직 구조화&#10;&#10;- 공통 로직 내부 유틸 함수로 분리&#10;- 소정근로일,결근처리일, 소정근로제외일 계산 함수 최적화&#10;- 결근처리 계산 중 소정근로제외일 고려하지 않는 오류 수정" />
+    <MESSAGE value="refactor : 산정방식(입사일/회계연도) 계산 로직 수정 &amp; 공통 로직 분리&#10;&#10;- 공통 로직(월차 계산) 분리 후 구조화&#10;- 결근처리일 계산시 소정근로제외기간을 고려하지 않는 오류 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor : 산정방식(입사일/회계연도) 계산 로직 수정 &amp; 공통 로직 분리&#10;&#10;- 공통 로직(월차 계산) 분리 후 구조화&#10;- 결근처리일 계산시 소정근로제외기간을 고려하지 않는 오류 수정" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

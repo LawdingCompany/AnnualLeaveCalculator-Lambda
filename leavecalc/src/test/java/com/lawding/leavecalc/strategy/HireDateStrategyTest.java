@@ -296,7 +296,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
-                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
+                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -327,7 +327,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
-                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
+                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -357,7 +357,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
-                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
+                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -388,7 +388,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
-                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
+                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -419,7 +419,7 @@ public class HireDateStrategyTest {
                 AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 
                 // Then
-                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
+                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
                 assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
             }
 
@@ -505,6 +505,43 @@ public class HireDateStrategyTest {
                     .referenceDate(referenceDate)
                     .nonWorkingPeriods(Map.of(2, absentPeriods))
                     .companyHolidays(companyHolidays)
+                    .build();
+
+                // When
+                AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
+
+                // Then
+                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
+                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
+            }
+
+            @Test
+            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 소정근로제외기간이 1일인 경우, 출근율(AR)이 80%이므로 연차는 15개다.")
+            void returns15WhenAttendanceRateIsEightyPercentAndOneExcludedDay() {
+                // Given
+                LocalDate hireDate = LocalDate.of(2024, 1, 1);
+                LocalDate referenceDate = LocalDate.of(2025, 1, 1);
+                List<DatePeriod> absentPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 6, 1),
+                        LocalDate.of(2024, 8, 12)
+                    )
+                );
+                List<DatePeriod> excludedPeriods = List.of(
+                    new DatePeriod(
+                        LocalDate.of(2024, 8, 8),
+                        LocalDate.of(2024, 8, 8)
+                    )
+                );
+
+                AnnualLeaveContext context = AnnualLeaveContext.builder()
+                    .hireDate(hireDate)
+                    .referenceDate(referenceDate)
+                    .nonWorkingPeriods(Map.of(
+                        2, absentPeriods,
+                        3, excludedPeriods
+                    ))
+                    .companyHolidays(List.of())
                     .build();
 
                 // When
@@ -605,7 +642,7 @@ public class HireDateStrategyTest {
             }
 
             @Test
-            @DisplayName("2024년 6 ~ 8월 중 소정근로제외 기간(소정근로일 50일)을 겹쳐서 기간 기재한 경우, 소정근로비율(PWR)이 79.67%이므로 비례삭감하여 적용한다.")
+            @DisplayName("2024년 6 ~ 8월 중 소정근로제외기간(소정근로일 50일)을 겹쳐서 기간 기재한 경우, 소정근로비율(PWR)이 79.67%이므로 비례삭감하여 적용한다.")
             void returnProratedLeaveWhenOverlappingExcludedPeriodsEqual50Days() {
                 // Given
                 LocalDate hireDate = LocalDate.of(2024, 1, 1);
@@ -636,7 +673,7 @@ public class HireDateStrategyTest {
             }
 
             @Test
-            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 외 회사 휴일이 1일인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
+            @DisplayName("2024년 소정근로제외기간(소정근로일 50일) 외 회사 휴일이 1일인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
             void returnProratedLeaveWhenPWRIsUnder80PercentWith1CompanyHoliday() {
                 // Given
                 LocalDate hireDate = LocalDate.of(2024, 1, 1);
@@ -666,7 +703,7 @@ public class HireDateStrategyTest {
             }
 
             @Test
-            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 외 회사 휴일이 2일(주말 1일)인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
+            @DisplayName("2024년 소정근로제외기간(소정근로일 50일) 외 회사 휴일이 2일(주말 1일)인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
             void returnProratedLeaveWhenPWRIsUnder80PercentWith2CompanyHolidaysIncludingWeekend() {
                 // Given
                 LocalDate hireDate = LocalDate.of(2024, 1, 1);
@@ -697,7 +734,7 @@ public class HireDateStrategyTest {
             }
 
             @Test
-            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 외 회사 휴일이 2일(공휴일 1일)인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
+            @DisplayName("2024년 소정근로제외기간(소정근로일 50일) 외 회사 휴일이 2일(공휴일 1일)인 경우, 소정근로비율(PWR)이 79.59%이므로 비례삭감하여 적용한다.")
             void returnProratedLeaveWhenPWRIsUnder80PercentWith1PublicHoliday() {
                 // Given
                 LocalDate hireDate = LocalDate.of(2024, 1, 1);
@@ -728,7 +765,7 @@ public class HireDateStrategyTest {
             }
 
             @Test
-            @DisplayName("2024년 소정근로제외 기간(소정근로일 50일) 내 회사 휴일이 1일인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
+            @DisplayName("2024년 소정근로제외기간(소정근로일 50일) 내 회사 휴일이 1일인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
             void return15WhenPWRIsExactly80With1CompanyHolidayInExcludedPeriod() {
                 // Given
                 LocalDate hireDate = LocalDate.of(2024, 1, 1);
@@ -758,7 +795,7 @@ public class HireDateStrategyTest {
             }
 
             @Test
-            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 회사 휴일이 2일(주말 1일)인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
+            @DisplayName("2024년 소정근로제외기간(소정근로일 50일) 내 회사 휴일이 2일(주말 1일)인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
             void return15WhenPWRIsExactly80With2CompanyHolidaysIncludingWeekend() {
                 // Given
                 LocalDate hireDate = LocalDate.of(2024, 1, 1);
@@ -789,7 +826,7 @@ public class HireDateStrategyTest {
             }
 
             @Test
-            @DisplayName("2024년 결근 기간(소정근로일 50일) 내 회사 휴일이 2일(법정공휴일 1일)인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
+            @DisplayName("2024년 소정근로제외기간(소정근로일 50일) 내 회사 휴일이 2일(법정공휴일 1일)인 경우, 소정근로비율(PWR)이 80%이므로 연차는 15개다.")
             void return15WhenPWRIsExactly80With1PublicHolidayInExcludedPeriod() {
                 // Given
                 LocalDate hireDate = LocalDate.of(2024, 1, 1);

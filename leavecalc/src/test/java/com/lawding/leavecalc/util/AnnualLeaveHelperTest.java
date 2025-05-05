@@ -4,6 +4,7 @@ import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ public class AnnualLeaveHelperTest {
 
     @Nested
     @DisplayName("입사 후 1년 미만인지 확인하는 함수")
-    class isLessThanOneYearTest {
+    class BeforeOneYearFromHireDateTest {
 
         @Test
         @DisplayName("기준일이 입사일로부터 1년이 지나지 않은 경우 true")
@@ -85,7 +86,7 @@ public class AnnualLeaveHelperTest {
 
     @Nested
     @DisplayName("근속연수에 따른 가산 연차를 계산하는 함수")
-    class calculateAdditionalLeaveTest {
+    class CalculateAdditionalLeaveTest {
 
         @Test
         @DisplayName("근속연수가 1년 미만이면 가산 연차는 0일이다.")
@@ -126,7 +127,7 @@ public class AnnualLeaveHelperTest {
 
     @Nested
     @DisplayName("해당 날짜가 주중(월-금)인지 판단하는 함수")
-    class isWeekdayTest {
+    class IsWeekdayTest {
 
         @Test
         @DisplayName("해당 날짜가 주중이면 true")
@@ -163,7 +164,7 @@ public class AnnualLeaveHelperTest {
 
     @Nested
     @DisplayName("출근율(AR)을 계산하는 함수")
-    class calculateAttendanceRateTest {
+    class CalculateAttendanceRateTest {
 
         @Test
         @DisplayName("결근처리일, 소정근로제외일수가 없으면 출근율(AR) 1.0")
@@ -264,7 +265,7 @@ public class AnnualLeaveHelperTest {
 
     @Nested
     @DisplayName("연차산정기간의 개근 여부를 판단하여 월차를 계산하는 함수")
-    class monthlyAccruedLeavesTest {
+    class MonthlyAccruedLeavesTest {
 
         @Test
         @DisplayName("6개월간 결근 처리일이 없다면, 월차 6개")
@@ -274,10 +275,8 @@ public class AnnualLeaveHelperTest {
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 6, 30)
             );
-            List<DatePeriod> excludedPeriods = List.of();
-
             // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, Set.of());
 
             // Then
             assertEquals(6, monthlyLeave.getTotalLeaveDays());
@@ -291,10 +290,9 @@ public class AnnualLeaveHelperTest {
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 6, 29)
             );
-            List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, Set.of());
 
             // Then
             assertEquals(5, monthlyLeave.getTotalLeaveDays());
@@ -308,10 +306,9 @@ public class AnnualLeaveHelperTest {
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 7, 1)
             );
-            List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, Set.of());
 
             // Then
             assertEquals(6, monthlyLeave.getTotalLeaveDays());
@@ -325,10 +322,9 @@ public class AnnualLeaveHelperTest {
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 12, 31)
             );
-            List<DatePeriod> excludedPeriods = List.of();
 
             // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, Set.of());
 
             // Then
             assertEquals(11, monthlyLeave.getTotalLeaveDays());
@@ -342,14 +338,14 @@ public class AnnualLeaveHelperTest {
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 12, 31)
             );
-            List<DatePeriod> excludedPeriods = List.of(new DatePeriod(
-                    LocalDate.of(2024, 5, 1),
-                    LocalDate.of(2024, 5, 1)
-                )
+
+            Set<LocalDate> workingDaysWithinAbsentPeriods = Set.of(
+                LocalDate.of(2024, 5, 1)
             );
 
             // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period,
+                workingDaysWithinAbsentPeriods);
 
             // Then
             assertEquals(11, monthlyLeave.getTotalLeaveDays());
@@ -363,50 +359,20 @@ public class AnnualLeaveHelperTest {
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 12, 31)
             );
-            List<DatePeriod> excludedPeriods = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 2),
-                    LocalDate.of(2024, 5, 2)
-                ),
-                new DatePeriod(
-                    LocalDate.of(2024, 8, 2),
-                    LocalDate.of(2024, 8, 2)
-                )
+
+            Set<LocalDate> workingDaysWithinAbsentPeriods = Set.of(
+                LocalDate.of(2024, 5, 2),
+                LocalDate.of(2024, 8, 2)
             );
 
             // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period,
+                workingDaysWithinAbsentPeriods);
 
             // Then
             assertEquals(10, monthlyLeave.getTotalLeaveDays());
         }
 
-        @Test
-        @DisplayName("1년간 결근 처리일이 연달아(5, 6월)있다면, 월차 10개")
-        void returnsTenWhenAbsentDaysOccurInMayAndJune() {
-            // Given
-            DatePeriod period = new DatePeriod(
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 12, 31)
-            );
-
-            List<DatePeriod> excludedPeriods = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 2),
-                    LocalDate.of(2024, 5, 6)
-                ),
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 2),
-                    LocalDate.of(2024, 6, 1)
-                )
-            );
-
-            // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
-
-            // Then
-            assertEquals(10, monthlyLeave.getTotalLeaveDays());
-        }
 
         @Test
         @DisplayName("1년간 결근 처리일이 모든 달에 있으면, 월차 0개")
@@ -416,15 +382,24 @@ public class AnnualLeaveHelperTest {
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 12, 31)
             );
-            List<DatePeriod> excludedPeriods = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 1, 1),
-                    LocalDate.of(2024, 12, 1)
-                )
+            Set<LocalDate> workingDaysWithinAbsentPeriods = Set.of( // 이미 주말은 제외
+                LocalDate.of(2024, 1, 2),
+                LocalDate.of(2024, 2, 2),
+                LocalDate.of(2024, 3, 4),
+                LocalDate.of(2024, 4, 2),
+                LocalDate.of(2024, 5, 2),
+                LocalDate.of(2024, 6, 3),
+                LocalDate.of(2024, 7, 2),
+                LocalDate.of(2024, 8, 2),
+                LocalDate.of(2024, 9, 2),
+                LocalDate.of(2024, 10, 2),
+                LocalDate.of(2024, 11, 8),
+                LocalDate.of(2024, 12, 2)
             );
 
             // When
-            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period, excludedPeriods);
+            MonthlyLeaveDetail monthlyLeave = monthlyAccruedLeaves(period,
+                workingDaysWithinAbsentPeriods);
 
             // Then
             assertEquals(0, monthlyLeave.getTotalLeaveDays());
@@ -435,7 +410,7 @@ public class AnnualLeaveHelperTest {
 
     @Nested
     @DisplayName("소수점 둘째자리까지 올림하는 함수")
-    class formatDoubleTest {
+    class FormatDoubleTest {
 
         @Test
         @DisplayName("0.478인 경우 0.48")
@@ -464,9 +439,46 @@ public class AnnualLeaveHelperTest {
         }
     }
 
+
     @Nested
-    @DisplayName("연차산정기간 내 소정근로일을 계산하는 함수")
-    class calculatePrescribedWorkingDaysTest {
+    @DisplayName("소정근로비율(PWR)을 계산하는 함수")
+    class CalculatePrescribedWorkingRatioTest {
+
+        @Test
+        @DisplayName("소정근로제외일수가 0이면, 소정근로비율(PWR)은 1이다.")
+        void returnsOneAsWorkingRatioWhenExcludedWorkingDaysIsZero() {
+            // Given
+            int prescribedWorkingDays = 246;
+            int excludedWorkingDays = 0;
+
+            // When
+            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,
+                excludedWorkingDays);
+
+            // Then
+            assertEquals(1, result);
+        }
+
+        @Test
+        @DisplayName("소정근로제외일수가 소정근로일 수와 같으면 소정근로비율(PWR)은 0이다.")
+        void returnsZeroAsWorkingRatioWhenExcludedDaysEqualPrescribedWorkingDays() {
+            // Given
+            int prescribedWorkingDays = 246;
+            int excludedWorkingDays = 246;
+
+            // When
+            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,
+                excludedWorkingDays);
+
+            // Then
+            assertEquals(0, result);
+        }
+    }
+
+
+    @Nested
+    @DisplayName("연차산정기간의 전체 소정근로일 계산하는 함수")
+    class CalculatePrescribedWorkingDaysTest {
 
         @Test
         @DisplayName("2024년의 주말 제외 일수(법정공휴일x, 회사휴일x)는 262일이다.")
@@ -504,6 +516,7 @@ public class AnnualLeaveHelperTest {
             assertEquals(246, result);
         }
 
+
         @Test
         @DisplayName("2024년의 전체 일수 - 주말 - 법정공휴일 - 회사휴일(평일2, 주말2, 공휴일1)을 뺀 일수는 244일이다.")
         void returns244WorkingDaysIn2024WhenWeekendsAndAllHolidaysAreExcluded() {
@@ -532,279 +545,336 @@ public class AnnualLeaveHelperTest {
     }
 
     @Nested
-    @DisplayName("연차 산정 기간과 겹치는 결근/소정근로제외일 중 소정근로일(주말·공휴일 제외) 계산")
-    class calculatePrescribedWorkingDaysWithinPeriodsTest {
+    @DisplayName("결근처리기간들 중 기준 기간 내 소정근로일을 계산하는 함수")
+    class CalculatePrescribedWorkingDaysInAbsentPeriodsTest {
 
         @Test
-        @DisplayName("2024년 5월 중 5.6 ~ 5.20 까지 결근했을 시 결근한 소정근로일은 9일이다.")
+        @DisplayName("결근 기간(2024.05.06 ~ 2024.05.20)에서 소정근로일은 9일이다.")
         void returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod() {
             // Given
+
+            List<DatePeriod> absentPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 20))
+            );
+
             DatePeriod standard = new DatePeriod(
                 LocalDate.of(2024, 5, 1),
                 LocalDate.of(2024, 5, 31)
-            );
-
-            List<DatePeriod> periods1 = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 6),
-                    LocalDate.of(2024, 5, 20))
-            );
-
-            List<DatePeriod> periods2 = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 6),
-                    LocalDate.of(2024, 5, 8)),
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 8),
-                    LocalDate.of(2024, 5, 20))
-            );
-
-            List<DatePeriod> periods3 = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 6),
-                    LocalDate.of(2024, 5, 8)),
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 7),
-                    LocalDate.of(2024, 5, 20))
             );
 
             List<LocalDate> companyHolidays = List.of();
 
             // When
-            int result1 = calculatePrescribedWorkingDaysWithinPeriods(periods1, standard,
-                companyHolidays, STATUTORY_HOLIDAYS_2024);
-            int result2 = calculatePrescribedWorkingDaysWithinPeriods(periods2, standard,
-                companyHolidays, STATUTORY_HOLIDAYS_2024);
-            int result3 = calculatePrescribedWorkingDaysWithinPeriods(periods3, standard,
-                companyHolidays, STATUTORY_HOLIDAYS_2024);
+            Set<LocalDate> result = getPrescribedWorkingDaySetInAbsentPeriods(absentPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays, List.of());
 
             // Then
-            assertEquals(9, result1);
-            assertEquals(9, result2);
-            assertEquals(9, result3);
+            Set<LocalDate> expected = Set.of(
+                LocalDate.of(2024, 5, 7),
+                LocalDate.of(2024, 5, 8),
+                LocalDate.of(2024, 5, 9),
+                LocalDate.of(2024, 5, 10),
+                LocalDate.of(2024, 5, 13),
+                LocalDate.of(2024, 5, 14),
+                LocalDate.of(2024, 5, 16),
+                LocalDate.of(2024, 5, 17),
+                LocalDate.of(2024, 5, 20)
+            );
+            assertEquals(9, result.size());
         }
 
         @Test
-        @DisplayName("2024년 5월 중 5.6 ~ 5.20 까지 결근 & 회사 휴일(5/10,11(토),15(공휴일)) 일 때 결근한 소정근로일은 8일이다.")
-        void returns8WorkingDaysWhenAbsentFromMay6To20IncludingCompanyHolidayOnMay9AndWeekendOnMay10() {
+        @DisplayName("결근 기간(2024.05.06 ~ 2024.05.20)에서 소정근로제외일이 2일인 경우 소정근로일은 7일이다.")
+        void return7WhenExcludedPeriodHas2Weekdays() {
             // Given
+
+            List<DatePeriod> absentPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 20))
+            );
+
             DatePeriod standard = new DatePeriod(
                 LocalDate.of(2024, 5, 1),
                 LocalDate.of(2024, 5, 31)
             );
 
-            List<DatePeriod> periods = List.of(
+            List<LocalDate> companyHolidays = List.of();
+
+            List<DatePeriod> excludedPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 10))
+            );
+            // When
+            Set<LocalDate> result = getPrescribedWorkingDaySetInAbsentPeriods(absentPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays, excludedPeriods);
+
+            // Then
+            Set<LocalDate> expected = Set.of(
+                LocalDate.of(2024, 5, 7),
+                LocalDate.of(2024, 5, 8),
+                LocalDate.of(2024, 5, 13),
+                LocalDate.of(2024, 5, 14),
+                LocalDate.of(2024, 5, 16),
+                LocalDate.of(2024, 5, 17),
+                LocalDate.of(2024, 5, 20)
+            );
+
+            assertEquals(expected, result);
+        }
+
+        @Test
+        @DisplayName("결근 기간(2024.05.06 ~ 2024.05.20)에서 소정근로제외일이 주말일 경우 소정근로일은 9일이다.")
+        void return9WhenExcludedPeriodIncludesWeekends() {
+            // Given
+
+            List<DatePeriod> absentPeriods = List.of(
                 new DatePeriod(
                     LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
                     LocalDate.of(2024, 5, 20))
+            );
+
+            DatePeriod standard = new DatePeriod(
+                LocalDate.of(2024, 5, 1),
+                LocalDate.of(2024, 5, 31)
+            );
+
+            List<LocalDate> companyHolidays = List.of();
+
+            List<DatePeriod> excludedPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 11),  // 토
+                    LocalDate.of(2024, 5, 11))
+            );
+            // When
+            Set<LocalDate> result = getPrescribedWorkingDaySetInAbsentPeriods(absentPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays, excludedPeriods);
+
+            // Then
+            Set<LocalDate> expected = Set.of(
+                LocalDate.of(2024, 5, 7),
+                LocalDate.of(2024, 5, 8),
+                LocalDate.of(2024, 5, 9),
+                LocalDate.of(2024, 5, 10),
+                LocalDate.of(2024, 5, 13),
+                LocalDate.of(2024, 5, 14),
+                LocalDate.of(2024, 5, 16),
+                LocalDate.of(2024, 5, 17),
+                LocalDate.of(2024, 5, 20)
+            );
+            assertEquals(expected, result);
+        }
+
+        @Test
+        @DisplayName("결근 기간(2024.05.06 ~ 2024.05.20)에서 회사 휴일이 1일인 경우 소정근로일은 8일이다.")
+        void return7WhenCompanyHolidayHas2Weekdays() {
+            // Given
+
+            List<DatePeriod> absentPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 20))
+            );
+
+            DatePeriod standard = new DatePeriod(
+                LocalDate.of(2024, 5, 1),
+                LocalDate.of(2024, 5, 31)
             );
 
             List<LocalDate> companyHolidays = List.of(
-                LocalDate.of(2024, 5, 10),  // 평일
-                LocalDate.of(2024, 5, 11),  // 토
-                LocalDate.of(2024, 5, 15)   // 법정공휴일(중복)
+                LocalDate.of(2024, 5, 10),
+                LocalDate.of(2024, 5, 11)
             );
 
             // When
-            int result = calculatePrescribedWorkingDaysWithinPeriods(periods, standard,
-                companyHolidays, STATUTORY_HOLIDAYS_2024);
+            Set<LocalDate> result = getPrescribedWorkingDaySetInAbsentPeriods(absentPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays, List.of());
+
+            // Then
+            Set<LocalDate> expected = Set.of(
+                LocalDate.of(2024, 5, 7),
+                LocalDate.of(2024, 5, 8),
+                LocalDate.of(2024, 5, 9),
+                LocalDate.of(2024, 5, 13),
+                LocalDate.of(2024, 5, 14),
+                LocalDate.of(2024, 5, 16),
+                LocalDate.of(2024, 5, 17),
+                LocalDate.of(2024, 5, 20)
+            );
+            assertEquals(expected, result);
+        }
+
+        @Test
+        @DisplayName("결근 기간(2024.05.06 ~ 2024.05.20)에서 회사 휴일이 주말일 경우 소정근로일은 9일이다.")
+        void return9WhenCompanyHolidaysIncludeWeekends() {
+            // Given
+
+            List<DatePeriod> absentPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 20))
+            );
+
+            DatePeriod standard = new DatePeriod(
+                LocalDate.of(2024, 5, 1),
+                LocalDate.of(2024, 5, 31)
+            );
+
+            List<LocalDate> companyHolidays = List.of(
+                LocalDate.of(2024, 5, 11)
+            );
+
+            // When
+            Set<LocalDate> result = getPrescribedWorkingDaySetInAbsentPeriods(absentPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays, List.of());
+
+            // Then
+            Set<LocalDate> expected = Set.of(
+                LocalDate.of(2024, 5, 7),
+                LocalDate.of(2024, 5, 8),
+                LocalDate.of(2024, 5, 9),
+                LocalDate.of(2024, 5, 10),
+                LocalDate.of(2024, 5, 13),
+                LocalDate.of(2024, 5, 14),
+                LocalDate.of(2024, 5, 16),
+                LocalDate.of(2024, 5, 17),
+                LocalDate.of(2024, 5, 20)
+            );
+            assertEquals(expected, result);
+        }
+
+        @Test
+        @DisplayName("결근 기간(2024.05.06 ~ 2024.05.20)에서 소정근로제외일과 회사 휴일이 겹칠 경우 소정근로일은 7일이다.")
+        void return7WhenExcludedPeriodOverlapsWithCompanyHoliday() {
+            // Given
+
+            List<DatePeriod> absentPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 20))
+            );
+
+            DatePeriod standard = new DatePeriod(
+                LocalDate.of(2024, 5, 1),
+                LocalDate.of(2024, 5, 31)
+            );
+
+            List<LocalDate> companyHolidays = List.of(
+                LocalDate.of(2024, 5, 10)
+            );
+
+            List<DatePeriod> excludedPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 10))
+            );
+
+            // When
+            Set<LocalDate> result = getPrescribedWorkingDaySetInAbsentPeriods(absentPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays, excludedPeriods);
+
+            // Then
+            Set<LocalDate> expected = Set.of(
+                LocalDate.of(2024, 5, 7),
+                LocalDate.of(2024, 5, 8),
+                LocalDate.of(2024, 5, 13),
+                LocalDate.of(2024, 5, 14),
+                LocalDate.of(2024, 5, 16),
+                LocalDate.of(2024, 5, 17),
+                LocalDate.of(2024, 5, 20)
+            );
+            assertEquals(expected, result);
+        }
+    }
+
+    @Nested
+    @DisplayName("소정근로제외기간들 중 기준 기간 내 소정근로일을 계산하는 함수")
+    class CalculateExcludedWorkingDaysTest {
+
+        @Test
+        @DisplayName("소정근로제외 기간(2024.05.06 ~ 2024.05.20)에서 소정근로일은 9일이다.")
+        void return9WhenExcludedPeriodIsFromMay6ToMay20() {
+            // Given
+
+            List<DatePeriod> excludedPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 20))
+            );
+
+            DatePeriod standard = new DatePeriod(
+                LocalDate.of(2024, 5, 1),
+                LocalDate.of(2024, 5, 31)
+            );
+
+            List<LocalDate> companyHolidays = List.of();
+
+            // When
+            int result = calculateExcludedWorkingDays(excludedPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays);
+
+            // Then
+            assertEquals(9, result);
+        }
+
+        @Test
+        @DisplayName("소정근로제외 기간(2024.05.06 ~ 2024.05.20)에서 회사 휴일이 2일(주말 1일)인 경우 소정근로일은 8일이다.")
+        void return8WhenExcludedPeriodHasTwoCompanyHolidaysIncludingWeekend() {
+            // Given
+
+            List<DatePeriod> excludedPeriods = List.of(
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 6),
+                    LocalDate.of(2024, 5, 10)),
+                new DatePeriod(
+                    LocalDate.of(2024, 5, 9),
+                    LocalDate.of(2024, 5, 20))
+            );
+
+            DatePeriod standard = new DatePeriod(
+                LocalDate.of(2024, 5, 1),
+                LocalDate.of(2024, 5, 31)
+            );
+
+            List<LocalDate> companyHolidays = List.of(
+                LocalDate.of(2024, 5, 10),
+                LocalDate.of(2024, 5, 11) // 토
+            );
+
+
+            // When
+            int result = calculateExcludedWorkingDays(excludedPeriods,
+                standard, STATUTORY_HOLIDAYS_2024, companyHolidays);
 
             // Then
             assertEquals(8, result);
-
         }
 
-        @Test
-        @DisplayName("2024년 5월 중 5.6 ~ 5.16, 5.20 ~ 5.25 까지 결근했을 때 결근한 소정근로일은 12일이다.")
-        void returns12WorkingDaysWhenAbsentFromMay6To16AndMay20To25() {
-            // Given
-            DatePeriod standard = new DatePeriod(
-                LocalDate.of(2024, 5, 1),
-                LocalDate.of(2024, 5, 31)
-            );
-
-            List<DatePeriod> periods = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 6),
-                    LocalDate.of(2024, 5, 16)),
-                new DatePeriod(
-                    LocalDate.of(2024, 5, 20),
-                    LocalDate.of(2024, 5, 25))
-            );
-
-            List<LocalDate> companyHolidays = List.of();
-
-            // When
-            int result = calculatePrescribedWorkingDaysWithinPeriods(periods, standard,
-                companyHolidays, STATUTORY_HOLIDAYS_2024);
-
-            // Then
-            assertEquals(12, result);
-
-        }
-
-        @Test
-        @DisplayName("2024년 5월 중 6.2 ~ 6.15 까지 결근했을 때 결근한 소정근로일은 0일이다.")
-        void returnsZeroWorkingDaysWhenAbsentFromJune2To15() {
-            // Given
-            DatePeriod standard = new DatePeriod(
-                LocalDate.of(2024, 5, 1),
-                LocalDate.of(2024, 5, 31)
-            );
-
-            List<DatePeriod> periods = List.of(
-                new DatePeriod(
-                    LocalDate.of(2024, 6, 2),
-                    LocalDate.of(2024, 6, 15))
-            );
-
-            List<LocalDate> companyHolidays = List.of();
-
-            // When
-            int result = calculatePrescribedWorkingDaysWithinPeriods(periods, standard,
-                companyHolidays, STATUTORY_HOLIDAYS_2024);
-
-            // Then
-            assertEquals(0, result);
-
-        }
     }
 
-    @Nested
-    @DisplayName("소정근로비율(PWR)을 계산하는 함수")
-    class calculatePrescribedWorkingRatioTest {
 
-        @Test
-        @DisplayName("소정근로제외일수가 0이면, 소정근로비율(PWR)은 1이다.")
-        void returnsOneAsWorkingRatioWhenExcludedWorkingDaysIsZero() {
-            // Given
-            int prescribedWorkingDays = 246;
-            int excludedWorkingDays = 0;
-
-            // When
-            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,
-                excludedWorkingDays);
-
-            // Then
-            assertEquals(1, result);
-        }
-
-        @Test
-        @DisplayName("소정근로제외일수가 소정근로일 수와 같으면 소정근로비율(PWR)은 0이다.")
-        void returnsZeroAsWorkingRatioWhenExcludedDaysEqualPrescribedWorkingDays() {
-            // Given
-            int prescribedWorkingDays = 246;
-            int excludedWorkingDays = 246;
-
-            // When
-            double result = calculatePrescribedWorkingRatio(prescribedWorkingDays,
-                excludedWorkingDays);
-
-            // Then
-            assertEquals(0, result);
-        }
-    }
-
-    @Nested
-    @DisplayName("기간 내 소정근로일만 추출해 DatePeriod 단위로 변환하는 함수")
-    class filterWorkingDayOnlyPeriodsTest {
-
-        @Test
-        @DisplayName("빈 리스트를 넣은 경우 빈 리스트를 반환한다")
-        void returnsEmptyList_whenInputIsEmpty() {
-            // Given
-            List<DatePeriod> periods = List.of();
-            List<LocalDate> companyHolidays = List.of();
-            List<LocalDate> statutoryHolidays = List.of();
-            // When
-            List<DatePeriod> result = filterWorkingDayOnlyPeriods(periods, companyHolidays,
-                statutoryHolidays);
-            // Then
-
-            assertTrue(result.isEmpty());
-        }
-
-        @Test
-        @DisplayName("2025년 5월의 소정근로일은 20일(주말 9일, 공휴일 2일)이다.")
-        void returns20WhenWorkingDaysInMay2025() {
-            // Given
-            List<DatePeriod> periods = List.of(
-                new DatePeriod(
-                    LocalDate.of(2025, 5, 1),
-                    LocalDate.of(2025, 5, 6)
-                ),
-                new DatePeriod(
-                    LocalDate.of(2025, 5, 7),
-                    LocalDate.of(2025, 5, 31)
-                )
-            );
-            List<LocalDate> statutoryHolidays = List.of(
-                LocalDate.of(2025, 5, 5),
-                LocalDate.of(2025, 5, 6)
-            );
-            List<LocalDate> companyHolidays = List.of();
-            // When
-            List<DatePeriod> result = filterWorkingDayOnlyPeriods(periods, companyHolidays,
-                statutoryHolidays);
-            // Then
-            List<LocalDate> actualDates = result.stream()
-                .flatMap(p -> p.startDate().datesUntil(p.endDate().plusDays(1)))
-                .sorted()
-                .toList();
-
-            List<LocalDate> expectedDates = LocalDate.of(2025, 5, 1)
-                .datesUntil(LocalDate.of(2025, 5, 31).plusDays(1))
-                .filter(AnnualLeaveHelper::isWeekday)
-                .filter(d -> !statutoryHolidays.contains(d))
-                .sorted()
-                .toList();
-
-            assertEquals(expectedDates, actualDates);
-            assertEquals(20,actualDates.size());
-        }
-
-        @Test
-        @DisplayName("2025년 5.1 ~ 5.10 , 5.16 ~ 5.20 까지 소정근로일은 8일이다.")
-        void returns8WorkingDays_whenPeriodsAreMay1To10AndMay16To20_2025() {
-            // Given
-            List<DatePeriod> periods = List.of(
-                new DatePeriod(
-                    LocalDate.of(2025, 5, 1),
-                    LocalDate.of(2025, 5, 10)
-                ),
-                new DatePeriod(
-                    LocalDate.of(2025, 5, 16),
-                    LocalDate.of(2025, 5, 20)
-                )
-            );
-            List<LocalDate> statutoryHolidays = List.of(
-                LocalDate.of(2025, 5, 5),
-                LocalDate.of(2025, 5, 6)
-            );
-            List<LocalDate> companyHolidays = List.of();
-            // When
-            List<DatePeriod> result = filterWorkingDayOnlyPeriods(periods, companyHolidays,
-                statutoryHolidays);
-            // Then
-            List<LocalDate> actualDates = result.stream()
-                .flatMap(p -> p.startDate().datesUntil(p.endDate().plusDays(1)))
-                .sorted()
-                .toList();
-
-            List<LocalDate> expectedDates = List.of(
-                LocalDate.of(2025, 5, 1),
-                LocalDate.of(2025, 5, 2),
-                LocalDate.of(2025, 5, 7),
-                LocalDate.of(2025, 5, 8),
-                LocalDate.of(2025, 5, 9),
-                LocalDate.of(2025, 5, 16),
-                LocalDate.of(2025, 5, 19),
-                LocalDate.of(2025, 5, 20)
-            );
-
-
-            assertEquals(expectedDates, actualDates);
-            assertEquals(8,actualDates.size());
-        }
-    }
 }
