@@ -5,6 +5,7 @@ import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
+import com.lawding.leavecalc.domain.CalculationType;
 import com.lawding.leavecalc.domain.detail.AdjustedAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
@@ -61,7 +62,8 @@ public final class HireDateStrategy implements CalculationStrategy {
         MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(accrualPeriod,
             workingDaysWithinAbsentPeriods);
         return AnnualLeaveResult.builder()
-            .type(AnnualLeaveResultType.MONTHLY)
+            .calculationType(CalculationType.HIRE_DATE)
+            .annualLeaveResultType(AnnualLeaveResultType.MONTHLY)
             .hireDate(accrualPeriod.startDate())
             .referenceDate(accrualPeriod.endDate().plusDays(1))
             .calculationDetail(monthlyLeaveDetail)
@@ -106,7 +108,8 @@ public final class HireDateStrategy implements CalculationStrategy {
                     .totalLeaveDays(totalLeaveDays)
                     .build();
                 return AnnualLeaveResult.builder()
-                    .type(AnnualLeaveResultType.ADJUSTED)
+                    .calculationType(CalculationType.HIRE_DATE)
+                    .annualLeaveResultType(AnnualLeaveResultType.ADJUSTED)
                     .hireDate(hireDate)
                     .referenceDate(referenceDate)
                     .calculationDetail(adjustedAnnualLeaveDetail)
@@ -123,7 +126,8 @@ public final class HireDateStrategy implements CalculationStrategy {
                     .totalLeaveDays(totalLeaveDays)
                     .build();
                 return AnnualLeaveResult.builder()
-                    .type(AnnualLeaveResultType.FULL)
+                    .calculationType(CalculationType.HIRE_DATE)
+                    .annualLeaveResultType(AnnualLeaveResultType.FULL)
                     .hireDate(hireDate)
                     .referenceDate(referenceDate)
                     .calculationDetail(fullAnnualLeaveDetail)

@@ -7,6 +7,7 @@ import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.AnnualLeaveResultType;
+import com.lawding.leavecalc.domain.CalculationType;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.detail.AdjustedAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
@@ -79,7 +80,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
             MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(accrualPeriod,
                 workingDaysWithinAbsentPeriods);
             return AnnualLeaveResult.builder()
-                .type(AnnualLeaveResultType.MONTHLY)
+                .calculationType(CalculationType.FISCAL_YEAR)
+                .annualLeaveResultType(AnnualLeaveResultType.MONTHLY)
+                .fiscalYear(fiscalYear)
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
                 .calculationDetail(monthlyLeaveDetail)
@@ -104,7 +107,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                     .totalLeaveDays(totalLeaveDays)
                     .build();
                 return AnnualLeaveResult.builder()
-                    .type(AnnualLeaveResultType.ADJUSTED)
+                    .calculationType(CalculationType.FISCAL_YEAR)
+                    .annualLeaveResultType(AnnualLeaveResultType.ADJUSTED)
+                    .fiscalYear(fiscalYear)
                     .hireDate(hireDate)
                     .referenceDate(referenceDate)
                     .calculationDetail(adjustedAnnualLeaveDetail)
@@ -120,7 +125,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                     .totalLeaveDays(totalLeaveDays)
                     .build();
                 return AnnualLeaveResult.builder()
-                    .type(AnnualLeaveResultType.FULL)
+                    .calculationType(CalculationType.FISCAL_YEAR)
+                    .annualLeaveResultType(AnnualLeaveResultType.FULL)
+                    .fiscalYear(fiscalYear)
                     .hireDate(hireDate)
                     .referenceDate(referenceDate)
                     .calculationDetail(fullAnnualLeaveDetail)
@@ -145,7 +152,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
         if (referenceDate.isBefore(nextFiscalYear.startDate())) {
             // 기준일이 입사일과 같은 회계연도이면 => 월차
             return AnnualLeaveResult.builder()
-                .type(AnnualLeaveResultType.MONTHLY)
+                .calculationType(CalculationType.FISCAL_YEAR)
+                .annualLeaveResultType(AnnualLeaveResultType.MONTHLY)
+                .fiscalYear(fiscalYear)
                 .hireDate(hireDate)
                 .referenceDate(referenceDate)
                 .calculationDetail(monthlyLeaveDetail)
@@ -196,7 +205,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                                 monthlyLeaveDetail.getTotalLeaveDays() + proratedLeave)
                             .build();
                     return AnnualLeaveResult.builder()
-                        .type(AnnualLeaveResultType.MONTHY_PRORATED)
+                        .calculationType(CalculationType.FISCAL_YEAR)
+                        .annualLeaveResultType(AnnualLeaveResultType.MONTHY_PRORATED)
+                        .fiscalYear(fiscalYear)
                         .hireDate(hireDate)
                         .referenceDate(referenceDate)
                         .calculationDetail(monthlyProratedAnnualLeaveDetail)
@@ -209,7 +220,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                             .totalLeaveDays(proratedLeave)
                             .build();
                     return AnnualLeaveResult.builder()
-                        .type(AnnualLeaveResultType.PRORATED)
+                        .calculationType(CalculationType.FISCAL_YEAR)
+                        .annualLeaveResultType(AnnualLeaveResultType.PRORATED)
+                        .fiscalYear(fiscalYear)
                         .hireDate(hireDate)
                         .referenceDate(referenceDate)
                         .calculationDetail(proratedAnnualLeaveDetail)
@@ -218,7 +231,9 @@ public final class FiscalYearStrategy implements CalculationStrategy {
                 }
             } else {
                 return AnnualLeaveResult.builder()
-                    .type(AnnualLeaveResultType.MONTHLY)
+                    .calculationType(CalculationType.FISCAL_YEAR)
+                    .annualLeaveResultType(AnnualLeaveResultType.MONTHLY)
+                    .fiscalYear(fiscalYear)
                     .hireDate(hireDate)
                     .referenceDate(referenceDate)
                     .calculationDetail(monthlyLeaveDetail)
