@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2' // Shadow 플러그인 추가
 }
 
 group = 'com.leavecalc'
@@ -9,14 +10,11 @@ repositories {
     mavenCentral()
 }
 
-
 tasks.withType(JavaCompile).configureEach {
     options.encoding='UTF-8'
 }
 
-
 dependencies {
-
     // Lombok
     implementation 'org.projectlombok:lombok:1.18.26'
     compileOnly 'org.projectlombok:lombok:1.18.30'
@@ -27,14 +25,8 @@ dependencies {
     implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
     implementation 'com.amazonaws:aws-lambda-java-log4j2:1.5.1'
 
-    // AWS SDK v2 with BOM
-    implementation platform('software.amazon.awssdk:bom:2.25.21')
-    implementation 'software.amazon.awssdk:ssm'
-    implementation 'software.amazon.awssdk:regions'
-    implementation 'software.amazon.awssdk:auth'
-
     // Secure MySQL Connector
-    implementation 'com.mysql:mysql-connector-j:8.3.0'
+    implementation 'mysql:mysql-connector-java:8.0.33'
 
     // JUnit & Mockito
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
@@ -45,8 +37,31 @@ dependencies {
     // jackson-databind
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
-
 }
+
+// ShadowJar 설정 추가
+shadowJar {
+    archiveBaseName.set('leavecalc')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+
+    // 메타데이터 파일 병합 설정
+    mergeServiceFiles()
+
+    // 모든 의존성 포함
+    zip64 true
+
+    manifest {
+        attributes 'Main-Class': 'com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandler'
+    }
+}
+
+jar {
+    enabled = false
+}
+
+// 빌드 시 shadowJar 실행
+build.dependsOn shadowJar
 
 test {
     useJUnitPlatform()

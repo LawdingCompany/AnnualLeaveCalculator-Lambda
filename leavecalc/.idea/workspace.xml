@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="feat : 연차계산결과응답객체 생성 &amp; 핸들러, 유효성 검사 함수 테스트 코드 추가&#10;&#10;- AnnualLeaveResponse 객체 구현&#10;- AnnualLeaveCalculatorLambdaHandlerTest, AnnualLeaveRequestValidatorTest 코드 추가">
+    <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="fix : ParameterStore 대신 Lambda 환경변수 사용">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/db/RdsConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/db/RdsConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/NonWorkingPeriod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/NonWorkingPeriodRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/NonWorkingPeriodRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/mapper/AnnualLeaveMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/mapper/AnnualLeaveMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/ParameterStoreUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/DatePeriod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/DatePeriod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/CalculationDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/CalculationDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyLeaveDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/exception/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,6 +51,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Gradle.Build leavecalc.executor": "Run",
+    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.executor": "Run",
     "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success.executor": "Run",
     "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_HireDateType_Success.executor": "Run",
     "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_ValidInput_ReturnsCorrectResponse.executor": "Run",
@@ -82,7 +84,22 @@
       <recent name="com.leavecalc" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success">
+  <component name="RunManager" selected="JUnit.AnnualLeaveCalculatorLambdaHandlerTest">
+    <configuration name="AnnualLeaveCalculatorLambdaHandlerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="leavecalc.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lawding.leavecalc.handler.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.handler" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandlerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="leavecalc.test" />
       <extension name="coverage">
@@ -146,29 +163,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HireDateStrategyTest$LessThanOneYearHireTests.returns5WhenOneMonthHasAbsenceWithin6Months" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="leavecalc.test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.HireDateStrategyTest" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.HireDateStrategyTest$LessThanOneYearHireTests" />
-      <option name="METHOD_NAME" value="returns5WhenOneMonthHasAbsenceWithin6Months" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest" />
         <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success" />
-        <item itemvalue="JUnit.AnnualLeaveRequestValidatorTest" />
         <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_HireDateType_Success" />
+        <item itemvalue="JUnit.AnnualLeaveRequestValidatorTest" />
         <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_ValidInput_ReturnsCorrectResponse" />
-        <item itemvalue="JUnit.HireDateStrategyTest$LessThanOneYearHireTests.returns5WhenOneMonthHasAbsenceWithin6Months" />
       </list>
     </recent_temporary>
   </component>
@@ -209,7 +210,7 @@
       <workItem from="1746924670891" duration="1883000" />
       <workItem from="1746929335366" duration="249000" />
       <workItem from="1747175164090" duration="1839000" />
-      <workItem from="1747276128073" duration="11116000" />
+      <workItem from="1747276128073" duration="18998000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(입사일, 회계연도) 로직 최종 수정">
       <created>1745988718717</created>
@@ -250,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747285436066</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fix : ParameterStore 대신 Lambda 환경변수 사용">
+      <option name="closed" value="true" />
+      <created>1747291639552</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1747291639552</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -262,7 +271,8 @@
     <MESSAGE value="fix : 월차 계산 함수 파라미터 수정(monthlyAccruedLeaves)&#10;&#10;- LocalDate -&gt; DatePeriod로 수정" />
     <MESSAGE value="chore: 사용하지 않는 import 문 제거&#10;&#10;- 불필요한 import 문 정리&#10;- 코드 가독성 향상" />
     <MESSAGE value="feat : 연차계산결과응답객체 생성 &amp; 핸들러, 유효성 검사 함수 테스트 코드 추가&#10;&#10;- AnnualLeaveResponse 객체 구현&#10;- AnnualLeaveCalculatorLambdaHandlerTest, AnnualLeaveRequestValidatorTest 코드 추가" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : 연차계산결과응답객체 생성 &amp; 핸들러, 유효성 검사 함수 테스트 코드 추가&#10;&#10;- AnnualLeaveResponse 객체 구현&#10;- AnnualLeaveCalculatorLambdaHandlerTest, AnnualLeaveRequestValidatorTest 코드 추가" />
+    <MESSAGE value="fix : ParameterStore 대신 Lambda 환경변수 사용" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix : ParameterStore 대신 Lambda 환경변수 사용" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -320,11 +330,6 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java</url>
-          <line>30</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>

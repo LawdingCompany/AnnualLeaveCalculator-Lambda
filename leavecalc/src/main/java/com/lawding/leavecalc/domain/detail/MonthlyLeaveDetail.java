@@ -14,7 +14,6 @@ public class MonthlyLeaveDetail implements CalculationDetail {
 
     @Builder
     public static class MonthlyLeaveGrantRecord {
-
         DatePeriod period;
         double monthlyLeave;
     }

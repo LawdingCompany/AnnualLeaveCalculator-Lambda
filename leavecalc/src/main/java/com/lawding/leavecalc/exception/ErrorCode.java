@@ -7,11 +7,12 @@ public enum ErrorCode {
     REFERENCE_DATE_REQUIRED("E101","기준일은 필수 항목입니다."),
     FISCAL_YEAR_REQUIRED("E102","회계연도 방식일 경우, 회계연도 시작일은 필수입니다."),
 
-    PARAMETER_STORE_ERROR("E200","시스템 설정값 조회에 실패했습니다."),
     DATABASE_CONNECTION_FAILED("E201","데이터베이스 연결에 실패했습니다."),
     DATABASE_QUERY_FAILED("E202", "공휴일 조회에 실패했습니다."),
-    INTERNAL_SERVER_ERROR("E999", "서버 오류가 발생했습니다.");
 
+    SERIALIZATION_FAILED("E400", "응답 객체 직렬화에 실패했습니다."),
+
+    INTERNAL_SERVER_ERROR("E999", "서버 오류가 발생했습니다.");
 
     private final String code;
     private final String message;
