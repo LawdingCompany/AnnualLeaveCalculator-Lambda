@@ -43,11 +43,11 @@ public class AnnualLeaveMapper {
             .orElse(List.of()) // null이면 빈 리스트
             .stream()
             .collect(Collectors.groupingBy(
-                NonWorkingPeriodRequest::type,
+                NonWorkingPeriodRequest::getType,
                 Collectors.mapping(
                     period -> new DatePeriod(
-                        LocalDate.parse(period.startDate()),
-                        LocalDate.parse(period.endDate())
+                        LocalDate.parse(period.getStartDate()),
+                        LocalDate.parse(period.getEndDate())
                     ),
                     Collectors.toList()
                 )
