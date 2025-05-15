@@ -12,6 +12,7 @@ public class MonthlyLeaveDetail implements CalculationDetail {
     private final List<MonthlyLeaveGrantRecord> records;
     private final double totalLeaveDays;
 
+    @Getter
     @Builder
     public static class MonthlyLeaveGrantRecord {
         DatePeriod period;

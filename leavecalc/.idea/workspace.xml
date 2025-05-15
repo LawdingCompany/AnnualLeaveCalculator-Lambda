@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="fix : ParameterStore 대신 Lambda 환경변수 사용">
+    <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/DatePeriod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/DatePeriod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/CalculationDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/CalculationDetail.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/exception/ErrorCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,7 +203,7 @@
       <workItem from="1746924670891" duration="1883000" />
       <workItem from="1746929335366" duration="249000" />
       <workItem from="1747175164090" duration="1839000" />
-      <workItem from="1747276128073" duration="18998000" />
+      <workItem from="1747276128073" duration="19235000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(입사일, 회계연도) 로직 최종 수정">
       <created>1745988718717</created>
@@ -259,7 +252,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747291639552</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정">
+      <option name="closed" value="true" />
+      <created>1747300815025</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1747300815025</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -272,7 +273,8 @@
     <MESSAGE value="chore: 사용하지 않는 import 문 제거&#10;&#10;- 불필요한 import 문 정리&#10;- 코드 가독성 향상" />
     <MESSAGE value="feat : 연차계산결과응답객체 생성 &amp; 핸들러, 유효성 검사 함수 테스트 코드 추가&#10;&#10;- AnnualLeaveResponse 객체 구현&#10;- AnnualLeaveCalculatorLambdaHandlerTest, AnnualLeaveRequestValidatorTest 코드 추가" />
     <MESSAGE value="fix : ParameterStore 대신 Lambda 환경변수 사용" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix : ParameterStore 대신 Lambda 환경변수 사용" />
+    <MESSAGE value="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
