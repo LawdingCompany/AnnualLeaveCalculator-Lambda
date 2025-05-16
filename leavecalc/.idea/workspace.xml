@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정">
+    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="test : 수정된 산정방식(입사일/회계연도) 테스트 코드 작성&#10;&#10;- 리팩토링 후 수정된 계산 방식 테스트 코드 작성&#10;- 산정방식(회계연도) 테스트 코드 작성">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyLeaveDetail.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,11 +17,26 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -33,124 +47,262 @@
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
-  <component name="ProjectId" id="2vW0bEmi57jOvWoYtYk40HbvYwk" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="2vWBFakxbZMOJZoOu0rdjpkB3cr" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build leavecalc.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_HireDateType_Success.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_ValidInput_ReturnsCorrectResponse.executor": "Run",
-    "JUnit.AnnualLeaveRequestValidatorTest.executor": "Run",
-    "JUnit.HireDateStrategyTest$LessThanOneYearHireTests.returns5WhenOneMonthHasAbsenceWithin6Months.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "develop",
-    "last_opened_file_path": "C:/kb_project/bank-challenger",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/jaeyu/OneDrive/바탕 화면/lawding/Lambda/leavecalc/src/main/java/com/leavecalc/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.17",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return15WhenEmployeeHasARIsExactly80Percent.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return15WhenEmployeeHasARIsExactly80PercentCase1.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return15WhenEmployeeHasARIsExactly80PercentCase2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return15WhenEmployeeHasARIsExactly80PercentCase3.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return15WhenEmployeeHasARIsExactly80PercentCase4.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return15WhenFirstYearEmployeeHasARAndPWROver80Percent.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return16WhenThreeYearEmployeeHasARAndPWROver80Percent.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return16WhenThreeYearsEmployeeHasARAndPWROver80Percent.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return25WhenTwentyFiveYearsEmployeeHasARAndPWROver80Percent.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return9WhenEmployeeHasARUnder80PercentCase.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return9WhenEmployeeHasARUnder80PercentCase2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return9WhenEmployeeHasARUnder80PercentCase3.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.AfterThanOneYearHireDateTests.return9WhenFirstYearEmployeeHasARUnder80Percent.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.BeforeFirstRegularFiscalYearTests.return5WhenReferenceDateIsInSameFiscalYear.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.BeforeFirstRegularFiscalYearTests.returnMonthlyLeaveWhenReferenceDateIsInSameFiscalYear.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build leavecalc.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.HireDateStrategyTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.HireDateStrategyTest.입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.HireDateStrategyTest.입사일_1년미만_개근한_근로자는_월차_최댓값.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.HireDateStrategyTest.입사일_1년미만_결근이_있는_달은_연차가_발생하지_않는다.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.HireDateStrategyTest.입사일_1년이상_근로자의_일반적인_연차_개수_가산연차없음.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.LessThanOneYearHireDateTests.return6WhenAbsenceIsOnHolidayWithin6Months.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.LessThanOneYearHireTests.return5WhenOneMonthHasAbsenceWithin6Months.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.LessThanOneYearHireTests.return6WhenAbsenceIsOnHolidayWithin6Months.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.LessThanOneYearHireTests.returns5WhenOneMonthHasAbsenceWithin6Months.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase1.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentAndOverlapDuration50s.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase1.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase3.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest1.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest3.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.leavecalc.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$BeforeOneYearFromHireDateTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculateAttendanceRateTest.returnsCorrectAttendanceRateGivenAllParameters.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculateExcludedWorkingDaysTest.return7WhenExcludedPeriodHas2Weekdays.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculateExcludedWorkingDaysTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return7WhenCompanyHolidayHas2Weekdays.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return7WhenExcludedPeriodHas2Weekdays.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return7WhenExcludedPeriodOverlapsWithCompanyHoliday.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenCompanyHolidaysIncludeWeekends.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenCompanyHolidaysIncludeWeekends2.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenExcludedPeriodIncludesWeekends.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.return9WhenExcludedPeriodIncludesWeekends1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysInAbsentPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod2.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysTest.returns244WorkingDaysIn2024WhenWeekendsAndAllHolidaysAreExcluded.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysTest.returns246WorkingDaysIn2024WhenWeekendsAndStatutoryHolidaysAreExcluded.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysTest.returns262WhenCountingWeekdaysIn2024.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$CalculatePrescribedWorkingDaysWithinExcludedPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$IsWeekdayTest.returnTrueWhenIsWeekDays.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$MonthlyAccruedLeavesTest.returnsFiveMonthlyLeavesWhenOneDayShortOfSixMonths.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$MonthlyAccruedLeavesTest.returnsZeroWhenAbsentDaysExistInEveryMonth.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAdditionalLeaveTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAdditionalLeaveTest.returnOneWhenThreeOrFourYears.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAdditionalLeaveTest.returnTenWhenOverTwentyOneYears.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAdditionalLeaveTest.returnZeroWhenLessThanOneYear.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAttendanceRateTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAttendanceRateTest.returnsCorrectAttendanceRateGivenAllParameters.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAttendanceRateTest.returnsHalfAttendanceRateWhenAbsentDaysAreHalfOfWorkingDaysAndNoExcludedDays.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAttendanceRateTest.returnsOneWhenNoAbsent.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAttendanceRateTest.returnsOneWhenNoAbsentAndNoExclusion.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAttendanceRateTest.returnsZeroWhenAllWorkingDaysAreAbsent.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculateAttendanceRateTest.returnsZeroWhenAllWorkingDaysAreExcluded.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysTest.returns244WorkingDaysIn2024WhenWeekendsAndAllHolidaysAreExcluded.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysTest.returns246WorkingDaysIn2024WhenWeekendsAndStatutoryHolidaysAreExcluded.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysTest.returns262WhenCountingWeekdaysIn2024.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysWithinPeriodsTest.returns10WorkingDaysWhenAbsentFromMay6To16AndMay20To25.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysWithinPeriodsTest.returns12WorkingDaysWhenAbsentFromMay6To16AndMay20To25.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysWithinPeriodsTest.returns12WorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysWithinPeriodsTest.returns8WorkingDaysWhenAbsentFromMay6To20IncludingCompanyHolidayOnMay9AndWeekendOnMay10.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysWithinPeriodsTest.returnsNineWorkingDaysWhenAbsentFromMay6ToMay20WithinMayPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingDaysWithinPeriodsTest.returnsZeroWorkingDaysWhenAbsentFromJune2To15.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingRatioTest.returnsOneAsWorkingRatioWhenExcludedWorkingDaysIsZero.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$calculatePrescribedWorkingRatioTest.returnsZeroAsWorkingRatioWhenExcludedDaysEqualPrescribedWorkingDays.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$filterWorkingDayOnlyPeriodsTest.returns20WhenWorkingDaysInMay2025.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$filterWorkingDayOnlyPeriodsTest.returns8WorkingDays_whenPeriodsAreMay1To10AndMay16To20_2025.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$filterWorkingDayOnlyPeriodsTest.returnsEmptyList_whenInputIsEmpty.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$formatDoubleTest.test1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$formatDoubleTest.test2.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$isLessThanOneYearTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$isLessThanOneYearTest.returnFalseWhenReferenceDateIsExactlyOneYearFromHireDate.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$isLessThanOneYearTest.returnTrueWhenReferenceDateIsBeforeOneYearFromHireDate.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$isWeekdayTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$isWeekdayTest.returnFalseWhenIsWeekends.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$isWeekdayTest.returnTrueWhenIsWeekDays.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest$PeriodIsExactlyOneYear.returnsElevenWhenNoAbsenceOrExcludedPeriodInOneYear.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest$PeriodIsLessThanOneYear.returnsFiveMonthlyLeavesWhenOneDayShortOfSixMonths.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest$PeriodIsLessThanOneYear.returnsSixMonthlyLeavesWhenMoreThanSixMonthsByOneDay.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest$PeriodIsLessThanOneYear.returnsSixMonthlyLeavesWhenNoAbsenceOrExcludedPeriodInSixMonths.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsElevenWhenAbsentDaysAreOneInOneYearPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsElevenWhenNoAbsenceOrExcludedPeriodInOneYear.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsFiveMonthlyLeavesWhenOneDayShortOfSixMonths.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsSixMonthlyLeavesWhenNoAbsenceOrExcludedPeriodInSixMonths.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsTenWhenAbsentDaysOccurInMayAndAugust.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsTenWhenAbsentDaysOccurInMayAndJune.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsZeroWhenAbsentDaysExistInEveryMonth.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.test.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveHelperTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateAndHireDateAreInSameFiscalYear.return4WhenOneMonthHasAbsenceDuringAccrualPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateAndHireDateAreInSameFiscalYear.return5WhenFullyAttendedInSameFiscalYear.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return17Point57WhenOneDayAbsenceBeforeOneYear.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return17Point57WhenOneDayAbsenceBeforeOneYear1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return18Point57WhenReferenceDateBeforeOneYear1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return4WhenReferenceDateIsBeforeOneYearAndOneMonthAbsent.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return4WhenReferenceDateIsBeforeOneYearAndOneMonthAbsent1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests.return4WhenOneMonthHasAbsenceDuringAccrualPeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests.return4WhenReferenceDateIsInSameFiscalYear.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenARIs80Point67.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenARIs80Point671.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenARIs80Point672.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return15WhenReferenceDateIsFirstFiscalYearStartDate.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return16WhenInThirdFiscalYearCase1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return16WhenInThirdFiscalYearCase2.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.return16WhenInThirdFiscalYearCase3.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest.return15WhenReferenceDateIsFirstFiscalYearStartDate.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest.test.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.FiscalYearStrategyTest.입사일_1년미만_첫_회계연도_도래_이전_회계연도_시작일과_동일하지_않은_경우.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return15WhenEmployeeHasARIsExactly80PercentCase4.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80Percent.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentAndOverlapDuration50s.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase1.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase2.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$AfterThanOneYearHireDateTests$AttendanceRateBoundaryTests.return9WhenEmployeeHasARUnder80PercentCase3.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$LessThanOneYearHireTests.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$LessThanOneYearHireTests.return5WhenOneMonthHasAbsenceWithin6Months.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$LessThanOneYearHireTests.returns6WhenPerfectAttendance.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest.입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest.입사일_1년미만_개근한_근로자는_월마다_연차가_1개씩_발생한다_경계값.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest.입사일_1년미만_결근이_있는_달은_연차가_발생하지_않는다.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest.입사일_1년미만_결근이있는경우_그게주말인경우_고려해야함.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest.입사일_1년이상_출근율이_80퍼미만일때.executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.lawding.leavecalc.domain.result" />
-      <recent name="com.leavecalc" />
+      <recent name="com.lawding.leavecalc.constant" />
+      <recent name="com.lawding.leavecalc.strategy" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AnnualLeaveCalculatorLambdaHandlerTest">
-    <configuration name="AnnualLeaveCalculatorLambdaHandlerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.FiscalYearStrategyTest">
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="leavecalc.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.handler.*" />
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.handler" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandlerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="leavecalc.test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.handler.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.handler" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandlerTest" />
-      <option name="METHOD_NAME" value="handleRequest_FiscalYearDateType_Success" />
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIs80AndOneExcludedDay" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_HireDateType_Success" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="leavecalc.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.handler.*" />
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.handler" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandlerTest" />
-      <option name="METHOD_NAME" value="handleRequest_HireDateType_Success" />
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_ValidInput_ReturnsCorrectResponse" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="leavecalc.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.handler.*" />
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.handler" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandlerTest" />
-      <option name="METHOD_NAME" value="handleRequest_ValidInput_ReturnsCorrectResponse" />
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnualLeaveRequestValidatorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="leavecalc.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.util.*" />
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.util" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.util.AnnualLeaveRequestValidatorTest" />
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
+      <option name="METHOD_NAME" value="returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FiscalYearStrategyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="leavecalc.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -158,203 +310,201 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest" />
-        <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success" />
-        <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_HireDateType_Success" />
-        <item itemvalue="JUnit.AnnualLeaveRequestValidatorTest" />
-        <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_ValidInput_ReturnsCorrectResponse" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay" />
+        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
-        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
+        <option value="jdk-17.0.10-azul-17.0.10-4caba194b151-cd1dbda1" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="" />
-      <created>1744245592162</created>
+      <changelist id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="" />
+      <created>1744250847438</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1744245592162</updated>
-      <workItem from="1744245593780" duration="2684000" />
-      <workItem from="1744248297575" duration="277000" />
-      <workItem from="1744331963459" duration="1293000" />
-      <workItem from="1745223192148" duration="3061000" />
-      <workItem from="1745226274630" duration="6117000" />
-      <workItem from="1745232411055" duration="102000" />
-      <workItem from="1745468026834" duration="15165000" />
-      <workItem from="1745975710420" duration="4882000" />
-      <workItem from="1745980608373" duration="5187000" />
-      <workItem from="1745989081445" duration="120000" />
-      <workItem from="1745989210696" duration="6367000" />
-      <workItem from="1745995600161" duration="73000" />
-      <workItem from="1746171053950" duration="812000" />
-      <workItem from="1746171877485" duration="1355000" />
-      <workItem from="1746173643061" duration="11084000" />
-      <workItem from="1746921143234" duration="187000" />
-      <workItem from="1746921343420" duration="268000" />
-      <workItem from="1746922268860" duration="606000" />
-      <workItem from="1746924670891" duration="1883000" />
-      <workItem from="1746929335366" duration="249000" />
-      <workItem from="1747175164090" duration="1839000" />
-      <workItem from="1747276128073" duration="19235000" />
+      <updated>1744250847438</updated>
+      <workItem from="1744250848997" duration="6712000" />
+      <workItem from="1744427608020" duration="13000" />
+      <workItem from="1745048887341" duration="12859000" />
+      <workItem from="1745298737160" duration="11154000" />
+      <workItem from="1745395964692" duration="4436000" />
+      <workItem from="1745403434429" duration="7287000" />
+      <workItem from="1745487272653" duration="10556000" />
+      <workItem from="1745541856082" duration="33767000" />
+      <workItem from="1745639480093" duration="24273000" />
+      <workItem from="1745733397183" duration="403000" />
+      <workItem from="1745751331077" duration="8534000" />
+      <workItem from="1745907506312" duration="1522000" />
+      <workItem from="1745909964207" duration="23350000" />
+      <workItem from="1745997457942" duration="752000" />
+      <workItem from="1746021080890" duration="10761000" />
+      <workItem from="1746034857707" duration="1237000" />
+      <workItem from="1746085998144" duration="15127000" />
+      <workItem from="1746186309787" duration="14536000" />
+      <workItem from="1746211118511" duration="244000" />
+      <workItem from="1746261375273" duration="2157000" />
+      <workItem from="1746355311315" duration="24667000" />
+      <workItem from="1746433613050" duration="28995000" />
+      <workItem from="1746735471960" duration="31000" />
+      <workItem from="1746748074916" duration="2000" />
     </task>
-    <task id="LOCAL-00001" summary="feat : 산정방식(입사일, 회계연도) 로직 최종 수정">
-      <created>1745988718717</created>
+    <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
+      <option name="closed" value="true" />
+      <created>1745672379171</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1745988718717</updated>
+      <updated>1745672379171</updated>
     </task>
-    <task id="LOCAL-00002" summary="test : 산정방식(입사일, 회계연도) 기본 테스트 코드 작성&#10;&#10;- 월차 계산 방식에서 오류 수정">
+    <task id="LOCAL-00002" summary="docs: 회계연도 및 입사일 함수 로직 분석 주석 추가&#10;&#10;회계연도 및 입사일 관련 함수들에 대해 노무사와 논의한 내용을 바탕으로 로직을 분석하고, 오류를 발견하여 주석으로 표시하였습니다.">
       <option name="closed" value="true" />
-      <created>1745995656974</created>
+      <created>1745760775554</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1745995656974</updated>
+      <updated>1745760775554</updated>
     </task>
-    <task id="LOCAL-00003" summary="fix : 월차 계산 함수 파라미터 수정(monthlyAccruedLeaves)&#10;&#10;- LocalDate -&gt; DatePeriod로 수정">
+    <task id="LOCAL-00003" summary="feat: AR/PWR 계산 로직 및 연차 산정 방식(입사일/회계연도) 처리 로직 수정">
       <option name="closed" value="true" />
-      <created>1746172326399</created>
+      <created>1745944223770</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1746172326399</updated>
+      <updated>1745944223770</updated>
     </task>
-    <task id="LOCAL-00004" summary="chore: 사용하지 않는 import 문 제거&#10;&#10;- 불필요한 import 문 정리&#10;- 코드 가독성 향상">
+    <task id="LOCAL-00004" summary="test: 연차 계산에 필요한 유틸 함수 테스트 코드 작성&#10;&#10;- AnnualLeaveHelper 클래스 Unit Test 진행&#10;- 경계값 테스트 케이스 추가">
       <option name="closed" value="true" />
-      <created>1746172749577</created>
+      <created>1746034629961</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1746172749577</updated>
+      <updated>1746034629961</updated>
     </task>
-    <task id="LOCAL-00005" summary="feat : 연차계산결과응답객체 생성 &amp; 핸들러, 유효성 검사 함수 테스트 코드 추가&#10;&#10;- AnnualLeaveResponse 객체 구현&#10;- AnnualLeaveCalculatorLambdaHandlerTest, AnnualLeaveRequestValidatorTest 코드 추가">
+    <task id="LOCAL-00005" summary="test: 연차 계산 보조 유틸 함수 단위 테스트 추가&#10;&#10;- 소정근로비율(PWR), 출근율(AR) 계산 함수 테스트&#10;- 결근/제외일 리스트 기반 소정근로일 계산 함수 검증&#10;  · 겹치는 기간, 주말/공휴일 제외 처리 로직 확인&#10;- 연차 산정기간 내 총 소정근로일 계산 로직 테스트&#10;  · 주말/공휴일/회사휴일 제외한 일수 계산&#10;- 월차 계산 함수 테스트 (1년 미만 근로자 대상 월별 부여)&#10;- 입사 1년 미만 여부, 근속연수별 연차 계산 함수 검증">
       <option name="closed" value="true" />
-      <created>1747285436066</created>
+      <created>1746108307452</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1747285436066</updated>
+      <updated>1746108307452</updated>
     </task>
-    <task id="LOCAL-00006" summary="fix : ParameterStore 대신 Lambda 환경변수 사용">
+    <task id="LOCAL-00006" summary="feat : 산정방식(입사일)의 결과 상세 정보 추가 &amp; 기간 리스트 중 소정근로일만 추출하는 함수 추가&#10;&#10;- 기간 리스트(결근처리, 소정근로제외일)에 대해 실제 출근일만 추출하는 함수 추가&#10;- 개근 여부 판단 함수 정확성 증가&#10;- 산정 결과 유형(5가지) 중 3가지에 대해 결과 상세 정보 출력 객체 생성">
       <option name="closed" value="true" />
-      <created>1747291639552</created>
+      <created>1746208048219</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1747291639552</updated>
+      <updated>1746208048219</updated>
     </task>
-    <task id="LOCAL-00007" summary="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정">
+    <task id="LOCAL-00007" summary="feat : 산정방식(입사일)의 결과 상세 정보 추가 &amp; 기간 리스트 중 소정근로일만 추출하는 함수 추가 및 테스트 코드 작성&#10;&#10;- 기간 리스트(결근처리, 소정근로제외일)에 대해 실제 출근일만 추출하는 함수 추가&#10;- 개근 여부 판단 함수 정확성 증가&#10;- 산정 결과 유형(5가지) 중 3가지에 대해 결과 상세 정보 출력 객체 생성">
       <option name="closed" value="true" />
-      <created>1747300815025</created>
+      <created>1746208076164</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1747300815025</updated>
+      <updated>1746208076164</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="test : 산정방식(입사일) 테스트 코드 작성">
+      <option name="closed" value="true" />
+      <created>1746211351895</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746211351895</updated>
+    </task>
+    <task id="LOCAL-00009" summary="test : 산정방식(입사일) 테스트 코드 작성 완료&#10;&#10;- HireDateStrategyTest 코드 작성 완료&#10;- 입사일 1년 미만인 경우 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 출근율(AR)별 분기 및 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 소정근로일(PWR)별 분기 및 경계값 테스트 완료&#10;- 각각의 경우의 수에 대해 주말, 법정 공휴일, 회사 휴일 모두 대입한 경우 테스트 완료">
+      <option name="closed" value="true" />
+      <created>1746375341985</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1746375341985</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행">
+      <option name="closed" value="true" />
+      <created>1746392200773</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1746392200773</updated>
+    </task>
+    <task id="LOCAL-00011" summary="test : 산정방식(입사일) 테스트 verify 함수 추가">
+      <option name="closed" value="true" />
+      <created>1746395897271</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1746395897271</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor : 날짜 계산 유틸 함수 수정 및 공통 로직 구조화&#10;&#10;- 공통 로직 내부 유틸 함수로 분리&#10;- 소정근로일,결근처리일, 소정근로제외일 계산 함수 최적화&#10;- 결근처리 계산 중 소정근로제외일 고려하지 않는 오류 수정">
+      <option name="closed" value="true" />
+      <created>1746465849884</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746465849884</updated>
+    </task>
+    <task id="LOCAL-00013" summary="refactor : 산정방식(입사일/회계연도) 계산 로직 수정 &amp; 공통 로직 분리&#10;&#10;- 공통 로직(월차 계산) 분리 후 구조화&#10;- 결근처리일 계산시 소정근로제외기간을 고려하지 않는 오류 수정">
+      <option name="closed" value="true" />
+      <created>1746465927114</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1746465927114</updated>
+    </task>
+    <task id="LOCAL-00014" summary="test : 수정된 산정방식(입사일/회계연도) 테스트 코드 작성&#10;&#10;- 리팩토링 후 수정된 계산 방식 테스트 코드 작성&#10;- 산정방식(회계연도) 테스트 코드 작성">
+      <option name="closed" value="true" />
+      <created>1746475842096</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1746475842096</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat : 산정방식(입사일, 회계연도) 로직 최종 수정" />
-    <MESSAGE value="test : 산정방식(입사일, 회계연도) 기본 테스트 코드 작성&#10;&#10;- 월차 계산 방식에서 오류 수정" />
-    <MESSAGE value="fix : 월차 계산 함수 파라미터 수정(monthlyAccruedLeaves)&#10;&#10;- LocalDate -&gt; DatePeriod로 수정" />
-    <MESSAGE value="chore: 사용하지 않는 import 문 제거&#10;&#10;- 불필요한 import 문 정리&#10;- 코드 가독성 향상" />
-    <MESSAGE value="feat : 연차계산결과응답객체 생성 &amp; 핸들러, 유효성 검사 함수 테스트 코드 추가&#10;&#10;- AnnualLeaveResponse 객체 구현&#10;- AnnualLeaveCalculatorLambdaHandlerTest, AnnualLeaveRequestValidatorTest 코드 추가" />
-    <MESSAGE value="fix : ParameterStore 대신 Lambda 환경변수 사용" />
-    <MESSAGE value="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java</url>
-          <line>52</line>
-          <properties class="com.lawding.leavecalc.strategy.FiscalYearStrategyTest">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java</url>
-          <line>152</line>
-          <properties class="com.lawding.leavecalc.strategy.FiscalYearStrategyTest.BeforeFirstRegularFiscalYearTests.ReferenceDateIsInDifferentFiscalYearFromHireDate">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>279</line>
-          <properties class="com.lawding.leavecalc.strategy.HireDateStrategyTest.AfterThanOneYearHireDateTests.AttendanceRateBoundaryTests">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>305</line>
-          <properties class="com.lawding.leavecalc.strategy.HireDateStrategyTest.AfterThanOneYearHireDateTests.AttendanceRateBoundaryTests">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>209</line>
-          <properties class="com.lawding.leavecalc.strategy.HireDateStrategyTest.AfterThanOneYearHireDateTests">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>81</line>
-          <properties class="com.lawding.leavecalc.strategy.HireDateStrategyTest.BeforeOneYearFromHireDateTests">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>234</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java</url>
-          <line>53</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>306</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java</url>
-          <line>147</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat : 헬퍼클래스 JavaDoc 추가" />
+    <MESSAGE value="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1." />
+    <MESSAGE value="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용" />
+    <MESSAGE value="docs: 회계연도 및 입사일 함수 로직 분석 주석 추가&#10;&#10;회계연도 및 입사일 관련 함수들에 대해 노무사와 논의한 내용을 바탕으로 로직을 분석하고, 오류를 발견하여 주석으로 표시하였습니다." />
+    <MESSAGE value="feat: AR/PWR 계산 로직 및 연차 산정 방식(입사일/회계연도) 처리 로직 수정" />
+    <MESSAGE value="test: 연차 계산에 필요한 유틸 함수 테스트 코드 작성&#10;&#10;- AnnualLeaveHelper 클래스 Unit Test 진행&#10;- 경계값 테스트 케이스 추가" />
+    <MESSAGE value="test: 연차 계산 보조 유틸 함수 단위 테스트 추가&#10;&#10;- 소정근로비율(PWR), 출근율(AR) 계산 함수 테스트&#10;- 결근/제외일 리스트 기반 소정근로일 계산 함수 검증&#10;  · 겹치는 기간, 주말/공휴일 제외 처리 로직 확인&#10;- 연차 산정기간 내 총 소정근로일 계산 로직 테스트&#10;  · 주말/공휴일/회사휴일 제외한 일수 계산&#10;- 월차 계산 함수 테스트 (1년 미만 근로자 대상 월별 부여)&#10;- 입사 1년 미만 여부, 근속연수별 연차 계산 함수 검증" />
+    <MESSAGE value="feat : 산정방식(입사일)의 결과 상세 정보 추가 &amp; 기간 리스트 중 소정근로일만 추출하는 함수 추가&#10;&#10;- 기간 리스트(결근처리, 소정근로제외일)에 대해 실제 출근일만 추출하는 함수 추가&#10;- 개근 여부 판단 함수 정확성 증가&#10;- 산정 결과 유형(5가지) 중 3가지에 대해 결과 상세 정보 출력 객체 생성" />
+    <MESSAGE value="feat : 산정방식(입사일)의 결과 상세 정보 추가 &amp; 기간 리스트 중 소정근로일만 추출하는 함수 추가 및 테스트 코드 작성&#10;&#10;- 기간 리스트(결근처리, 소정근로제외일)에 대해 실제 출근일만 추출하는 함수 추가&#10;- 개근 여부 판단 함수 정확성 증가&#10;- 산정 결과 유형(5가지) 중 3가지에 대해 결과 상세 정보 출력 객체 생성" />
+    <MESSAGE value="test : 산정방식(입사일) 테스트 코드 작성" />
+    <MESSAGE value="test : 산정방식(입사일) 테스트 코드 작성 완료&#10;&#10;- HireDateStrategyTest 코드 작성 완료&#10;- 입사일 1년 미만인 경우 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 출근율(AR)별 분기 및 경계값 테스트 완료&#10;- 입사일 1년 이상인 경우 소정근로일(PWR)별 분기 및 경계값 테스트 완료&#10;- 각각의 경우의 수에 대해 주말, 법정 공휴일, 회사 휴일 모두 대입한 경우 테스트 완료" />
+    <MESSAGE value="feat : 산정방식(회계연도) 결과 상세 정보 추가&#10;&#10;- 계산 결과 상세 정보 추가&#10;- 기존 로직 리팩토링 진행" />
+    <MESSAGE value="test : 산정방식(입사일) 테스트 verify 함수 추가" />
+    <MESSAGE value="refactor : 날짜 계산 유틸 함수 수정 및 공통 로직 구조화&#10;&#10;- 공통 로직 내부 유틸 함수로 분리&#10;- 소정근로일,결근처리일, 소정근로제외일 계산 함수 최적화&#10;- 결근처리 계산 중 소정근로제외일 고려하지 않는 오류 수정" />
+    <MESSAGE value="refactor : 산정방식(입사일/회계연도) 계산 로직 수정 &amp; 공통 로직 분리&#10;&#10;- 공통 로직(월차 계산) 분리 후 구조화&#10;- 결근처리일 계산시 소정근로제외기간을 고려하지 않는 오류 수정" />
+    <MESSAGE value="test : 수정된 산정방식(입사일/회계연도) 테스트 코드 작성&#10;&#10;- 리팩토링 후 수정된 계산 방식 테스트 코드 작성&#10;- 산정방식(회계연도) 테스트 코드 작성" />
+    <option name="LAST_COMMIT_MESSAGE" value="test : 수정된 산정방식(입사일/회계연도) 테스트 코드 작성&#10;&#10;- 리팩토링 후 수정된 계산 방식 테스트 코드 작성&#10;- 산정방식(회계연도) 테스트 코드 작성" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
