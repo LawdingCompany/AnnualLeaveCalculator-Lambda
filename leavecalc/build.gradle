@@ -25,7 +25,8 @@ dependencies {
     implementation 'com.amazonaws:aws-lambda-java-events:3.11.0'
     implementation 'com.amazonaws:aws-lambda-java-log4j2:1.5.1'
 
-    // Secure MySQL Connector
+    // RDS, Secure MySQL Connector
+    implementation 'software.amazon.awssdk:rds:2.31.6'
     implementation 'mysql:mysql-connector-java:8.0.33'
 
     // JUnit & Mockito
@@ -37,6 +38,7 @@ dependencies {
     // jackson-databind
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2'
+
 }
 
 // ShadowJar 설정 추가
