@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="Merage : workspace 충돌 해결">
+    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="refactor : RDS IAM 인증 방식으로 변경 #3&#10;&#10;- AWS Lambda IAM Role 추가(+rds:connect)&#10;- RDS IAM 인증 토큰 발행 후 접근&#10;- RDS 조회(SELECT)만 가능, 보안 향상">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/db/RdsConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/db/RdsConnector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/exception/ErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/exception/ErrorCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,6 +95,7 @@
     &quot;Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest2.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.PrescribeWorkingRatioBoundaryTests.returnProratedTest3.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.leavecalc.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveCalculatorLambdaHandlerTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.AnnualLeaveHelperTest$BeforeOneYearFromHireDateTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.AnnualLeaveHelperTest$CalculateAttendanceRateTest.returnsCorrectAttendanceRateGivenAllParameters.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.AnnualLeaveHelperTest$CalculateExcludedWorkingDaysTest.return7WhenExcludedPeriodHas2Weekdays.executor&quot;: &quot;Run&quot;,
@@ -163,6 +164,7 @@
     &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.returnsZeroWhenAbsentDaysExistInEveryMonth.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.AnnualLeaveHelperTest$monthlyAccruedLeavesTest.test.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.AnnualLeaveHelperTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveRequestValidatorTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateAndHireDateAreInSameFiscalYear.return4WhenOneMonthHasAbsenceDuringAccrualPeriod.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateAndHireDateAreInSameFiscalYear.return5WhenFullyAttendedInSameFiscalYear.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.FiscalYearStrategyTest$BeforeFirstRegularFiscalYearTests$ReferenceDateIsInDifferentFiscalYearFromHireDate.return17Point57WhenOneDayAbsenceBeforeOneYear.executor&quot;: &quot;Run&quot;,
@@ -209,6 +211,7 @@
     &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -231,35 +234,33 @@
       <recent name="com.lawding.leavecalc.strategy" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.FiscalYearStrategyTest">
-    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.AnnualLeaveCalculatorLambdaHandlerTest">
+    <configuration name="AnnualLeaveCalculatorLambdaHandlerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="leavecalc.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="PATTERN" value="com.lawding.leavecalc.handler.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
-      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIs80AndOneExcludedDay" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.handler" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandlerTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AnnualLeaveRequestValidatorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="leavecalc.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.lawding.leavecalc.strategy.*" />
+          <option name="PATTERN" value="com.lawding.leavecalc.util.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest" />
-      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.strategy.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart" />
-      <option name="METHOD_NAME" value="returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="com.lawding.leavecalc.util" />
+      <option name="MAIN_CLASS_NAME" value="com.lawding.leavecalc.util.AnnualLeaveRequestValidatorTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -313,11 +314,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AnnualLeaveCalculatorLambdaHandlerTest" />
+        <item itemvalue="JUnit.AnnualLeaveRequestValidatorTest" />
         <item itemvalue="JUnit.FiscalYearStrategyTest" />
         <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenPwrIs80AndOneCompanyHolidayWithinExclusionPeriod1" />
         <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod1" />
-        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIs80AndOneExcludedDay" />
-        <item itemvalue="JUnit.FiscalYearStrategyTest$ReferenceDateIsAfterFirstFiscalYearStart.returns15WhenAttendanceRateIsEightyPercentAndOneCompanyHolidayWithinAbsencePeriod" />
       </list>
     </recent_temporary>
   </component>
@@ -360,6 +361,8 @@
       <workItem from="1746433613050" duration="28995000" />
       <workItem from="1746735471960" duration="31000" />
       <workItem from="1746748074916" duration="2000" />
+      <workItem from="1747440487827" duration="710000" />
+      <workItem from="1747441205101" duration="685000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
       <option name="closed" value="true" />
@@ -481,7 +484,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747355599242</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="refactor : RDS IAM 인증 방식으로 변경 #3&#10;&#10;- AWS Lambda IAM Role 추가(+rds:connect)&#10;- RDS IAM 인증 토큰 발행 후 접근&#10;- RDS 조회(SELECT)만 가능, 보안 향상">
+      <option name="closed" value="true" />
+      <created>1747361630766</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1747361630766</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -516,7 +527,8 @@
     <MESSAGE value="refactor : 산정방식(입사일/회계연도) 계산 로직 수정 &amp; 공통 로직 분리&#10;&#10;- 공통 로직(월차 계산) 분리 후 구조화&#10;- 결근처리일 계산시 소정근로제외기간을 고려하지 않는 오류 수정" />
     <MESSAGE value="test : 수정된 산정방식(입사일/회계연도) 테스트 코드 작성&#10;&#10;- 리팩토링 후 수정된 계산 방식 테스트 코드 작성&#10;- 산정방식(회계연도) 테스트 코드 작성" />
     <MESSAGE value="Merage : workspace 충돌 해결" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merage : workspace 충돌 해결" />
+    <MESSAGE value="refactor : RDS IAM 인증 방식으로 변경 #3&#10;&#10;- AWS Lambda IAM Role 추가(+rds:connect)&#10;- RDS IAM 인증 토큰 발행 후 접근&#10;- RDS 조회(SELECT)만 가능, 보안 향상" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor : RDS IAM 인증 방식으로 변경 #3&#10;&#10;- AWS Lambda IAM Role 추가(+rds:connect)&#10;- RDS IAM 인증 토큰 발행 후 접근&#10;- RDS 조회(SELECT)만 가능, 보안 향상" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
