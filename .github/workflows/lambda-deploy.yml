@@ -20,13 +20,13 @@ jobs:
           cache: 'gradle'
 
       - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
+        run: cd leavecalc && chmod +x ./gradlew
 
       - name: Run Test
-        run: ./gradlew test
+        run: cd leavecalc && ./gradlew test
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: cd leavecalc && ./gradlew build -x test
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
