@@ -361,7 +361,7 @@
       <workItem from="1747441205101" duration="1287000" />
       <workItem from="1747475877666" duration="117000" />
       <workItem from="1747476532630" duration="2000" />
-      <workItem from="1747476548057" duration="1958000" />
+      <workItem from="1747476548057" duration="2422000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
       <option name="closed" value="true" />
