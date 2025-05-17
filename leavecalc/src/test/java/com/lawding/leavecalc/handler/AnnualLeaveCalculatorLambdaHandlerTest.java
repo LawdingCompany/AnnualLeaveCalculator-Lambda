@@ -1,9 +1,12 @@
 package com.lawding.leavecalc.handler;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -70,10 +73,9 @@ public class AnnualLeaveCalculatorLambdaHandlerTest {
             .referenceDate("2024-06-03")
             .build();
 
-        // 요청을 JSON으로 변환하여 InputStream 생성
         String requestJson = objectMapper.writeValueAsString(request);
-        InputStream inputStream = new ByteArrayInputStream(requestJson.getBytes());
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        APIGatewayProxyRequestEvent apiGatewayEvent = new APIGatewayProxyRequestEvent();
+        apiGatewayEvent.setBody(requestJson);
 
         // 모든 정적 메서드 모킹
         try (MockedStatic<AnnualLeaveRequestValidator> validatorMock = mockStatic(AnnualLeaveRequestValidator.class);
@@ -102,25 +104,30 @@ public class AnnualLeaveCalculatorLambdaHandlerTest {
             responseMock.when(() -> AnnualLeaveResponse.of(any(AnnualLeaveResult.class)))
                 .thenReturn(mockResponse);
 
+
             // When
-            handler.handleRequest(inputStream, outputStream, context);
+            APIGatewayProxyResponseEvent response = handler.handleRequest(apiGatewayEvent, context);
 
             // Then: 각 단계가 호출되었는지 검증
 
-            // 1. 유효성 검사가 호출되었는지 확인
+            // 응답 검증
+            assertNotNull(response);
+            assertEquals(200, response.getStatusCode());
+
+            // 유효성 검사가 호출되었는지 확인
             validatorMock.verify(() -> AnnualLeaveRequestValidator.validate(any(AnnualLeaveRequest.class)));
 
-            // 2. 매퍼가 호출되었는지 확인
+            // 매퍼가 호출되었는지 확인
             mapperMock.verify(() -> AnnualLeaveMapper.toContext(any(AnnualLeaveRequest.class)));
 
-            // 3. 팩토리가 호출되었는지 확인
+            // 팩토리가 호출되었는지 확인
             factoryMock.verify(() -> CalculationStrategyFactory.from(any(AnnualLeaveContext.class)));
 
-            // 4. 올바른 전략이 호출되었는지 확인
+            // 올바른 전략이 호출되었는지 확인
             verify(hireDateStrategy).annualLeaveCalculate(any(AnnualLeaveContext.class));
             verify(fiscalYearStrategy, never()).annualLeaveCalculate(any(AnnualLeaveContext.class));
 
-            // 5. 응답 생성 메서드가 호출되었는지 확인
+            // 응답 생성 메서드가 호출되었는지 확인
             responseMock.verify(() -> AnnualLeaveResponse.of(any(AnnualLeaveResult.class)));
         }
     }
@@ -138,8 +145,8 @@ public class AnnualLeaveCalculatorLambdaHandlerTest {
 
         // 요청을 JSON으로 변환하여 InputStream 생성
         String requestJson = objectMapper.writeValueAsString(request);
-        InputStream inputStream = new ByteArrayInputStream(requestJson.getBytes());
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        APIGatewayProxyRequestEvent apiGatewayEvent = new APIGatewayProxyRequestEvent();
+        apiGatewayEvent.setBody(requestJson);
 
         // 모든 정적 메서드 모킹
         try (MockedStatic<AnnualLeaveRequestValidator> validatorMock = mockStatic(AnnualLeaveRequestValidator.class);
@@ -169,24 +176,25 @@ public class AnnualLeaveCalculatorLambdaHandlerTest {
                 .thenReturn(mockResponse);
 
             // When
-            handler.handleRequest(inputStream, outputStream, context);
+            APIGatewayProxyResponseEvent response = handler.handleRequest(apiGatewayEvent, context);
 
-            // Then: 각 단계가 호출되었는지 검증
+            assertNotNull(response);
+            assertEquals(200, response.getStatusCode());
 
-            // 1. 유효성 검사가 호출되었는지 확인
+            // 유효성 검사가 호출되었는지 확인
             validatorMock.verify(() -> AnnualLeaveRequestValidator.validate(any(AnnualLeaveRequest.class)));
 
-            // 2. 매퍼가 호출되었는지 확인
+            // 매퍼가 호출되었는지 확인
             mapperMock.verify(() -> AnnualLeaveMapper.toContext(any(AnnualLeaveRequest.class)));
 
-            // 3. 팩토리가 호출되었는지 확인
+            // 팩토리가 호출되었는지 확인
             factoryMock.verify(() -> CalculationStrategyFactory.from(any(AnnualLeaveContext.class)));
 
-            // 4. 올바른 전략이 호출되었는지 확인
+            // 올바른 전략이 호출되었는지 확인
             verify(fiscalYearStrategy).annualLeaveCalculate(any(AnnualLeaveContext.class));
             verify(hireDateStrategy, never()).annualLeaveCalculate(any(AnnualLeaveContext.class));
 
-            // 5. 응답 생성 메서드가 호출되었는지 확인
+            // 응답 생성 메서드가 호출되었는지 확인
             responseMock.verify(() -> AnnualLeaveResponse.of(any(AnnualLeaveResult.class)));
         }
     }
