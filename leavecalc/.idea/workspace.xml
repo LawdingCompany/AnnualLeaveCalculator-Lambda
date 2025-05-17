@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="refactor : RDS IAM 인증 방식으로 변경 #3&#10;&#10;- AWS Lambda IAM Role 추가(+rds:connect)&#10;- RDS IAM 인증 토큰 발행 후 접근&#10;- RDS 조회(SELECT)만 가능, 보안 향상">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="feat : API Gateway 연동 Handler 함수 수정 및 통합 테스트 코드 추가 #6&#10;&#10;- API Gateway 연동 Handler 함수 코드 수정(APIGatewayProxyResponseEvent)&#10;- Handler 통합 테스트 코드 수정">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/lambda-deploy.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,6 +212,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/jaeyu/Desktop/lawding/lambda&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -362,7 +361,10 @@
       <workItem from="1746735471960" duration="31000" />
       <workItem from="1746748074916" duration="2000" />
       <workItem from="1747440487827" duration="710000" />
-      <workItem from="1747441205101" duration="685000" />
+      <workItem from="1747441205101" duration="1287000" />
+      <workItem from="1747475877666" duration="117000" />
+      <workItem from="1747476532630" duration="2000" />
+      <workItem from="1747476548057" duration="1583000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
       <option name="closed" value="true" />
@@ -492,7 +494,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747361630766</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="feat : API Gateway 연동 Handler 함수 수정 및 통합 테스트 코드 추가 #6&#10;&#10;- API Gateway 연동 Handler 함수 코드 수정(APIGatewayProxyResponseEvent)&#10;- Handler 통합 테스트 코드 수정">
+      <option name="closed" value="true" />
+      <created>1747442217029</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1747442217029</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -528,7 +538,8 @@
     <MESSAGE value="test : 수정된 산정방식(입사일/회계연도) 테스트 코드 작성&#10;&#10;- 리팩토링 후 수정된 계산 방식 테스트 코드 작성&#10;- 산정방식(회계연도) 테스트 코드 작성" />
     <MESSAGE value="Merage : workspace 충돌 해결" />
     <MESSAGE value="refactor : RDS IAM 인증 방식으로 변경 #3&#10;&#10;- AWS Lambda IAM Role 추가(+rds:connect)&#10;- RDS IAM 인증 토큰 발행 후 접근&#10;- RDS 조회(SELECT)만 가능, 보안 향상" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor : RDS IAM 인증 방식으로 변경 #3&#10;&#10;- AWS Lambda IAM Role 추가(+rds:connect)&#10;- RDS IAM 인증 토큰 발행 후 접근&#10;- RDS 조회(SELECT)만 가능, 보안 향상" />
+    <MESSAGE value="feat : API Gateway 연동 Handler 함수 수정 및 통합 테스트 코드 추가 #6&#10;&#10;- API Gateway 연동 Handler 함수 코드 수정(APIGatewayProxyResponseEvent)&#10;- Handler 통합 테스트 코드 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : API Gateway 연동 Handler 함수 수정 및 통합 테스트 코드 추가 #6&#10;&#10;- API Gateway 연동 Handler 함수 코드 수정(APIGatewayProxyResponseEvent)&#10;- Handler 통합 테스트 코드 수정" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
