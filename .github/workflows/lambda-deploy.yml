@@ -46,7 +46,7 @@ jobs:
           
           echo "새 버전 배포됨: $VERSION"
           
-          aws lambda put-function-configuration \
+          aws lambda update-function-configuration \
           --function-name annualLeaveCalculator \
           --snap-start ApplyOn=PublishedVersions
           
