@@ -46,6 +46,21 @@ jobs:
           
           echo "새 버전 배포됨: $VERSION"
           
+          echo "Lambda 업데이트가 완료될 때까지 대기 중..."
+          while true; do
+          STATUS=$(aws lambda get-function \
+          --function-name annualLeaveCalculator \
+          --query 'Configuration.LastUpdateStatus' \
+          --output text)
+          
+          if [ "$STATUS" = "Successful" ]; then
+          echo "Lambda 업데이트 완료!"
+          break
+          fi
+          echo "현재 상태: $STATUS, 5초 후 다시 확인..."
+          sleep 5
+          done
+          
           aws lambda update-function-configuration \
           --function-name annualLeaveCalculator \
           --snap-start ApplyOn=PublishedVersions
