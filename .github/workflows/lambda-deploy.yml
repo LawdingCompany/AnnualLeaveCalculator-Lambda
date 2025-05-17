@@ -37,7 +37,7 @@ jobs:
 
       - name: Deploy to Lambda with SnapStart
         run: |
-          JAR_PATH="build/libs/leavecalc.jar"
+          JAR_PATH="leavecalc/build/libs/leavecalc.jar"
           
           VERSION=$(aws lambda update-function-code \
           --function-name annualLeaveCalculator \
