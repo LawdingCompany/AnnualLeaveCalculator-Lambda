@@ -94,6 +94,22 @@ jobs:
 
       - name: Verify Deployment
         run: |
+          echo "Lambda 함수 상태 확인 중..."
+          
+          while true; do
+          STATUS=$(aws lambda get-function \
+          --function-name annualLeaveCalculator:prod \
+          --query 'Configuration.State' \
+          --output text)
+          
+          if [ "$STATUS" = "Active" ]; then
+          echo "Lambda 함수가 활성화되었습니다!"
+          break
+          fi
+          echo "현재 상태: $STATUS, 5초 후 다시 확인..."
+          sleep 5
+          done
+          
           aws lambda get-function \
           --function-name annualLeaveCalculator:prod \
           --query 'Configuration.[State,LastUpdateStatus]'
