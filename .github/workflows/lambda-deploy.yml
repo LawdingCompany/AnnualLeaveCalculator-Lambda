@@ -77,6 +77,7 @@ jobs:
           --query 'Configuration.[State,LastUpdateStatus]'
           
           aws lambda invoke \
+          --cli-binary-format raw-in-base64-out \
           --function-name annualLeaveCalculator:prod \
           --payload '{"action": "test"}' \
           response.json
