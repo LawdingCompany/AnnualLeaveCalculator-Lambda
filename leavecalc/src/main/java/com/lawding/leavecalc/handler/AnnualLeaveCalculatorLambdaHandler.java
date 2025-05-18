@@ -47,7 +47,7 @@ public class AnnualLeaveCalculatorLambdaHandler implements
 
             logger.debug("요청 객체 변환 시작");
             AnnualLeaveRequest request = mapper.readValue(requestBody, AnnualLeaveRequest.class);
-            logger.debug("요청 객체 변환 완료: {}", request);
+            logger.debug("요청 객체 변환 완료: {}", request.toString());
 
             logger.info("유효성 검증 시작");
             AnnualLeaveRequestValidator.validate(request);
@@ -55,7 +55,7 @@ public class AnnualLeaveCalculatorLambdaHandler implements
 
             logger.debug("컨텍스트 변환 시작");
             AnnualLeaveContext annualLeaveContext = AnnualLeaveMapper.toContext(request);
-            logger.debug("컨텍스트 변환 완료: {}", annualLeaveContext);
+            logger.debug("컨텍스트 변환 완료: {}", annualLeaveContext.toString());
 
             logger.info("계산 전략 결정 시작");
             CalculationStrategy calculationStrategy = CalculationStrategyFactory.from(
@@ -64,7 +64,7 @@ public class AnnualLeaveCalculatorLambdaHandler implements
 
             logger.info("연차 계산 시작");
             AnnualLeaveResult result = calculationStrategy.annualLeaveCalculate(annualLeaveContext);
-            logger.info("연차 계산 완료: {}", result);
+            logger.info("연차 계산 완료: {}", result.toString());
 
             AnnualLeaveResponse response = AnnualLeaveResponse.of(result);
             logger.info("응답 객체 생성 완료: {}", response);
