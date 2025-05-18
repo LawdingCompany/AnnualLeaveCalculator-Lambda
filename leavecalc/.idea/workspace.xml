@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="fix : 로그 출력 객체 어노테이션 추가 #4&#10;&#10;- request, context, result 객체 @ToString 어노테이션 추가">
+    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="fix : 로그 출력 형태 수정 #4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/NonWorkingPeriodRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/NonWorkingPeriodRequest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -371,7 +371,8 @@
       <workItem from="1747476532630" duration="2000" />
       <workItem from="1747476548057" duration="2965000" />
       <workItem from="1747564608351" duration="11000" />
-      <workItem from="1747565024154" duration="4017000" />
+      <workItem from="1747565024154" duration="4353000" />
+      <workItem from="1747582355523" duration="16000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
       <option name="closed" value="true" />
@@ -557,7 +558,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747568216811</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="fix : 로그 출력 형태 수정 #4">
+      <option name="closed" value="true" />
+      <created>1747569082604</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1747569082604</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -575,7 +584,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat : 헬퍼클래스 JavaDoc 추가" />
     <MESSAGE value="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1." />
     <MESSAGE value="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용" />
     <MESSAGE value="docs: 회계연도 및 입사일 함수 로직 분석 주석 추가&#10;&#10;회계연도 및 입사일 관련 함수들에 대해 노무사와 논의한 내용을 바탕으로 로직을 분석하고, 오류를 발견하여 주석으로 표시하였습니다." />
@@ -600,7 +608,8 @@
     <MESSAGE value="feat : 연차 계산기 로깅 시스템 구현 #4&#10;&#10;- SLF4J와 Logback 기반 로깅 프레임워크 적용&#10;- MDC를 활용한 요청 추적 기능 구현&#10;- 각 처리 단계별 로그 추가 (INFO/DEBUG 레벨 구분)&#10;- 성능 측정 로깅 추가&#10;- 오류 발생 시 스택트레이스 포함 로깅&#10;- CloudWatch 통합 로깅 구현&#10;- 요청별 추적을 위한 고유 ID 적용&#10;- 로그 레벨 환경변수 제어 기능 추가" />
     <MESSAGE value="fix : 로그 출력 객체 수정 #4&#10;&#10;- request, context, result 객체 출력 형태 변경" />
     <MESSAGE value="fix : 로그 출력 객체 어노테이션 추가 #4&#10;&#10;- request, context, result 객체 @ToString 어노테이션 추가" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix : 로그 출력 객체 어노테이션 추가 #4&#10;&#10;- request, context, result 객체 @ToString 어노테이션 추가" />
+    <MESSAGE value="fix : 로그 출력 형태 수정 #4" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix : 로그 출력 형태 수정 #4" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
