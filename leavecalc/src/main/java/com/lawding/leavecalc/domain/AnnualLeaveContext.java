@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * 연차 계산에 필요한 정보를 담은 객체입니다.
@@ -20,6 +21,7 @@ import lombok.Getter;
  */
 @Getter
 @Builder
+@ToString
 public class AnnualLeaveContext {
     private CalculationType calculationType;
     private MonthDay fiscalYear;
