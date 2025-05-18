@@ -43,7 +43,6 @@ public class AnnualLeaveCalculatorLambdaHandler implements
 
         try {
             String requestBody = input.getBody();
-            logger.info("요청 데이터: {}", requestBody);
 
             logger.debug("요청 객체 변환 시작");
             AnnualLeaveRequest request = mapper.readValue(requestBody, AnnualLeaveRequest.class);
