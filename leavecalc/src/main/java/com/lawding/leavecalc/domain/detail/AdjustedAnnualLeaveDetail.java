@@ -2,9 +2,11 @@ package com.lawding.leavecalc.domain.detail;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 public class AdjustedAnnualLeaveDetail implements CalculationDetail {
 
     // (기본 + 가산) * PWR

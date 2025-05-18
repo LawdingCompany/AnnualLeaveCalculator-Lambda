@@ -3,9 +3,11 @@ package com.lawding.leavecalc.domain.detail;
 import com.lawding.leavecalc.domain.DatePeriod;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 public class FullAnnualLeaveDetail implements CalculationDetail {
     // 기본 + 가산
     private final DatePeriod accrualPeriod;
