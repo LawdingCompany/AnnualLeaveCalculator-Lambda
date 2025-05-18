@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="fix : JDK 21 세팅 명령어 오류 수정 #1" />
+    <list default="true" id="61b90bd3-bd75-4cf9-8d3a-2d891df98f03" name="Changes" comment="fix : JDK 21 세팅 명령어 오류 수정 #1">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/LogUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,7 +29,12 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="leavecalc" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -362,6 +373,8 @@
       <workItem from="1747475877666" duration="117000" />
       <workItem from="1747476532630" duration="2000" />
       <workItem from="1747476548057" duration="2965000" />
+      <workItem from="1747564608351" duration="11000" />
+      <workItem from="1747565024154" duration="1861000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(회계연도) 연차 계산 기능 추가&#10;&#10;1. 산정방식(회계연도)를 이용한 연차 계산 방식 추가&#10;2. 산정방식(입사일) 계산 일부 기능 수정&#10;   - 가산연차에만 적용된 PWR을 총 연차에 적용">
       <option name="closed" value="true" />
