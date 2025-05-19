@@ -1,7 +1,12 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.1.2' // Shadow 플러그인 추가
+//    id 'jacoco'
 }
+
+//jacoco {
+//    toolVersion = "0.8.11"  // 최신 버전으로 업데이트 가능
+//}
 
 group = 'com.leavecalc'
 version = '1.0-SNAPSHOT'
@@ -70,4 +75,14 @@ build.dependsOn shadowJar
 
 test {
     useJUnitPlatform()
+//    finalizedBy jacocoTestReport
 }
+
+//jacocoTestReport {
+//    dependsOn test  // 테스트가 완료된 후 리포트 생성
+//    reports {
+//        xml.required = false
+//        csv.required = false
+//        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+//    }
+//}
