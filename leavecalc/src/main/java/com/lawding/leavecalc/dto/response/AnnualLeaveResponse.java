@@ -1,4 +1,4 @@
-package com.lawding.leavecalc.dto;
+package com.lawding.leavecalc.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;

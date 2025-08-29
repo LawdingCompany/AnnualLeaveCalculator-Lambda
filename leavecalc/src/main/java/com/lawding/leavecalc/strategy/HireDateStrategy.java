@@ -11,8 +11,7 @@ import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import com.lawding.leavecalc.domain.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
-import com.lawding.leavecalc.domain.AnnualLeaveResultType;
-import com.lawding.leavecalc.repository.HolidayJdbcRepository;
+import com.lawding.leavecalc.flow.CalculationFlow;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -21,12 +20,9 @@ import java.util.Set;
 
 
 public final class HireDateStrategy implements CalculationStrategy {
+    private final CalculationFlow flow;
 
-    private final HolidayJdbcRepository holidayRepository;
-
-    public HireDateStrategy(HolidayJdbcRepository holidayRepository) {
-        this.holidayRepository = holidayRepository;
-    }
+    public HireDateStrategy(CalculationFlow flow) { this.flow = flow; }
 
     /**
      * @param annualLeaveContext 계산할 연차 정보를 담고 있는 객체
@@ -51,7 +47,7 @@ public final class HireDateStrategy implements CalculationStrategy {
         }
     }
 
-    private AnnualLeaveResult calculateMonthlyLeave(LocalDate hireDate, LocalDate referenceDate,
+    private AnnualLeaveResult calculateMonthlyLeave(Integer type, LocalDate hireDate, LocalDate referenceDate,
         List<DatePeriod> absentPeriods, List<DatePeriod> excludedPeriods,
         List<LocalDate> companyHolidays) {
         DatePeriod accrualPeriod = new DatePeriod(hireDate,

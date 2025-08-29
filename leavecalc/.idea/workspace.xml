@@ -4,9 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="fix : MonthlyLeaveDetail 직렬화를 위한 @Getter 추가">
+    <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="feat : 테스트 커버리지 측정 도구 추가(JaCoCo) #28&#10;&#10;- ./gradlew test jacocoTestReport로 측정&#10;- Report로 생성(주석으로 업로드)&#10;- build/jacocoHtml/index.html로 확인 가능">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/Condition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/LeaveType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/FlowResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/LessOneYearFlowResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/CalculationFlow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/FiscalYearFlow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/HireDateFlow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/AnnualLeaveContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/AnnualLeaveContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/AnnualLeaveResultType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/request/AnnualLeaveRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/response/AnnualLeaveResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/NonWorkingPeriodRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/request/NonWorkingPeriodRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/mapper/AnnualLeaveMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/mapper/AnnualLeaveMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/CalculationStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/CalculationStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/CalculationStrategyFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/factory/CalculationStrategyFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveRequestValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveRequestValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveRequestValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveRequestValidatorTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,9 +42,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -66,13 +87,14 @@
     &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/jaeyu/OneDrive/바탕 화면/lawding/Lambda/leavecalc/src/main/java/com/leavecalc/Main.java&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.lawding.leavecalc.flow" />
       <recent name="com.lawding.leavecalc.domain.result" />
       <recent name="com.leavecalc" />
     </key>
@@ -207,7 +229,11 @@
       <workItem from="1746929335366" duration="249000" />
       <workItem from="1747175164090" duration="1839000" />
       <workItem from="1747276128073" duration="19598000" />
-      <workItem from="1747641912765" duration="148000" />
+      <workItem from="1747641912765" duration="1039000" />
+      <workItem from="1749605696203" duration="11000" />
+      <workItem from="1754889595373" duration="33000" />
+      <workItem from="1754889634707" duration="3587000" />
+      <workItem from="1756446925483" duration="14093000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(입사일, 회계연도) 로직 최종 수정">
       <created>1745988718717</created>
@@ -272,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747301358661</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat : 테스트 커버리지 측정 도구 추가(JaCoCo) #28&#10;&#10;- ./gradlew test jacocoTestReport로 측정&#10;- Report로 생성(주석으로 업로드)&#10;- build/jacocoHtml/index.html로 확인 가능">
+      <option name="closed" value="true" />
+      <created>1747642142882</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1747642142882</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -287,7 +321,8 @@
     <MESSAGE value="fix : ParameterStore 대신 Lambda 환경변수 사용" />
     <MESSAGE value="feat : 핸들러 직렬화 설정 추가, 테스트 코드 수정" />
     <MESSAGE value="fix : MonthlyLeaveDetail 직렬화를 위한 @Getter 추가" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix : MonthlyLeaveDetail 직렬화를 위한 @Getter 추가" />
+    <MESSAGE value="feat : 테스트 커버리지 측정 도구 추가(JaCoCo) #28&#10;&#10;- ./gradlew test jacocoTestReport로 측정&#10;- Report로 생성(주석으로 업로드)&#10;- build/jacocoHtml/index.html로 확인 가능" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat : 테스트 커버리지 측정 도구 추가(JaCoCo) #28&#10;&#10;- ./gradlew test jacocoTestReport로 측정&#10;- Report로 생성(주석으로 업로드)&#10;- build/jacocoHtml/index.html로 확인 가능" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

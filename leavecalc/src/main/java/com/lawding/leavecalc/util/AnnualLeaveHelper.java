@@ -7,29 +7,16 @@ import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AnnualLeaveHelper {
 
 
     private AnnualLeaveHelper() {
-    }
-
-    /**
-     * 입사 후 1년 미만인지 확인하는 함수
-     *
-     * @param hireDate      입사일
-     * @param referenceDate 기준일
-     * @return 근속연수가 1년 미만인가
-     */
-    public static boolean isBeforeOneYearFromHireDate(LocalDate hireDate, LocalDate referenceDate) {
-        return referenceDate.isBefore(hireDate.plusYears(1));
     }
 
     /**

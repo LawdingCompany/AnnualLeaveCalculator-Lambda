@@ -14,6 +14,7 @@ import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
 import com.lawding.leavecalc.domain.detail.MonthlyProratedAnnualLeaveDetail;
 import com.lawding.leavecalc.domain.detail.ProratedAnnualLeaveDetail;
+import com.lawding.leavecalc.flow.FiscalYearFlow;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import com.lawding.leavecalc.util.AnnualLeaveHelper;
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
 
     private final HolidayJdbcRepository holidayRepository;
 
-    public FiscalYearStrategy(HolidayJdbcRepository holidayRepository) {
+    public FiscalYearStrategy(FiscalYearFlow holidayRepository) {
         this.holidayRepository = holidayRepository;
     }
 
