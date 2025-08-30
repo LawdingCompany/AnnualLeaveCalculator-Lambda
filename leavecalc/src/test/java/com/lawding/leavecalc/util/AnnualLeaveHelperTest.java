@@ -1,7 +1,7 @@
 package com.lawding.leavecalc.util;
 
 import com.lawding.leavecalc.domain.DatePeriod;
-import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
+import com.lawding.leavecalc.dto.detail.MonthlyLeaveDetail;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;

@@ -6,23 +6,31 @@ import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.CalculationType;
-import com.lawding.leavecalc.domain.detail.AdjustedAnnualLeaveDetail;
-import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
-import com.lawding.leavecalc.domain.detail.MonthlyLeaveDetail;
-import com.lawding.leavecalc.domain.AnnualLeaveResult;
+import com.lawding.leavecalc.domain.flow.hiredate.FullFlowResult;
+import com.lawding.leavecalc.dto.AdjustedAnnualLeaveResult;
+import com.lawding.leavecalc.dto.FullAnnualLeaveResult;
+import com.lawding.leavecalc.dto.detail.AdjustedAnnualLeaveDetail;
+import com.lawding.leavecalc.dto.detail.FullAnnualLeaveDetail;
+import com.lawding.leavecalc.dto.detail.MonthlyLeaveDetail;
+import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
+import com.lawding.leavecalc.domain.flow.FlowResult;
+import com.lawding.leavecalc.domain.flow.hiredate.LowPWRFlowResult;
+import com.lawding.leavecalc.domain.flow.hiredate.LessOneYearFlowResult;
+import com.lawding.leavecalc.domain.flow.hiredate.LowARFlowResult;
 import com.lawding.leavecalc.flow.CalculationFlow;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 
 public final class HireDateStrategy implements CalculationStrategy {
+
     private final CalculationFlow flow;
 
-    public HireDateStrategy(CalculationFlow flow) { this.flow = flow; }
+    public HireDateStrategy(CalculationFlow flow) {
+        this.flow = flow;
+    }
 
     /**
      * @param annualLeaveContext 계산할 연차 정보를 담고 있는 객체
@@ -30,107 +38,61 @@ public final class HireDateStrategy implements CalculationStrategy {
      */
     @Override
     public AnnualLeaveResult annualLeaveCalculate(AnnualLeaveContext annualLeaveContext) {
-        LocalDate hireDate = annualLeaveContext.getHireDate();
-        LocalDate referenceDate = annualLeaveContext.getReferenceDate();
-        Map<Integer, List<DatePeriod>> nonWorkingPeriods = annualLeaveContext.getNonWorkingPeriods();
-        List<LocalDate> companyHolidays = annualLeaveContext.getCompanyHolidays();
-        List<DatePeriod> absentPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
-        List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(3, List.of());
-        if (isBeforeOneYearFromHireDate(hireDate, referenceDate)) {
-            // 입사일 1년 미만
-            return calculateMonthlyLeave(hireDate, referenceDate, absentPeriods, excludedPeriods,
-                companyHolidays);
-        } else {
-            // 입사일 1년 이상
-            return calculateAnnualLeave(hireDate, referenceDate, absentPeriods, excludedPeriods,
-                companyHolidays);
-        }
+        FlowResult flowResult = flow.process(annualLeaveContext);
+
+        return switch (flowResult.getCondition()) {
+            case HD_LESS_THAN_ONE_YEAR -> {
+                LessOneYearFlowResult context = (LessOneYearFlowResult) flowResult;
+                MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(context);
+                yield AnnualLeaveResult.builder()
+                    .calculationType(CalculationType.HIRE_DATE)
+                    .calculationDetail(monthlyLeaveDetail)
+                    .explanation(LESS_THAN_ONE_YEAR)
+                    .build();
+            }
+            case HD_LOW_AR -> {
+                LowARFlowResult context = (LowARFlowResult) flowResult;
+                MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(context);
+                yield AnnualLeaveResult.builder()
+                    .calculationType(CalculationType.HIRE_DATE)
+                    .calculationDetail(monthlyLeaveDetail)
+                    .explanation(LESS_THAN_ONE_YEAR)
+                    .build();
+            }
+            case HD_LOW_PWR -> {
+                LowPWRFlowResult context = (LowPWRFlowResult) flowResult;
+                AdjustedAnnualLeaveResult adjustedLeaveDays = calculateAdjustedAnnualLeave(context);
+                yield AnnualLeaveResult.builder()
+                    .calculationType(CalculationType.HIRE_DATE)
+                    .build();
+            }
+            case HD_FULL -> {
+                FullFlowResult context = (FullFlowResult) flowResult;
+                FullAnnualLeaveResult fullAnnualLeaveDays = calculateFullAnnualLeave(context);
+                yield AnnualLeaveResult.builder()
+                    .calculationType(CalculationType.HIRE_DATE)
+                    .explanation(LESS_THAN_ONE_YEAR)
+                    .build();
+            }
+        };
     }
 
-    private AnnualLeaveResult calculateMonthlyLeave(Integer type, LocalDate hireDate, LocalDate referenceDate,
-        List<DatePeriod> absentPeriods, List<DatePeriod> excludedPeriods,
-        List<LocalDate> companyHolidays) {
-        DatePeriod accrualPeriod = new DatePeriod(hireDate,
-            referenceDate.minusDays(1));
-        List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
-        Set<LocalDate> workingDaysWithinAbsentPeriods = getPrescribedWorkingDaySetInAbsentPeriods(
-            absentPeriods, accrualPeriod, holidays, companyHolidays, excludedPeriods);
-        MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(accrualPeriod,
-            workingDaysWithinAbsentPeriods);
-        return AnnualLeaveResult.builder()
-            .calculationType(CalculationType.HIRE_DATE)
-            .annualLeaveResultType(AnnualLeaveResultType.MONTHLY)
-            .hireDate(accrualPeriod.startDate())
-            .referenceDate(accrualPeriod.endDate().plusDays(1))
-            .calculationDetail(monthlyLeaveDetail)
-            .explanation(LESS_THAN_ONE_YEAR)
+    private AdjustedAnnualLeaveResult calculateAdjustedAnnualLeave(LowPWRFlowResult context){
+        int additionalLeave = calculateAdditionalLeave(context.getServiceYears());
+        double adjustedLeaveDays = formatDouble(
+            (BASE_ANNUAL_LEAVE + additionalLeave) * context.getPrescribeWorkingRatio());
+        return AdjustedAnnualLeaveResult.builder()
+            .additionalLeave(additionalLeave)
+            .adjustedLeaveDays(adjustedLeaveDays)
             .build();
     }
 
-    private AnnualLeaveResult calculateAnnualLeave(LocalDate hireDate, LocalDate referenceDate,
-        List<DatePeriod> absentPeriods, List<DatePeriod> excludedPeriods,
-        List<LocalDate> companyHolidays) {
-        DatePeriod accrualPeriod = getAccrualPeriod(hireDate, referenceDate);
-        List<LocalDate> holidays = holidayRepository.findWeekdayHolidays(
-            accrualPeriod);
-        int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriod,
-            companyHolidays, holidays);
-        int absentDays = calculatePrescribedWorkingDaysInAbsentPeriods(absentPeriods,
-            accrualPeriod, holidays, companyHolidays, excludedPeriods);
-        int excludedWorkingDays = calculateExcludedWorkingDays(excludedPeriods, accrualPeriod,
-            holidays, companyHolidays);
-        double attendanceRate = calculateAttendanceRate(prescribedWorkingDays,
-            absentDays, excludedWorkingDays);
-        double prescribeWorkingRatio = calculatePrescribedWorkingRatio(prescribedWorkingDays,
-            excludedWorkingDays);
-        if (attendanceRate < MINIMUM_WORK_RATIO) {
-            // AR < 0.8 => 월차 (직전 연차 산정 기간에 대한 개근 판단에 따라 연차 부여)
-            return calculateMonthlyLeave(hireDate, referenceDate, absentPeriods, excludedPeriods,
-                companyHolidays);
-        } else {
-            int serviceYears = calculateServiceYears(hireDate, referenceDate);
-            int additionalLeave = calculateAdditionalLeave(serviceYears);
-            if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) {
-                // PWR < 0.8 => (기본연차 + 가산연차) * PWR
-                double totalLeaveDays = formatDouble(
-                    (BASE_ANNUAL_LEAVE + additionalLeave) * prescribeWorkingRatio);
-                AdjustedAnnualLeaveDetail adjustedAnnualLeaveDetail = AdjustedAnnualLeaveDetail.builder()
-                    .baseAnnualLeave(BASE_ANNUAL_LEAVE)
-                    .serviceYears(serviceYears)
-                    .additionalLeave(additionalLeave)
-                    .prescribedWorkingDays(prescribedWorkingDays)
-                    .excludedWorkingDays(excludedWorkingDays)
-                    .prescribeWorkingRatio(prescribeWorkingRatio)
-                    .totalLeaveDays(totalLeaveDays)
-                    .build();
-                return AnnualLeaveResult.builder()
-                    .calculationType(CalculationType.HIRE_DATE)
-                    .annualLeaveResultType(AnnualLeaveResultType.ADJUSTED)
-                    .hireDate(hireDate)
-                    .referenceDate(referenceDate)
-                    .calculationDetail(adjustedAnnualLeaveDetail)
-                    .explanation(AR_OVER_80_PWR_UNDER_80_AFTER_ONE_YEAR)
-                    .build();
-            } else {
-                // 기본연차 + 가산연차
-                double totalLeaveDays = BASE_ANNUAL_LEAVE + additionalLeave;
-                FullAnnualLeaveDetail fullAnnualLeaveDetail = FullAnnualLeaveDetail.builder()
-                    .accrualPeriod(accrualPeriod)
-                    .baseAnnualLeave(BASE_ANNUAL_LEAVE)
-                    .serviceYears(serviceYears)
-                    .additionalLeave(additionalLeave)
-                    .totalLeaveDays(totalLeaveDays)
-                    .build();
-                return AnnualLeaveResult.builder()
-                    .calculationType(CalculationType.HIRE_DATE)
-                    .annualLeaveResultType(AnnualLeaveResultType.FULL)
-                    .hireDate(hireDate)
-                    .referenceDate(referenceDate)
-                    .calculationDetail(fullAnnualLeaveDetail)
-                    .explanation(AR_AND_PWR_OVER_80_AFTER_ONE_YEAR)
-                    .build();
-            }
-        }
+    private FullAnnualLeaveResult calculateFullAnnualLeave(FullFlowResult context){
+        int additionalLeave = calculateAdditionalLeave(context.getServiceYears());
+        return FullAnnualLeaveResult.builder()
+            .additionalLeave(additionalLeave)
+            .totalLeaveDays(BASE_ANNUAL_LEAVE + additionalLeave)
+            .build();
     }
 
     /**

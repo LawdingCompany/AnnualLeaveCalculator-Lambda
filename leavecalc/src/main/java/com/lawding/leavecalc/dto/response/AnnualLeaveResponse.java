@@ -1,10 +1,10 @@
 package com.lawding.leavecalc.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.lawding.leavecalc.domain.AnnualLeaveResult;
+import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.AnnualLeaveResultType;
 import com.lawding.leavecalc.domain.CalculationType;
-import com.lawding.leavecalc.domain.detail.CalculationDetail;
+import com.lawding.leavecalc.dto.detail.CalculationDetail;
 import java.time.LocalDate;
 import java.time.MonthDay;
 

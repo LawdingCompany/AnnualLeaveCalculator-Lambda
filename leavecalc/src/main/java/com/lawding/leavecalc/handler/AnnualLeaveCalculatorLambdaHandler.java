@@ -10,7 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lawding.leavecalc.dto.request.AnnualLeaveRequest;
 import com.lawding.leavecalc.dto.response.AnnualLeaveResponse;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
-import com.lawding.leavecalc.domain.AnnualLeaveResult;
+import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.mapper.AnnualLeaveMapper;
 import com.lawding.leavecalc.strategy.CalculationStrategy;
 import com.lawding.leavecalc.strategy.factory.CalculationStrategyFactory;

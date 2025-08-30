@@ -8,13 +8,13 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-@Getter
 @SuperBuilder
+@Getter
 @ToString
-public class LessOneYearFlowResult extends FlowResult implements MonthlyCalcContext {
-    // 입사일 1년 미만
+public class LowARFlowResult extends FlowResult implements MonthlyCalcContext {
+    // 입사일 1년 이상 & 출근율 80% 미만
     // 월차
     private final Set<LocalDate> absentDays;
     private final Set<LocalDate> excludedDays;
-
+    private final double attendanceRate;
 }

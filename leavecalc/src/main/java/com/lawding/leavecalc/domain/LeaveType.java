@@ -1,7 +1,7 @@
 package com.lawding.leavecalc.domain;
 
 public enum LeaveType {
-    MONTHY,
-//    PRORATED,
+    MONTHLY,
+    MONTHLY_AND_ANNUAL,
     ANNUAL;
 }

@@ -14,4 +14,5 @@ public abstract class FlowResult {
     private final LeaveType leaveType;
     private final DatePeriod accrualPeriod;
     private final Condition condition;
+    private final int serviceYears;
 }
