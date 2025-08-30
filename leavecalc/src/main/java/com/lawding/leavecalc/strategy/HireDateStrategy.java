@@ -9,19 +9,15 @@ import com.lawding.leavecalc.domain.CalculationType;
 import com.lawding.leavecalc.domain.flow.hiredate.FullFlowResult;
 import com.lawding.leavecalc.dto.AdjustedAnnualLeaveResult;
 import com.lawding.leavecalc.dto.FullAnnualLeaveResult;
-import com.lawding.leavecalc.dto.detail.AdjustedAnnualLeaveDetail;
-import com.lawding.leavecalc.dto.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.dto.detail.MonthlyLeaveDetail;
 import com.lawding.leavecalc.dto.AnnualLeaveResult;
-import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.flow.FlowResult;
-import com.lawding.leavecalc.domain.flow.hiredate.LowPWRFlowResult;
+import com.lawding.leavecalc.domain.flow.UnderPWRFlowResult;
 import com.lawding.leavecalc.domain.flow.hiredate.LessOneYearFlowResult;
-import com.lawding.leavecalc.domain.flow.hiredate.LowARFlowResult;
+import com.lawding.leavecalc.domain.flow.UnderARFlowResult;
+import com.lawding.leavecalc.exception.AnnualLeaveException;
+import com.lawding.leavecalc.exception.ErrorCode;
 import com.lawding.leavecalc.flow.CalculationFlow;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
 
 
 public final class HireDateStrategy implements CalculationStrategy {
@@ -41,7 +37,7 @@ public final class HireDateStrategy implements CalculationStrategy {
         FlowResult flowResult = flow.process(annualLeaveContext);
 
         return switch (flowResult.getCondition()) {
-            case HD_LESS_THAN_ONE_YEAR -> {
+            case HD_LESS_ONE_YEAR -> {
                 LessOneYearFlowResult context = (LessOneYearFlowResult) flowResult;
                 MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(context);
                 yield AnnualLeaveResult.builder()
@@ -50,8 +46,8 @@ public final class HireDateStrategy implements CalculationStrategy {
                     .explanation(LESS_THAN_ONE_YEAR)
                     .build();
             }
-            case HD_LOW_AR -> {
-                LowARFlowResult context = (LowARFlowResult) flowResult;
+            case HD_AFTER_ONE_YEAR_AND_UNDER_AR -> {
+                UnderARFlowResult context = (UnderARFlowResult) flowResult;
                 MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(context);
                 yield AnnualLeaveResult.builder()
                     .calculationType(CalculationType.HIRE_DATE)
@@ -59,8 +55,8 @@ public final class HireDateStrategy implements CalculationStrategy {
                     .explanation(LESS_THAN_ONE_YEAR)
                     .build();
             }
-            case HD_LOW_PWR -> {
-                LowPWRFlowResult context = (LowPWRFlowResult) flowResult;
+            case HD_AFTER_ONE_YEAR_AND_OVER_AR_AND_UNDER_PWR -> {
+                UnderPWRFlowResult context = (UnderPWRFlowResult) flowResult;
                 AdjustedAnnualLeaveResult adjustedLeaveDays = calculateAdjustedAnnualLeave(context);
                 yield AnnualLeaveResult.builder()
                     .calculationType(CalculationType.HIRE_DATE)
@@ -74,10 +70,11 @@ public final class HireDateStrategy implements CalculationStrategy {
                     .explanation(LESS_THAN_ONE_YEAR)
                     .build();
             }
+            default -> throw new AnnualLeaveException(ErrorCode.HIREDATE_FLOW_ERROR);
         };
     }
 
-    private AdjustedAnnualLeaveResult calculateAdjustedAnnualLeave(LowPWRFlowResult context){
+    private AdjustedAnnualLeaveResult calculateAdjustedAnnualLeave(UnderPWRFlowResult context){
         int additionalLeave = calculateAdditionalLeave(context.getServiceYears());
         double adjustedLeaveDays = formatDouble(
             (BASE_ANNUAL_LEAVE + additionalLeave) * context.getPrescribeWorkingRatio());

@@ -9,9 +9,9 @@ import com.lawding.leavecalc.domain.Condition;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.flow.FlowResult;
 import com.lawding.leavecalc.domain.LeaveType;
-import com.lawding.leavecalc.domain.flow.hiredate.LowPWRFlowResult;
+import com.lawding.leavecalc.domain.flow.UnderPWRFlowResult;
 import com.lawding.leavecalc.domain.flow.hiredate.FullFlowResult;
-import com.lawding.leavecalc.domain.flow.hiredate.LowARFlowResult;
+import com.lawding.leavecalc.domain.flow.UnderARFlowResult;
 import com.lawding.leavecalc.domain.flow.hiredate.LessOneYearFlowResult;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
@@ -47,7 +47,7 @@ public class HireDateFlow implements CalculationFlow {
                 excludedPeriods, companyHolidays, holidays);
             return LessOneYearFlowResult.builder()
                 .leaveType(LeaveType.MONTHLY)
-                .condition(Condition.HD_LESS_THAN_ONE_YEAR)
+                .condition(Condition.HD_LESS_ONE_YEAR)
                 .accrualPeriod(accrualPeriod)
                 .serviceYears(serviceYears)
                 .absentDays(absentDays)
@@ -68,9 +68,9 @@ public class HireDateFlow implements CalculationFlow {
             excludedDays.size());
 
         if(attendanceRate<MINIMUM_WORK_RATIO){
-            return LowARFlowResult.builder()
+            return UnderARFlowResult.builder()
                 .leaveType(LeaveType.MONTHLY)
-                .condition(Condition.HD_LOW_AR)
+                .condition(Condition.HD_AFTER_ONE_YEAR_AND_UNDER_AR)
                 .accrualPeriod(accrualPeriod)
                 .serviceYears(serviceYears)
                 .absentDays(absentDays)
@@ -83,9 +83,9 @@ public class HireDateFlow implements CalculationFlow {
             excludedDays.size());
 
         if(prescribeWorkingRatio<MINIMUM_WORK_RATIO){
-            return LowPWRFlowResult.builder()
+            return UnderPWRFlowResult.builder()
                 .leaveType(LeaveType.ANNUAL)
-                .condition(Condition.HD_LOW_PWR)
+                .condition(Condition.HD_AFTER_ONE_YEAR_AND_OVER_AR_AND_UNDER_PWR)
                 .accrualPeriod(accrualPeriod)
                 .serviceYears(serviceYears)
                 .attendanceRate(formatDouble(attendanceRate))

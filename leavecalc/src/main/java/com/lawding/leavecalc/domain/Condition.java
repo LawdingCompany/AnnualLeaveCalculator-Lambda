@@ -2,10 +2,15 @@ package com.lawding.leavecalc.domain;
 
 public enum Condition {
     // 입사일 기준 흐름
-    HD_LESS_THAN_ONE_YEAR, // 입사일 1년미만, 월차
-    HD_LOW_AR, // 입사일 1년 이상 & 출근율 80% 미만
-    HD_LOW_PWR, // 입사일 1년 이상 & 출근율 80% 이상 & 소정근로비율 80% 미만
-    HD_FULL // 정기 연차 전체 부여
-    
+    HD_LESS_ONE_YEAR, // 입사일 1년미만, 월차
+    HD_AFTER_ONE_YEAR_AND_UNDER_AR, // 입사일 1년 이상 & 출근율 80% 미만
+    HD_AFTER_ONE_YEAR_AND_OVER_AR_AND_UNDER_PWR, // 입사일 1년 이상 & 출근율 80% 이상 & 소정근로비율 80% 미만
+    HD_FULL, // 정기 연차 전체 부여
+
     // 회계연도 기준 흐름
+    FY_BEFORE_FIRST_REGULAR_START_DATE_AND_BEFORE_PRORATED_START_DATE,
+    FY_AFTER_FIRST_REGULAR_START_DATE_AND_UNDER_AR, // 첫 정기 회계연도 이후 & 출근율 80% 미만
+    FY_AFTER_FIRST_REGULAR_START_DATE_AND_OVER_AR_AND_UNDER_PWR,  // 첫 정기 회계연도 이후 & 출근율 80% 이상 & 소정근로비율 80% 미만
+    FY_FULL, // 정기 연차 전체 부여
+
 }

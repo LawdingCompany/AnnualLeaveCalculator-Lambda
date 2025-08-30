@@ -261,23 +261,37 @@ public class AnnualLeaveHelper {
      * @param endDate      종료일
      * @param absentDays   순수 결근처리일
      * @param excludedDays 순수 소정근로제외일
-     * @return [시작일, 종료일]  개근 판단
+     * @return [시작일, 종료일]  개근 판단, 기간이 전체 소정근로제외일이면 false(월차 부여x)
      */
-    private static boolean isFullAttendance(LocalDate startDate, LocalDate endDate,
+    private static boolean isFullAttendance(
+        LocalDate startDate, LocalDate endDate,
         Set<LocalDate> absentDays, Set<LocalDate> excludedDays) {
-        if (absentDays == null || absentDays.isEmpty()) {
-            return true;
+
+        // null 방어
+        Set<LocalDate> abs = (absentDays == null) ? Set.of() : absentDays;
+        Set<LocalDate> exc = (excludedDays == null) ? Set.of() : excludedDays;
+
+        boolean hasPureWorkingDay = false;
+
+        for (LocalDate d = startDate; !d.isAfter(endDate); d = d.plusDays(1)) {
+            boolean isAbsent = abs.contains(d);
+            boolean isExcluded = exc.contains(d);
+
+            // 1) 제외로 상쇄되지 않은 결근이 하나라도 있으면 즉시 false
+            if (isAbsent && !isExcluded) {
+                return false;
+            }
+
+            // 2) 결근도 아니고 제외도 아닌 "순수 근무일"이 하나라도 있어야 true 조건 충족
+            if (!isAbsent && !isExcluded) {
+                hasPureWorkingDay = true;
+            }
         }
-        Set<LocalDate> effectiveAbsences = new HashSet<>(absentDays);
-        if (excludedDays != null && !excludedDays.isEmpty()) {
-            effectiveAbsences.removeAll(excludedDays);
-        }
-        if (effectiveAbsences.isEmpty()) {
-            return true;
-        }
-        return startDate.datesUntil(endDate.plusDays(1))
-            .noneMatch(effectiveAbsences::contains);
+
+        // 순수 근무일이 최소 1일 있어야 full attendance로 인정
+        return hasPureWorkingDay;
     }
+
 
     /**
      * @param accrualPeriods    연차산정기간
