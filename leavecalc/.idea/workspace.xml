@@ -5,35 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="feat : 테스트 커버리지 측정 도구 추가(JaCoCo) #28&#10;&#10;- ./gradlew test jacocoTestReport로 측정&#10;- Report로 생성(주석으로 업로드)&#10;- build/jacocoHtml/index.html로 확인 가능">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/MonthlyCalcContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/FullFlowResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/LowARFlowResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/LowPWRFlowResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/record/MonthlyLeaveRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AdjustedAnnualLeaveResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/FullAnnualLeaveResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/fiscalyear/BeforeFirstRegularFlowResult.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/AnnualLeaveResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/AnnualLeaveResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/LeaveType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/LeaveType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/AdjustedAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/detail/AdjustedAnnualLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/CalculationDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/detail/CalculationDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/FullAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/detail/FullAnnualLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/detail/MonthlyLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/MonthlyProratedAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/detail/MonthlyProratedAnnualLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/detail/ProratedAnnualLeaveDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/detail/ProratedAnnualLeaveDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/FlowResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/FlowResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/LessOneYearFlowResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/LessOneYearFlowResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/response/AnnualLeaveResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/dto/response/AnnualLeaveResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/FiscalYearFlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/FiscalYearFlow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/HireDateFlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/HireDateFlow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/CalculationStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/CalculationStrategy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/FiscalYearStrategy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/handler/AnnualLeaveCalculatorLambdaHandlerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/FiscalYearStrategyTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/strategy/HireDateStrategyTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveHelperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/lawding/leavecalc/util/AnnualLeaveHelperTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,37 +45,37 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.Build leavecalc.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_HireDateType_Success.executor": "Run",
-    "JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_ValidInput_ReturnsCorrectResponse.executor": "Run",
-    "JUnit.AnnualLeaveRequestValidatorTest.executor": "Run",
-    "JUnit.HireDateStrategyTest$LessThanOneYearHireTests.returns5WhenOneMonthHasAbsenceWithin6Months.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "develop",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/kb_project/bank-challenger",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/jaeyu/OneDrive/바탕 화면/lawding/Lambda/leavecalc/src/main/java/com/leavecalc/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.17",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Build leavecalc.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveCalculatorLambdaHandlerTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_FiscalYearDateType_Success.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_HireDateType_Success.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveCalculatorLambdaHandlerTest.handleRequest_ValidInput_ReturnsCorrectResponse.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.AnnualLeaveRequestValidatorTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.HireDateStrategyTest$LessThanOneYearHireTests.returns5WhenOneMonthHasAbsenceWithin6Months.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/kb_project/bank-challenger&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/jaeyu/OneDrive/바탕 화면/lawding/Lambda/leavecalc/src/main/java/com/leavecalc/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.lawding.leavecalc.dto" />
@@ -242,6 +219,7 @@
       <workItem from="1754889634707" duration="3587000" />
       <workItem from="1756446925483" duration="14093000" />
       <workItem from="1756470895774" duration="15024000" />
+      <workItem from="1756525939677" duration="4040000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(입사일, 회계연도) 로직 최종 수정">
       <created>1745988718717</created>

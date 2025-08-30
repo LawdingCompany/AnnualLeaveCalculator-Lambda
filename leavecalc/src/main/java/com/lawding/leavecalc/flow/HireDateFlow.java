@@ -103,18 +103,6 @@ public class HireDateFlow implements CalculationFlow {
             .build();
     }
 
-
-    /**
-     * 입사 후 1년 미만인지 확인하는 함수
-     *
-     * @param hireDate      입사일
-     * @param referenceDate 기준일
-     * @return 근속연수가 1년 미만인가
-     */
-    public static boolean isBeforeOneYearFromHireDate(LocalDate hireDate, LocalDate referenceDate) {
-        return referenceDate.isBefore(hireDate.plusYears(1));
-    }
-
     /**
      * 근속연수를 계산하는 함수
      *

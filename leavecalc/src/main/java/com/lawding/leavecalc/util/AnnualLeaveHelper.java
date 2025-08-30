@@ -33,6 +33,17 @@ public class AnnualLeaveHelper {
 
 
     /**
+     * 입사 후 1년 미만인지 확인하는 함수
+     *
+     * @param hireDate      입사일
+     * @param referenceDate 기준일
+     * @return 근속연수가 1년 미만인가
+     */
+    public static boolean isBeforeOneYearFromHireDate(LocalDate hireDate, LocalDate referenceDate) {
+        return referenceDate.isBefore(hireDate.plusYears(1));
+    }
+
+    /**
      * 해당 날짜가 주말(토,일)인지 아닌지 판단하는 함수
      *
      * @param date 날짜

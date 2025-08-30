@@ -95,30 +95,5 @@ public final class HireDateStrategy implements CalculationStrategy {
             .build();
     }
 
-    /**
-     * 근속연수를 계산하는 함수
-     *
-     * @param startDate 시작일
-     * @param endDate   종료일
-     * @return 근속연수
-     */
-    private static int calculateServiceYears(LocalDate startDate, LocalDate endDate) {
-        return Period.between(startDate, endDate).getYears();
-    }
 
-
-    /**
-     * 산정일 기준 직전 연차 산정 기간을 계산하는 함수
-     *
-     * @param hireDate      입사일
-     * @param referenceDate 기준일
-     * @return 연차 산정 단위 기간 [시작일, 종료일]
-     */
-    private static DatePeriod getAccrualPeriod(LocalDate hireDate,
-        LocalDate referenceDate) {
-        int years = calculateServiceYears(hireDate, referenceDate) - 1;
-        LocalDate start = hireDate.plusYears(years);
-        LocalDate end = start.plusYears(1).minusDays(1);
-        return new DatePeriod(start, end);
-    }
 }
