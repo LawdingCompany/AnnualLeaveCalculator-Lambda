@@ -9,9 +9,9 @@ import com.lawding.leavecalc.domain.Condition;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.flow.FlowResult;
 import com.lawding.leavecalc.domain.LeaveType;
-import com.lawding.leavecalc.domain.flow.UnderPWRFlowResult;
+import com.lawding.leavecalc.domain.flow.hiredate.UnderPWRFlowResult;
 import com.lawding.leavecalc.domain.flow.hiredate.FullFlowResult;
-import com.lawding.leavecalc.domain.flow.UnderARFlowResult;
+import com.lawding.leavecalc.domain.flow.hiredate.UnderARFlowResult;
 import com.lawding.leavecalc.domain.flow.hiredate.LessOneYearFlowResult;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
@@ -45,6 +45,8 @@ public class HireDateFlow implements CalculationFlow {
                 absentPeriods, companyHolidays, holidays);
             Set<LocalDate> excludedDays = getPrescribedWorkingDayInPeriods(accrualPeriod,
                 excludedPeriods, companyHolidays, holidays);
+            Set<LocalDate> totalHolidays = getPrescribedWorkingDayInHolidays(accrualPeriod,
+                companyHolidays, holidays);
             return LessOneYearFlowResult.builder()
                 .leaveType(LeaveType.MONTHLY)
                 .condition(Condition.HD_LESS_ONE_YEAR)
@@ -52,6 +54,7 @@ public class HireDateFlow implements CalculationFlow {
                 .serviceYears(serviceYears)
                 .absentDays(absentDays)
                 .excludedDays(excludedDays)
+                .holidays(totalHolidays)
                 .build();
         }
 
@@ -66,8 +69,9 @@ public class HireDateFlow implements CalculationFlow {
             excludedPeriods, companyHolidays, holidays);
         double attendanceRate = calculateAttendanceRate(prescribedWorkingDays, absentDays.size(),
             excludedDays.size());
-
-        if(attendanceRate<MINIMUM_WORK_RATIO){
+        if (attendanceRate < MINIMUM_WORK_RATIO) {
+            Set<LocalDate> totalHolidays = getPrescribedWorkingDayInHolidays(accrualPeriod,
+                companyHolidays, holidays);
             return UnderARFlowResult.builder()
                 .leaveType(LeaveType.MONTHLY)
                 .condition(Condition.HD_AFTER_ONE_YEAR_AND_UNDER_AR)
@@ -75,6 +79,7 @@ public class HireDateFlow implements CalculationFlow {
                 .serviceYears(serviceYears)
                 .absentDays(absentDays)
                 .excludedDays(excludedDays)
+                .holidays(totalHolidays)
                 .attendanceRate(formatDouble(attendanceRate))
                 .build();
         }
@@ -82,7 +87,7 @@ public class HireDateFlow implements CalculationFlow {
         double prescribeWorkingRatio = calculatePrescribedWorkingRatio(prescribedWorkingDays,
             excludedDays.size());
 
-        if(prescribeWorkingRatio<MINIMUM_WORK_RATIO){
+        if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) {
             return UnderPWRFlowResult.builder()
                 .leaveType(LeaveType.ANNUAL)
                 .condition(Condition.HD_AFTER_ONE_YEAR_AND_OVER_AR_AND_UNDER_PWR)

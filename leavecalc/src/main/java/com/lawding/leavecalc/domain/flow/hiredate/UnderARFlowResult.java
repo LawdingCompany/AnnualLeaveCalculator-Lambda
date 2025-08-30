@@ -1,5 +1,7 @@
-package com.lawding.leavecalc.domain.flow;
+package com.lawding.leavecalc.domain.flow.hiredate;
 
+import com.lawding.leavecalc.domain.flow.FlowResult;
+import com.lawding.leavecalc.domain.flow.MonthlyCalcContext;
 import java.time.LocalDate;
 import java.util.Set;
 import lombok.Getter;
@@ -14,5 +16,6 @@ public class UnderARFlowResult extends FlowResult implements MonthlyCalcContext 
     // 월차
     private final Set<LocalDate> absentDays;
     private final Set<LocalDate> excludedDays;
+    private final Set<LocalDate> holidays;
     private final double attendanceRate;
 }

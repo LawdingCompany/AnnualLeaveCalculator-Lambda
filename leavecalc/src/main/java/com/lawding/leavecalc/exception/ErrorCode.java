@@ -18,7 +18,8 @@ public enum ErrorCode {
 
     SERIALIZATION_FAILED("E400", "응답 객체 직렬화에 실패했습니다."),
 
-    HIREDATE_FLOW_ERROR("E500","회계연도는 입사일 기준 흐름에서 계산할 수 없습니다."),
+    HIREDATE_FLOW_ERROR("E500","회계연도 산정방식은 입사일 기준 흐름에서 계산할 수 없습니다."),
+    FISCALYEAR_FLOW_ERROR("E501","입사일 산정방식은 회계연도 기준 흐름에서 계산할 수 없습니다."),
     INTERNAL_SERVER_ERROR("E"
         + "999", "서버 오류가 발생했습니다.");
 

@@ -1,5 +1,6 @@
-package com.lawding.leavecalc.domain.flow;
+package com.lawding.leavecalc.domain.flow.hiredate;
 
+import com.lawding.leavecalc.domain.flow.FlowResult;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;

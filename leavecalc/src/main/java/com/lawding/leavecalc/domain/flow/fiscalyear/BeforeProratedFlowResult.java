@@ -1,4 +1,4 @@
-package com.lawding.leavecalc.domain.flow.hiredate;
+package com.lawding.leavecalc.domain.flow.fiscalyear;
 
 import com.lawding.leavecalc.domain.flow.FlowResult;
 import com.lawding.leavecalc.domain.flow.MonthlyCalcContext;
@@ -11,11 +11,8 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @ToString
-public class LessOneYearFlowResult extends FlowResult implements MonthlyCalcContext {
-    // 입사일 1년 미만
-    // 월차
+public class BeforeProratedFlowResult extends FlowResult implements MonthlyCalcContext {
     private final Set<LocalDate> absentDays;
     private final Set<LocalDate> excludedDays;
     private final Set<LocalDate> holidays;
-
 }

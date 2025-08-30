@@ -190,10 +190,10 @@ public class AnnualLeaveHelper {
 
     /**
      * @param accrualPeriod     산정 기간
-     * @param periods           기간(결근처리 기간 or 소정근로제외 기간)
+     * @param periods           결근처리 기간 or 소정근로제외 기간
      * @param companyHolidays   회사 휴일
      * @param statutoryHolidays 법정 공휴일
-     * @return 산정 기간 내 결근 기간 중 회사 휴일과 법정 공휴일, 주말을 제외한 결근 일을 담은 Set periods 중 순수한 날을 담은 Set
+     * @return 산정 기간 내 기간 중 회사 휴일과 법정 공휴일, 주말을 제외한 결근 일을 담은 Set periods 중 순수한 날을 담은 Set
      */
     public static Set<LocalDate> getPrescribedWorkingDayInPeriods(DatePeriod accrualPeriod,
         List<DatePeriod> periods, List<LocalDate> companyHolidays,
@@ -202,6 +202,38 @@ public class AnnualLeaveHelper {
         Set<LocalDate> holidays = new HashSet<>(companyHolidays);
         holidays.addAll(statutoryHolidays);
         return filterPrescribedWorkingDays(days, holidays);
+    }
+
+
+    /**
+     * @param accrualPeriod     산정 기간
+     * @param companyHolidays   회사 휴일
+     * @param statutoryHolidays 법정 공휴일
+     * @return 산정 기간 중 회사 휴일과 법정 공휴일, 주말을 제외한 결근 일을 담은 Set periods 중 순수한 날을 담은 Set
+     */
+    public static Set<LocalDate> getPrescribedWorkingDayInHolidays(DatePeriod accrualPeriod,
+        List<LocalDate> companyHolidays, List<LocalDate> statutoryHolidays) {
+        Set<LocalDate> holidays = new HashSet<>();
+        if (statutoryHolidays != null) {
+            holidays.addAll(statutoryHolidays);
+        }
+        if (companyHolidays != null) {
+            holidays.addAll(companyHolidays);
+        }
+
+        return holidays.stream()
+            .filter(day -> isWithinInclusive(day, accrualPeriod))
+            .filter(AnnualLeaveHelper::isWeekday)
+            .collect(Collectors.toSet());
+    }
+
+    /**
+     * @param day    날짜
+     * @param period 기간
+     * @return 해당 날짜가 기간 안에 포함되는지 여부
+     */
+    private static boolean isWithinInclusive(LocalDate day, DatePeriod period) {
+        return !day.isBefore(period.startDate()) && !day.isAfter(period.endDate());
     }
 
     /**
@@ -221,9 +253,10 @@ public class AnnualLeaveHelper {
         DatePeriod period = calcContext.getAccrualPeriod();
         Set<LocalDate> absentDays = calcContext.getAbsentDays();
         Set<LocalDate> excludedDays = calcContext.getExcludedDays();
+        Set<LocalDate> holidays = calcContext.getHolidays();
 
         List<MonthlyLeaveRecord> records = new ArrayList<>();
-        int totalMonthlyLeaves = 0;
+        double totalMonthlyLeaves = 0.0;
 
         LocalDate currentStart = period.startDate();
 
@@ -233,18 +266,49 @@ public class AnnualLeaveHelper {
             if (currentEnd.isAfter(period.endDate())) {
                 break;
             }
-            boolean fullAttendance = isFullAttendance(currentStart, currentEnd,
-                absentDays, excludedDays);
-            double granted = fullAttendance ? 1 : 0;
+
+            // 소정근로일
+            Set<LocalDate> prescribedSet = currentStart
+                .datesUntil(currentEnd.plusDays(1))
+                .filter(AnnualLeaveHelper::isWeekday)
+                .filter(day -> !holidays.contains(day))
+                .collect(Collectors.toSet());
+
+            int denominator = prescribedSet.size();
+            double granted = 0.0;
+
+            if (denominator > 0) {
+                // 간격 내 제외/결근만 추출
+                Set<LocalDate> monthlyExcluded = excludedDays.stream()
+                    .filter(prescribedSet::contains)
+                    .collect(Collectors.toSet());
+
+                Set<LocalDate> monthlyAbsent = absentDays.stream()
+                    .filter(prescribedSet::contains)
+                    .collect(Collectors.toSet());
+
+                // 제외일과 겹치지 않는 실질 결근이 있는가?
+                boolean hasAbsence = monthlyAbsent.stream()
+                    .anyMatch(d -> !monthlyExcluded.contains(d));
+
+                if (!hasAbsence) {
+                    int attendanceDays = denominator - monthlyExcluded.size();
+                    granted = (double) attendanceDays / denominator;
+                }
+            }
+
             records.add(
                 MonthlyLeaveRecord.builder()
                     .period(new DatePeriod(currentStart, currentEnd))
                     .monthlyLeave(granted)
                     .build()
             );
-            if (fullAttendance) {
-                totalMonthlyLeaves++;
+
+            totalMonthlyLeaves = Math.min(MAX_MONTHLY_LEAVE, totalMonthlyLeaves + granted);
+            if (totalMonthlyLeaves >= MAX_MONTHLY_LEAVE) {
+                break;
             }
+
             currentStart = currentEnd.plusDays(1);
         }
 

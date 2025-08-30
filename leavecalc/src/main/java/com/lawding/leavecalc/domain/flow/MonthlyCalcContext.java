@@ -8,4 +8,5 @@ public interface MonthlyCalcContext {
     DatePeriod getAccrualPeriod();
     Set<LocalDate> getAbsentDays();
     Set<LocalDate> getExcludedDays();
+    Set<LocalDate> getHolidays();
 }

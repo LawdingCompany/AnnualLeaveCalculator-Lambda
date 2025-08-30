@@ -9,10 +9,13 @@ import com.lawding.leavecalc.domain.Condition;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.LeaveType;
 import com.lawding.leavecalc.domain.flow.FlowResult;
+import com.lawding.leavecalc.domain.flow.fiscalyear.BeforeProratedFlowResult;
+import com.lawding.leavecalc.domain.flow.fiscalyear.FullProratedFlowResult;
+import com.lawding.leavecalc.domain.flow.fiscalyear.MonthlyAndProratedFlowResult;
+import com.lawding.leavecalc.domain.flow.fiscalyear.ProratedUnderARFlowResult;
 import com.lawding.leavecalc.domain.flow.hiredate.FullFlowResult;
-import com.lawding.leavecalc.domain.flow.UnderARFlowResult;
-import com.lawding.leavecalc.domain.flow.UnderPWRFlowResult;
-import com.lawding.leavecalc.domain.flow.hiredate.LessOneYearFlowResult;
+import com.lawding.leavecalc.domain.flow.hiredate.UnderARFlowResult;
+import com.lawding.leavecalc.domain.flow.hiredate.UnderPWRFlowResult;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.time.MonthDay;
@@ -39,67 +42,46 @@ public class FiscalYearFlow implements CalculationFlow {
         Map<Integer, List<DatePeriod>> nonWorkingPeriods = context.getNonWorkingPeriods();
         List<DatePeriod> absentPeriods = nonWorkingPeriods.getOrDefault(2, List.of());
         List<DatePeriod> excludedPeriods = nonWorkingPeriods.getOrDefault(3, List.of());
-        int serviceYears = calculateServiceYears(referenceDate,
-            firstRegularFiscalYearStartDate);
-        if (isBeforeFirstFiscalYear(referenceDate, firstRegularFiscalYearStartDate)) {
-            // 월차 계산 준비
-            DatePeriod accrualPeriodForMonthly = getAccrualPeriodBeforeFirstRegularFiscalYearStartDate(
-                hireDate, referenceDate);
-            List<LocalDate> holidaysWithinMonthly = holidayRepository.findWeekdayHolidays(
-                accrualPeriodForMonthly);
-            Set<LocalDate> absentDaysWithinMonthly = getPrescribedWorkingDayInPeriods(
-                accrualPeriodForMonthly,
-                absentPeriods, companyHolidays, holidaysWithinMonthly);
-            Set<LocalDate> excludedDaysWithinMonthly = getPrescribedWorkingDayInPeriods(
-                accrualPeriodForMonthly,
-                excludedPeriods, companyHolidays, holidaysWithinMonthly);
+        int serviceYears = calculateServiceYears(referenceDate, firstRegularFiscalYearStartDate);
 
-            // 비례연차 부여날짜 구하기
+        // 1. 첫 정기 회계연도 이전인 경우
+        if (isBeforeFirstFiscalYear(referenceDate, firstRegularFiscalYearStartDate)) {
+
+            // 비례연차 발생일 구하기
             LocalDate proratedLeaveStartDate = getProratedLeaveStartDate(hireDate, fiscalYear);
-            // 산정일이 비례연차부여일 이전일 경우, 월차만 발생
+
             if (isBeforeProratedLeaveStartDate(referenceDate, proratedLeaveStartDate)) {
-                return LessOneYearFlowResult.builder()
-                    .leaveType(LeaveType.MONTHLY)
-                    .condition(
-                        Condition.FY_BEFORE_FIRST_REGULAR_START_DATE_AND_BEFORE_PRORATED_START_DATE)
-                    .accrualPeriod(accrualPeriodForMonthly)
-                    .serviceYears(serviceYears)
-                    .absentDays(absentDaysWithinMonthly)
-                    .excludedDays(excludedDaysWithinMonthly)
-                    .build();
+                // 비례연차발생일 이전일 경우, 월차만 발생
+                return buildMonthlyFlowResult(hireDate, referenceDate, serviceYears,
+                    companyHolidays, absentPeriods, excludedPeriods);
+            } else {
+                LocalDate oneYearAnniversary = hireDate.plusYears(1);
+
+                if (!referenceDate.isBefore(oneYearAnniversary)) {
+                    // 입사 후 1년 이상일 경우, 비례연차
+                    return buildProratedFlowResult(hireDate, serviceYears, proratedLeaveStartDate,
+                        companyHolidays, absentPeriods, excludedPeriods);
+                } else {
+                    // 월차 + 비례연차가 발생하는 경우
+                    FlowResult monthlyPart = buildMonthlyFlowResult(
+                        hireDate, referenceDate, serviceYears,
+                        companyHolidays, absentPeriods, excludedPeriods
+                    );
+
+                    FlowResult proratedPart = buildProratedFlowResult(
+                        hireDate, serviceYears, proratedLeaveStartDate,
+                        companyHolidays, absentPeriods, excludedPeriods
+                    );
+
+                    return MonthlyAndProratedFlowResult.builder()
+                        .leaveType(LeaveType.MONTHLY_AND_PRORATED)
+                        .condition(Condition.FY_MONTHLY_AND_PRORATED)
+                        .monthlyPart((BeforeProratedFlowResult) monthlyPart)
+                        .proratedPart(proratedPart)
+                        .build();
+
+                }
             }
-            // 비례연차 계산, 입사일 ~ 회계연도 종료일에 비례해서
-            DatePeriod accrualPeriodForProrated = getAccrualPeriodForProrated(hireDate,
-                proratedLeaveStartDate);
-            List<LocalDate> holidaysWithinProrated = holidayRepository.findWeekdayHolidays(
-                accrualPeriodForProrated);
-            int prescribedWorkingDays = calculatePrescribedWorkingDays(accrualPeriodForProrated,
-                companyHolidays, holidaysWithinProrated);
-            Set<LocalDate> absentDaysWithinProrated = getPrescribedWorkingDayInPeriods(
-                accrualPeriodForProrated,
-                absentPeriods, companyHolidays, holidaysWithinProrated);
-            Set<LocalDate> excludedDaysWithinProrated = getPrescribedWorkingDayInPeriods(
-                accrualPeriodForProrated,
-                excludedPeriods, companyHolidays, holidaysWithinProrated);
-            double attendanceRate = calculateAttendanceRate(prescribedWorkingDays,
-                absentDaysWithinProrated.size(), excludedDaysWithinProrated.size());
-            if (attendanceRate < MINIMUM_WORK_RATIO) {
-                return UnderARFlowResult.builder()
-                    .leaveType(LeaveType.MONTHLY)
-                    .condition(Condition.HD_AFTER_ONE_YEAR_AND_UNDER_AR)
-                    .accrualPeriod(accrualPeriod)
-                    .serviceYears(serviceYears)
-                    .absentDays(absentDaysWithinProrated)
-                    .excludedDays(excludedDaysWithinProrated)
-                    .attendanceRate(formatDouble(attendanceRate))
-                    .build();
-            }
-            // 산정일이 입사일보다 1년 이전일 경우,
-//            DatePeriod accrualPeriod = new DatePeriod(hireDate, referenceDate);
-//            return FlowResult.builder()
-//                .leaveType(LeaveType.MONTHY)
-//                .accrualPeriod(accrualPeriod)
-//                .build();
         }
         DatePeriod accrualPeriod = getAccrualPeriodAfterFirstRegularFiscalYearStartDate(
             referenceDate, fiscalYear);
@@ -113,8 +95,9 @@ public class FiscalYearFlow implements CalculationFlow {
             excludedPeriods, companyHolidays, holidays);
         double attendanceRate = calculateAttendanceRate(prescribedWorkingDays, absentDays.size(),
             excludedDays.size());
-
         if (attendanceRate < MINIMUM_WORK_RATIO) {
+            Set<LocalDate> totalHolidays = getPrescribedWorkingDayInHolidays(accrualPeriod,
+                companyHolidays, holidays);
             return UnderARFlowResult.builder()
                 .leaveType(LeaveType.MONTHLY)
                 .condition(Condition.FY_AFTER_FIRST_REGULAR_START_DATE_AND_UNDER_AR)
@@ -122,6 +105,7 @@ public class FiscalYearFlow implements CalculationFlow {
                 .serviceYears(serviceYears)
                 .absentDays(absentDays)
                 .excludedDays(excludedDays)
+                .holidays(totalHolidays)
                 .attendanceRate(formatDouble(attendanceRate))
                 .build();
         }
@@ -148,6 +132,94 @@ public class FiscalYearFlow implements CalculationFlow {
             .attendanceRate(formatDouble(attendanceRate))
             .prescribeWorkingRatio(formatDouble(prescribeWorkingRatio))
             .build();
+    }
+
+    private FlowResult buildMonthlyFlowResult(
+        LocalDate hireDate,
+        LocalDate referenceDate,
+        int serviceYears,
+        List<LocalDate> companyHolidays,
+        List<DatePeriod> absentPeriods,
+        List<DatePeriod> excludedPeriods
+    ) {
+        DatePeriod accrualPeriodForMonthly = getAccrualPeriodBeforeFirstRegularFiscalYearStartDate(
+            hireDate, referenceDate);
+        List<LocalDate> holidaysWithinMonthly = holidayRepository.findWeekdayHolidays(
+            accrualPeriodForMonthly);
+        Set<LocalDate> absentDaysWithinMonthly = getPrescribedWorkingDayInPeriods( // 순수 결근일
+            accrualPeriodForMonthly, absentPeriods, companyHolidays, holidaysWithinMonthly);
+        Set<LocalDate> excludedDaysWithinMonthly = getPrescribedWorkingDayInPeriods(
+            accrualPeriodForMonthly, excludedPeriods, companyHolidays, holidaysWithinMonthly);
+        Set<LocalDate> totalHolidaysWithinMonthly = getPrescribedWorkingDayInHolidays(
+            accrualPeriodForMonthly, companyHolidays, holidaysWithinMonthly);
+
+        return BeforeProratedFlowResult.builder()
+            .leaveType(LeaveType.MONTHLY)
+            .condition(Condition.FY_BEFORE_PRORATED)
+            .accrualPeriod(accrualPeriodForMonthly)
+            .serviceYears(serviceYears)
+            .absentDays(absentDaysWithinMonthly)
+            .excludedDays(excludedDaysWithinMonthly)
+            .holidays(totalHolidaysWithinMonthly)
+            .build();
+    }
+
+    private FlowResult buildProratedFlowResult(LocalDate hireDate,
+        int serviceYears,
+        LocalDate proratedLeaveStartDate,
+        List<LocalDate> companyHolidays,
+        List<DatePeriod> absentPeriods,
+        List<DatePeriod> excludedPeriods) {
+        DatePeriod accrualPeriodForProrated = getAccrualPeriodForProrated(hireDate,
+            proratedLeaveStartDate);
+
+        List<LocalDate> holidaysWithinProrated = holidayRepository.findWeekdayHolidays(
+            accrualPeriodForProrated);
+        int prescribedWorkingDaysWithinAccrualPeriodForProrated = getPrescribedWorkingDays(
+            accrualPeriodForProrated, companyHolidays, holidaysWithinProrated);
+        Set<LocalDate> absentDaysWithinProrated = getPrescribedWorkingDayInPeriods(
+            accrualPeriodForProrated, absentPeriods, companyHolidays, holidaysWithinProrated);
+        Set<LocalDate> excludedDaysWithinProrated = getPrescribedWorkingDayInPeriods(
+            accrualPeriodForProrated, excludedPeriods, companyHolidays, holidaysWithinProrated);
+        double attendanceRate = calculateAttendanceRate(
+            prescribedWorkingDaysWithinAccrualPeriodForProrated,
+            absentDaysWithinProrated.size(), excludedDaysWithinProrated.size());
+
+        if (attendanceRate < MINIMUM_WORK_RATIO) {
+            Set<LocalDate> totalHolidaysWithinProrated = getPrescribedWorkingDayInHolidays(
+                accrualPeriodForProrated,
+                companyHolidays, holidaysWithinProrated);
+            return ProratedUnderARFlowResult.builder()
+                .leaveType(LeaveType.PRORATED)
+                .condition(Condition.FY_PRORATED_AND_UNDER_AR)
+                .accrualPeriod(accrualPeriodForProrated)
+                .serviceYears(serviceYears)
+                .absentDays(absentDaysWithinProrated)
+                .excludedDays(excludedDaysWithinProrated)
+                .attendanceRate(formatDouble(attendanceRate))
+                .holidays(totalHolidaysWithinProrated)
+                .build();
+        }
+
+        DatePeriod fiscalYearForProrated = getFiscalYearForProrated(proratedLeaveStartDate);
+        List<LocalDate> holidaysWithinFiscalYear = holidayRepository.findWeekdayHolidays(
+            fiscalYearForProrated);
+        int prescribedWorkingDaysWithinFiscalYear = getPrescribedWorkingDays(
+            fiscalYearForProrated, companyHolidays,
+            holidaysWithinFiscalYear);
+        double prescribeWorkingRatio = calculatePrescribedWorkingRatioForProrated(
+            prescribedWorkingDaysWithinAccrualPeriodForProrated,
+            excludedDaysWithinProrated.size(),
+            prescribedWorkingDaysWithinFiscalYear);
+        return FullProratedFlowResult.builder()
+            .leaveType(LeaveType.PRORATED)
+            .condition(Condition.FY_PRORATED_FULL)
+            .accrualPeriod(accrualPeriodForProrated)
+            .serviceYears(serviceYears)
+            .attendanceRate(formatDouble(attendanceRate))
+            .prescribeWorkingRatio(prescribeWorkingRatio)
+            .build();
+
     }
 
     private boolean isBeforeFirstFiscalYear(LocalDate referenceDate,
@@ -241,6 +313,19 @@ public class FiscalYearFlow implements CalculationFlow {
     private DatePeriod getAccrualPeriodForProrated(LocalDate hireDate,
         LocalDate proratedLeaveStartDate) {
         return new DatePeriod(hireDate, proratedLeaveStartDate.minusDays(1));
+    }
+
+    private DatePeriod getFiscalYearForProrated(LocalDate proratedLeaveStartDate) {
+        return new DatePeriod(proratedLeaveStartDate.minusYears(1),
+            proratedLeaveStartDate.minusDays(1));
+    }
+
+    private double calculatePrescribedWorkingRatioForProrated(int numerator1, int numerator2,
+        int denominator) {
+        if (denominator <= 0 || numerator1 <= numerator2) {
+            return 0.0;
+        }
+        return (double) (numerator1 - numerator2) / denominator;
     }
 
 }

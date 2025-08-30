@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="feat : 테스트 커버리지 측정 도구 추가(JaCoCo) #28&#10;&#10;- ./gradlew test jacocoTestReport로 측정&#10;- Report로 생성(주석으로 업로드)&#10;- build/jacocoHtml/index.html로 확인 가능">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/Condition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/Condition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/LowARFlowResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/UnderARFlowResult.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/hiredate/LowPWRFlowResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/domain/flow/UnderPWRFlowResult.java" afterDir="false" />
@@ -14,6 +15,8 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/HireDateFlow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/flow/HireDateFlow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/strategy/HireDateStrategy.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/util/AnnualLeaveHelper.java" afterDir="false" />
+=======
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -219,7 +222,14 @@
       <workItem from="1749605696203" duration="11000" />
       <workItem from="1754889595373" duration="33000" />
       <workItem from="1754889634707" duration="3587000" />
+<<<<<<< Updated upstream
       <workItem from="1756446925483" duration="14288000" />
+=======
+      <workItem from="1756446925483" duration="14093000" />
+      <workItem from="1756470895774" duration="15024000" />
+      <workItem from="1756525939677" duration="4071000" />
+      <workItem from="1756547227128" duration="2366000" />
+>>>>>>> Stashed changes
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(입사일, 회계연도) 로직 최종 수정">
       <created>1745988718717</created>
