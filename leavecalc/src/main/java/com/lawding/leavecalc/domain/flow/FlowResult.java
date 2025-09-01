@@ -1,8 +1,10 @@
 package com.lawding.leavecalc.domain.flow;
 
-import com.lawding.leavecalc.domain.Condition;
+import com.lawding.leavecalc.domain.FlowStep;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.LeaveType;
+import com.lawding.leavecalc.domain.flow.context.CalculationContext;
+import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -10,9 +12,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 @ToString
-public abstract class FlowResult {
+public class FlowResult {
+    private final List<FlowStep> steps;
     private final LeaveType leaveType;
-    private final DatePeriod accrualPeriod;
-    private final Condition condition;
-    private final int serviceYears;
+    private final CalculationContext context;
 }

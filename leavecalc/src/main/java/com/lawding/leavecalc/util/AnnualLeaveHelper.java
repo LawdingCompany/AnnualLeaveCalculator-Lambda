@@ -3,9 +3,11 @@ package com.lawding.leavecalc.util;
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
 import com.lawding.leavecalc.domain.DatePeriod;
+import com.lawding.leavecalc.domain.flow.context.CalculationContext;
+import com.lawding.leavecalc.domain.flow.context.MonthlyContext;
 import com.lawding.leavecalc.dto.detail.MonthlyLeaveDetail;
 import com.lawding.leavecalc.domain.flow.MonthlyCalcContext;
-import com.lawding.leavecalc.domain.record.MonthlyLeaveRecord;
+import com.lawding.leavecalc.domain.MonthlyLeaveRecord;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -152,22 +154,6 @@ public class AnnualLeaveHelper {
         return filterPrescribedWorkingDays(absentDays, holidays, excludedDays);
     }
 
-    /**
-     * @param absentPeriods     결근처리기간
-     * @param standard          기준 기간(시작일, 종료일)
-     * @param statutoryHolidays 법정공휴일
-     * @param companyHolidays   회사휴일
-     * @param excludedPeriods   소정근로제외일
-     * @return 결근처리기간들 중 기준 기간 내 소정근로일 계산
-     */
-    public static int calculatePrescribedWorkingDaysInAbsentPeriods(List<DatePeriod> absentPeriods,
-        DatePeriod standard, List<LocalDate> statutoryHolidays, List<LocalDate> companyHolidays,
-        List<DatePeriod> excludedPeriods) {
-        return getPrescribedWorkingDaySetInAbsentPeriods(absentPeriods, standard,
-            statutoryHolidays,
-            companyHolidays, excludedPeriods).size();
-    }
-
 
     /**
      * @param excludedPeriods   소정근로제외기간
@@ -249,11 +235,11 @@ public class AnnualLeaveHelper {
             .collect(Collectors.toSet());
     }
 
-    public static MonthlyLeaveDetail monthlyAccruedLeaves(MonthlyCalcContext calcContext) {
-        DatePeriod period = calcContext.getAccrualPeriod();
-        Set<LocalDate> absentDays = calcContext.getAbsentDays();
-        Set<LocalDate> excludedDays = calcContext.getExcludedDays();
-        Set<LocalDate> holidays = calcContext.getHolidays();
+    public static MonthlyLeaveDetail monthlyAccruedLeaves(MonthlyContext context) {
+        DatePeriod period = context.getAccrualPeriod();
+        Set<LocalDate> absentDays = context.getAbsentDays();
+        Set<LocalDate> excludedDays = context.getExcludedDays();
+        Set<LocalDate> holidays = context.getHolidays();
 
         List<MonthlyLeaveRecord> records = new ArrayList<>();
         double totalMonthlyLeaves = 0.0;
@@ -267,7 +253,7 @@ public class AnnualLeaveHelper {
                 break;
             }
 
-            // 소정근로일
+            // 간격 내 소정근로일
             Set<LocalDate> prescribedSet = currentStart
                 .datesUntil(currentEnd.plusDays(1))
                 .filter(AnnualLeaveHelper::isWeekday)
@@ -278,23 +264,19 @@ public class AnnualLeaveHelper {
             double granted = 0.0;
 
             if (denominator > 0) {
-                // 간격 내 제외/결근만 추출
-                Set<LocalDate> monthlyExcluded = excludedDays.stream()
-                    .filter(prescribedSet::contains)
-                    .collect(Collectors.toSet());
 
-                Set<LocalDate> monthlyAbsent = absentDays.stream()
-                    .filter(prescribedSet::contains)
-                    .collect(Collectors.toSet());
-
-                // 제외일과 겹치지 않는 실질 결근이 있는가?
-                boolean hasAbsence = monthlyAbsent.stream()
-                    .anyMatch(d -> !monthlyExcluded.contains(d));
+                boolean hasAbsence = absentDays.stream()
+                    .anyMatch(prescribedSet::contains);
 
                 if (!hasAbsence) {
-                    int attendanceDays = denominator - monthlyExcluded.size();
+                    int excludedDay = (int) excludedDays.stream()
+                        .filter(prescribedSet::contains)
+                        .count();
+
+                    int attendanceDays = denominator - excludedDay;
                     granted = (double) attendanceDays / denominator;
                 }
+
             }
 
             records.add(
@@ -316,44 +298,6 @@ public class AnnualLeaveHelper {
             .records(records)
             .totalLeaveDays(totalMonthlyLeaves)
             .build();
-    }
-
-    /**
-     * [시작일, 종료일] 에 결근한 날이 있는지 확인하며 개근을 판단하는 함수
-     *
-     * @param startDate    시작일
-     * @param endDate      종료일
-     * @param absentDays   순수 결근처리일
-     * @param excludedDays 순수 소정근로제외일
-     * @return [시작일, 종료일]  개근 판단, 기간이 전체 소정근로제외일이면 false(월차 부여x)
-     */
-    private static boolean isFullAttendance(
-        LocalDate startDate, LocalDate endDate,
-        Set<LocalDate> absentDays, Set<LocalDate> excludedDays) {
-
-        // null 방어
-        Set<LocalDate> abs = (absentDays == null) ? Set.of() : absentDays;
-        Set<LocalDate> exc = (excludedDays == null) ? Set.of() : excludedDays;
-
-        boolean hasPureWorkingDay = false;
-
-        for (LocalDate d = startDate; !d.isAfter(endDate); d = d.plusDays(1)) {
-            boolean isAbsent = abs.contains(d);
-            boolean isExcluded = exc.contains(d);
-
-            // 1) 제외로 상쇄되지 않은 결근이 하나라도 있으면 즉시 false
-            if (isAbsent && !isExcluded) {
-                return false;
-            }
-
-            // 2) 결근도 아니고 제외도 아닌 "순수 근무일"이 하나라도 있어야 true 조건 충족
-            if (!isAbsent && !isExcluded) {
-                hasPureWorkingDay = true;
-            }
-        }
-
-        // 순수 근무일이 최소 1일 있어야 full attendance로 인정
-        return hasPureWorkingDay;
     }
 
 
@@ -395,4 +339,51 @@ public class AnnualLeaveHelper {
         }
         return (double) numerator / denominator;
     }
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    /**
+     * 산정 기간 내 기본 소정근로일 수를 계산한다. - 소정근로일 : 주말(토/일)과 법정공휴일을 제외한 평일
+     *
+     * @param accrualPeriod     산정 기간 [startDate, endDate] 포함
+     * @param statutoryHolidays 법정공휴일 목록 (null 가능)
+     * @return 소정근로일 수
+     */
+    public static int countPrescribedWorkingDays(DatePeriod accrualPeriod,
+        Set<LocalDate> statutoryHolidays) {
+
+        Set<LocalDate> holidays = (statutoryHolidays == null) ? Set.of() : statutoryHolidays;
+
+        long days = accrualPeriod.startDate().datesUntil(accrualPeriod.endDate().plusDays(1))
+            .filter(AnnualLeaveHelper::isWeekday)
+            .filter(day -> !holidays.contains(day))
+            .count();
+
+        return (int) days;
+    }
+
+    /**
+     * 산정 기간 내 기간(결근처리기간 or 소정근로제외기간) 내 평일 수를 계산한다. - 제외기간과 산정기간의 교집합 구간에서 주말/법정공휴일을 제외한 평일만 센다.
+     *
+     * @param accrualPeriod     연차 산정 기간
+     * @param periods           기간(결근처리, 소정근로제외)
+     * @param statutoryHolidays 법정 공휴일
+     * @return 순수 소정근로일(평일) 수
+     */
+    public static Set<LocalDate> getWorkingDaysInPeriods(DatePeriod accrualPeriod,
+        List<DatePeriod> periods, Set<LocalDate> statutoryHolidays) {
+        if (periods == null || periods.isEmpty()) {
+            return Set.of();
+        }
+
+        Set<LocalDate> holidays = (statutoryHolidays == null) ? Set.of() : statutoryHolidays;
+
+        return periods.stream()
+            .map(p -> intersectPeriod(p, accrualPeriod)) // 교집합
+            .filter(Objects::nonNull)
+            .flatMap(p -> p.startDate().datesUntil(p.endDate().plusDays(1)))
+            .filter(AnnualLeaveHelper::isWeekday)        // 주말 제외
+            .filter(d -> !holidays.contains(d))        // 공휴일 제외
+            .collect(Collectors.toSet());
+    }
+
 }

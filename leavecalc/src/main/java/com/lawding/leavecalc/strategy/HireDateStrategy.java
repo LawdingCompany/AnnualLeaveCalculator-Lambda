@@ -6,6 +6,7 @@ import static com.lawding.leavecalc.constant.AnnualLeaveConstants.*;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.CalculationType;
+import com.lawding.leavecalc.domain.flow.context.MonthlyContext;
 import com.lawding.leavecalc.domain.flow.hiredate.FullFlowResult;
 import com.lawding.leavecalc.dto.AdjustedAnnualLeaveResult;
 import com.lawding.leavecalc.dto.FullAnnualLeaveResult;
@@ -35,8 +36,9 @@ public final class HireDateStrategy implements CalculationStrategy {
     @Override
     public AnnualLeaveResult annualLeaveCalculate(AnnualLeaveContext annualLeaveContext) {
         FlowResult flowResult = flow.process(annualLeaveContext);
-
-        return switch (flowResult.getCondition()) {
+        MonthlyContext context = (MonthlyContext) flowResult.getContext();
+        MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(context);
+        return switch (flowResult.getFlowStep()) {
             case HD_LESS_ONE_YEAR -> {
                 LessOneYearFlowResult context = (LessOneYearFlowResult) flowResult;
                 MonthlyLeaveDetail monthlyLeaveDetail = monthlyAccruedLeaves(context);

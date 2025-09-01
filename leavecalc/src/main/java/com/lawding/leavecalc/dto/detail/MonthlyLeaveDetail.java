@@ -1,6 +1,6 @@
 package com.lawding.leavecalc.dto.detail;
 
-import com.lawding.leavecalc.domain.record.MonthlyLeaveRecord;
+import com.lawding.leavecalc.domain.MonthlyLeaveRecord;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;

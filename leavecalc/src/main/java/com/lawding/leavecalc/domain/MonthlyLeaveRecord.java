@@ -1,4 +1,4 @@
-package com.lawding.leavecalc.domain.record;
+package com.lawding.leavecalc.domain;
 
 import com.lawding.leavecalc.domain.DatePeriod;
 import lombok.Builder;
