@@ -9,5 +9,5 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class MonthlyAndProratedContext extends CalculationContext{
     private final MonthlyContext monthlyContext;
-    private final ProratedContext proratedContext;
+    private final CalculationContext  proratedContext;
 }

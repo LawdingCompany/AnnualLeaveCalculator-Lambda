@@ -10,6 +10,6 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class AnnualContext extends CalculationContext {
     private final DatePeriod accrualPeriod;
-    private final double prescribeWorkingRatio;
     private final double attendanceRate;
+    private final double prescribeWorkingRatio;
 }

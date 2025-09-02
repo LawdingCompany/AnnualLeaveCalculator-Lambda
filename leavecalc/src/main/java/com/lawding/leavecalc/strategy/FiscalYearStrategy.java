@@ -24,16 +24,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
     @Override
     public AnnualLeaveResult annualLeaveCalculate(AnnualLeaveContext annualLeaveContext) {
         FlowResult flowResult = flow.process(annualLeaveContext);
-        return switch (flowResult.getFlowStep()) {
-            case FY_BEFORE_PRORATED -> null;
-            case FY_MONTHLY_AND_PRORATED -> null;
-            case FY_PRORATED_AND_UNDER_AR -> null;
-            case FY_PRORATED_FULL -> null;
-            case FY_AFTER_FIRST_REGULAR_START_DATE_AND_UNDER_AR -> null;
-            case FY_AFTER_FIRST_REGULAR_START_DATE_AND_OVER_AR_AND_UNDER_PWR -> null;
-            case FY_FULL -> null;
-            default -> throw new AnnualLeaveException(ErrorCode.FISCALYEAR_FLOW_ERROR);
-        };
+        return null;
     }
 
 }

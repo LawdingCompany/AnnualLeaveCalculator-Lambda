@@ -3,7 +3,6 @@ package com.lawding.leavecalc.strategy;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
-import com.lawding.leavecalc.dto.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.util.List;
