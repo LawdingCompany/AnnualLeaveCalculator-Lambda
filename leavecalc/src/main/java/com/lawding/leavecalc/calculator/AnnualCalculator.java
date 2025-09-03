@@ -14,9 +14,9 @@ public class AnnualCalculator implements LeaveCalculator<AnnualContext> {
     public CalculationDetail calculate(AnnualContext context) {
         int additionalLeave = calculateAdditionalLeave(context.getServiceYears());
         double totalLeaveDays = 0.0;
-        if (context.getPrescribeWorkingRatio() < MINIMUM_WORK_RATIO) {
+        if (context.getPrescribedWorkingRatio() < MINIMUM_WORK_RATIO) {
             totalLeaveDays = formatDouble(
-                (BASE_ANNUAL_LEAVE + additionalLeave) * context.getPrescribeWorkingRatio());
+                (BASE_ANNUAL_LEAVE + additionalLeave) * context.getPrescribedWorkingRatio());
         } else {
             totalLeaveDays = BASE_ANNUAL_LEAVE + additionalLeave;
         }
