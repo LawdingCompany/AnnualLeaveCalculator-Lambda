@@ -16,6 +16,7 @@ import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -95,10 +96,12 @@ public class HireDateFlow implements CalculationFlow {
         int prescribedWorkingDays = countPrescribedWorkingDays(accrualPeriod, statutoryHolidays);
         Set<LocalDate> absentDays = getWorkingDaysInPeriods(accrualPeriod, absentPeriods,
             statutoryHolidays); // 순수 결근처리일
-        Set<LocalDate> excludedDays = getWorkingDaysInPeriods(accrualPeriod, excludedPeriods,
-            statutoryHolidays); // 순수 소정근로제외일
-        Set<LocalDate> companyHolidays = getWorkingDaysInCompanyHolidays(accrualPeriod,
-            companyHoliday, statutoryHolidays); // 순수 회사자체휴일
+        Set<LocalDate> excludedDays = new HashSet<>(
+            getWorkingDaysInPeriods(accrualPeriod, excludedPeriods,
+                statutoryHolidays)); // 순수 소정근로제외일
+        Set<LocalDate> companyHolidays = new HashSet<>(
+            getWorkingDaysInCompanyHolidays(accrualPeriod,
+                companyHoliday, statutoryHolidays)); // 순수 회사자체휴일
         excludedDays.addAll(companyHolidays);
 
         double attendanceRate = calculateAttendanceRate(prescribedWorkingDays, absentDays.size(),
