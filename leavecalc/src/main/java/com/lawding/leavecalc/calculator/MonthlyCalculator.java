@@ -10,17 +10,19 @@ import com.lawding.leavecalc.dto.detail.MonthlyDetail;
 import com.lawding.leavecalc.util.AnnualLeaveHelper;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MonthlyCalculator implements LeaveCalculator<MonthlyContext> {
+
     @Override
     public CalculationDetail calculate(MonthlyContext context) {
         DatePeriod period = context.getAccrualPeriod();
         Set<LocalDate> absentDays = context.getAbsentDays();
-        Set<LocalDate> excludedDays = context.getExcludedDays();
-        Set<LocalDate> companyHolidays = context.getCompanyHolidays();
+        Set<LocalDate> excludedDays = new HashSet<>(context.getExcludedDays());
+        Set<LocalDate> companyHolidays = new HashSet<>(context.getCompanyHolidays());
         Set<LocalDate> statutoryHolidays = context.getStatutoryHolidays();
 
         excludedDays.addAll(companyHolidays);

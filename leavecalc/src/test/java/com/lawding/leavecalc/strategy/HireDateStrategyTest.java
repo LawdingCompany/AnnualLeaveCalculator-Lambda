@@ -1,12 +1,16 @@
 //package com.lawding.leavecalc.strategy;
 //
 //import com.lawding.leavecalc.domain.AnnualLeaveContext;
+//import com.lawding.leavecalc.domain.CalculationType;
 //import com.lawding.leavecalc.dto.AnnualLeaveResult;
 //import com.lawding.leavecalc.domain.DatePeriod;
+//import com.lawding.leavecalc.flow.CalculationFlow;
+//import com.lawding.leavecalc.flow.HireDateFlow;
 //import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 //import java.time.LocalDate;
 //import java.util.List;
 //import java.util.Map;
+//import java.util.Set;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Nested;
@@ -30,8 +34,8 @@
 //    @InjectMocks
 //    HireDateStrategy hireDateStrategy;
 //
-//    private static List<LocalDate> getHolidayList() {
-//        return List.of(
+//    private static Set<LocalDate> getHolidayList() {
+//        return Set.of(
 //            LocalDate.of(2024, 1, 1),
 //            LocalDate.of(2024, 2, 9),
 //            LocalDate.of(2024, 2, 10),
@@ -58,6 +62,8 @@
 //    void setUp() {
 //        when(holidayRepository.findWeekdayHolidays(any(DatePeriod.class))).thenReturn(
 //            getHolidayList());
+//        CalculationFlow flow = new HireDateFlow(holidayRepository);
+//        hireDateStrategy = new HireDateStrategy(flow);
 //    }
 //
 //    @Nested
@@ -72,9 +78,10 @@
 //            LocalDate referenceDate = LocalDate.of(2025, 1, 1);
 //            List<DatePeriod> absentPeriods = List.of();
 //            AnnualLeaveContext context = AnnualLeaveContext.builder()
+//                .calculationType(CalculationType.HIRE_DATE)
 //                .hireDate(hireDate)
 //                .referenceDate(referenceDate)
-//                .nonWorkingPeriods(Map.of(2, absentPeriods))
+//                .nonWorkingPeriods(Map.of(1, absentPeriods))
 //                .companyHolidays(List.of())
 //                .build();
 //            // When
@@ -82,7 +89,7 @@
 //
 //            // Then
 //            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(6, result.getCalculationDetail().getTotalLeaveDays());
+//            assertEquals(6,result.calculationDetail().getTotalLeaveDays());
 //        }
 //
 //        @Test
@@ -103,7 +110,7 @@
 //
 //            // Then
 //            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
+////            assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
 //        }
 //
 //        @Test
@@ -124,7 +131,6 @@
 //
 //            // Then
 //            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(11, result.getCalculationDetail().getTotalLeaveDays());
 //        }
 //
 //        @Test
@@ -150,7 +156,6 @@
 //
 //            // Then
 //            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(5, result.getCalculationDetail().getTotalLeaveDays());
 //        }
 //
 //        @Test
@@ -180,7 +185,6 @@
 //
 //            // Then
 //            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(6, result.getCalculationDetail().getTotalLeaveDays());
 //        }
 //
 //    }
@@ -206,14 +210,7 @@
 //            // When
 //            AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 //
-//            // Then
-//            FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
-//            DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
 //
-//            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(LocalDate.of(2024, 1, 1), accrualPeriod.startDate());
-//            assertEquals(LocalDate.of(2024, 12, 31), accrualPeriod.endDate());
-//            assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //        }
 //
 //        @Test
@@ -233,13 +230,7 @@
 //            AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 //
 //            // Then
-//            FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
-//            DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
 //
-//            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(LocalDate.of(2026, 1, 1), accrualPeriod.startDate());
-//            assertEquals(LocalDate.of(2026, 12, 31), accrualPeriod.endDate());
-//            assertEquals(16, result.getCalculationDetail().getTotalLeaveDays());
 //        }
 //
 //        @Test
@@ -259,13 +250,7 @@
 //            AnnualLeaveResult result = hireDateStrategy.annualLeaveCalculate(context);
 //
 //            // Then
-//            FullAnnualLeaveDetail fullAnnualLeaveDetail = (FullAnnualLeaveDetail) result.getCalculationDetail();
-//            DatePeriod accrualPeriod = fullAnnualLeaveDetail.getAccrualPeriod();
 //
-//            verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//            assertEquals(LocalDate.of(2023, 1, 1), accrualPeriod.startDate());
-//            assertEquals(LocalDate.of(2023, 12, 31), accrualPeriod.endDate());
-//            assertEquals(25, result.getCalculationDetail().getTotalLeaveDays());
 //        }
 //
 //        @Nested
@@ -296,7 +281,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -327,7 +311,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -357,7 +340,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -388,7 +370,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -419,7 +400,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(2)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(9, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -449,7 +429,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -480,7 +459,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -511,7 +489,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -548,7 +525,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //        }
 //
@@ -581,7 +557,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(11.96, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -609,7 +584,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(12.75, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -637,7 +611,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(19.92, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -668,7 +641,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(11.96, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -698,7 +670,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -729,7 +700,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -760,7 +730,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(11.94, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -790,7 +759,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -821,7 +789,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //
 //            @Test
@@ -852,7 +819,6 @@
 //
 //                // Then
 //                verify(holidayRepository, times(1)).findWeekdayHolidays(any(DatePeriod.class));
-//                assertEquals(15, result.getCalculationDetail().getTotalLeaveDays());
 //            }
 //        }
 //    }
