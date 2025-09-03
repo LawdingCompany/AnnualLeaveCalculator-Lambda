@@ -29,8 +29,8 @@ public class DateParseUtils {
 
 
     public static List<LocalDate> convertToLocalDates(List<String> dates) {
-        if (dates == null) {
-            return null;
+        if (dates == null || dates.isEmpty()) {
+            return List.of(); // 항상 non-null 보장
         }
         return dates.stream()
             .map(LocalDate::parse)

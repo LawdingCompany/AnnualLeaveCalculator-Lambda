@@ -32,8 +32,8 @@ public class AnnualLeaveMapper {
             .fiscalYear(parseNullableMonthDay(request.getFiscalYear()))
             .hireDate(LocalDate.parse(request.getHireDate()))
             .referenceDate(LocalDate.parse(request.getReferenceDate()))
-            .nonWorkingPeriods(groupByNonWorkingType(request.getNonWorkingPeriods()))
-            .companyHolidays(convertToLocalDates(request.getCompanyHolidays()))
+            .nonWorkingPeriods(groupByNonWorkingType(request.getNonWorkingPeriods())) // null -> map.of()
+            .companyHolidays(convertToLocalDates(request.getCompanyHolidays())) // null -> map.of()
             .build();
     }
 
