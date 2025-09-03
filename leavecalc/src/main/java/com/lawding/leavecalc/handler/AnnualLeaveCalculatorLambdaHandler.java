@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lawding.leavecalc.dto.request.AnnualLeaveRequest;
-import com.lawding.leavecalc.dto.response.AnnualLeaveResponse;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.mapper.AnnualLeaveMapper;
@@ -62,11 +61,8 @@ public class AnnualLeaveCalculatorLambdaHandler implements
             logger.info("계산 전략 결정 완료: {}", calculationStrategy.getClass().getSimpleName());
 
             logger.info("연차 계산 시작");
-            AnnualLeaveResult result = calculationStrategy.annualLeaveCalculate(annualLeaveContext);
-            logger.info("연차 계산 완료: {}", result);
-
-            AnnualLeaveResponse response = AnnualLeaveResponse.of(result);
-            logger.info("응답 객체 생성 완료: {}", response);
+            AnnualLeaveResult response = calculationStrategy.annualLeaveCalculate(annualLeaveContext);
+            logger.info("연차 계산 완료: {}", response);
 
             String responseBody = mapper.writeValueAsString(response);
             logger.debug("응답 JSON 변환 완료: {}", responseBody);
