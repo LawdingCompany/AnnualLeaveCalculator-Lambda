@@ -9,5 +9,4 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public class ProratedDetail extends CalculationDetail {
-
 }

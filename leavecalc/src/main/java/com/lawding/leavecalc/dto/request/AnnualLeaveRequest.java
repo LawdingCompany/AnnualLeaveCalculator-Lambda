@@ -30,7 +30,7 @@ public class AnnualLeaveRequest {
     private String referenceDate;
 
     @JsonProperty("nonWorkingPeriods")
-    private List<NonWorkingPeriodRequest> nonWorkingPeriods;
+    private List<NonWorkingPeriodDto> nonWorkingPeriods;
 
     @JsonProperty("companyHolidays")
     private List<String> companyHolidays;

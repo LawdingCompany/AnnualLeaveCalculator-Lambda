@@ -56,6 +56,7 @@ public class HireDateFlow implements CalculationFlow {
         List<DatePeriod> excludedPeriods, List<FlowStep> steps) {
 
         DatePeriod accrualPeriod = new DatePeriod(hireDate, referenceDate);
+        DatePeriod availablePeriod = getAvailablePeriod(hireDate, referenceDate);
 
         Set<LocalDate> statutoryHolidays = holidayRepository.findWeekdayHolidays(
             accrualPeriod); // 산정기간 내 법정 공휴일
@@ -69,6 +70,7 @@ public class HireDateFlow implements CalculationFlow {
         MonthlyContext context = MonthlyContext.builder()
             .serviceYears(serviceYears)
             .accrualPeriod(accrualPeriod)
+            .availablePeriod(availablePeriod)
             .absentDays(absentDays)
             .excludedDays(excludedDays)
             .companyHolidays(companyHolidays)
@@ -87,6 +89,7 @@ public class HireDateFlow implements CalculationFlow {
         List<DatePeriod> excludedPeriods, List<FlowStep> steps) {
 
         DatePeriod accrualPeriod = getAccrualPeriod(hireDate, referenceDate);
+        DatePeriod availablePeriod = getAvailablePeriod(hireDate, referenceDate);
 
         Set<LocalDate> statutoryHolidays = holidayRepository.findWeekdayHolidays(accrualPeriod);
         int prescribedWorkingDays = countPrescribedWorkingDays(accrualPeriod, statutoryHolidays);
@@ -100,18 +103,23 @@ public class HireDateFlow implements CalculationFlow {
 
         double attendanceRate = calculateAttendanceRate(prescribedWorkingDays, absentDays.size(),
             excludedDays.size());
+        double prescribeWorkingRatio = calculatePrescribedWorkingRatio(prescribedWorkingDays,
+            excludedDays.size());
 
         if (attendanceRate < MINIMUM_WORK_RATIO) {
             steps.add(FlowStep.UNDER_AR);
+            steps.add(FlowStep.stepPWR(prescribeWorkingRatio));
 
             MonthlyContext context = MonthlyContext.builder()
                 .serviceYears(serviceYears)
                 .accrualPeriod(accrualPeriod)
+                .availablePeriod(availablePeriod)
                 .absentDays(absentDays)
                 .excludedDays(excludedDays)
                 .companyHolidays(companyHolidays)
                 .statutoryHolidays(statutoryHolidays)
                 .attendanceRate(attendanceRate)
+                .prescribedWorkingRatio(prescribeWorkingRatio)
                 .build();
 
             return FlowResult.builder()
@@ -121,22 +129,15 @@ public class HireDateFlow implements CalculationFlow {
                 .build();
 
         }
-
         steps.add(FlowStep.OVER_AR);
-        double prescribeWorkingRatio = calculatePrescribedWorkingRatio(prescribedWorkingDays,
-            excludedDays.size());
-
-        if (prescribeWorkingRatio < MINIMUM_WORK_RATIO) {
-            steps.add(FlowStep.UNDER_PWR);
-        } else {
-            steps.add(FlowStep.OVER_PWR);
-        }
+        steps.add(FlowStep.stepPWR(prescribeWorkingRatio));
 
         AnnualContext context = AnnualContext.builder()
             .serviceYears(serviceYears)
             .accrualPeriod(accrualPeriod)
+            .availablePeriod(availablePeriod)
             .attendanceRate(attendanceRate)
-            .prescribeWorkingRatio(prescribeWorkingRatio)
+            .prescribedWorkingRatio(prescribeWorkingRatio)
             .build();
 
         return FlowResult.builder()
@@ -172,5 +173,22 @@ public class HireDateFlow implements CalculationFlow {
         return new DatePeriod(start, end);
     }
 
+    private DatePeriod getAvailablePeriod(LocalDate hireDate, LocalDate referenceDate) {
+        LocalDate hireDateThisYear = LocalDate.of(
+            referenceDate.getYear(),
+            hireDate.getMonth(),
+            hireDate.getDayOfMonth()
+        );
+
+        LocalDate nextHireDate;
+        if (referenceDate.isBefore(hireDateThisYear)) {
+            nextHireDate = hireDateThisYear;
+        } else {
+            nextHireDate = hireDateThisYear.plusYears(1);
+        }
+
+        LocalDate endDate = nextHireDate.minusDays(1);
+        return new DatePeriod(referenceDate, endDate);
+    }
 }
 

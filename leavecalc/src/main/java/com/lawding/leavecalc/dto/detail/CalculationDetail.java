@@ -8,6 +8,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public abstract class CalculationDetail {
-
     private final double totalLeaveDays;
 }

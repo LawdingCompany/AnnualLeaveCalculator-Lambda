@@ -6,8 +6,9 @@ import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.CalculationType;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.dto.request.AnnualLeaveRequest;
-import com.lawding.leavecalc.dto.request.NonWorkingPeriodRequest;
+import com.lawding.leavecalc.dto.request.NonWorkingPeriodDto;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 public class AnnualLeaveMapper {
-
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private AnnualLeaveMapper() {
     }
 
@@ -37,13 +38,13 @@ public class AnnualLeaveMapper {
     }
 
     public static Map<Integer, List<DatePeriod>> groupByNonWorkingType(
-        List<NonWorkingPeriodRequest> nonWorkingPeriodRequests
+        List<NonWorkingPeriodDto> nonWorkingPeriodDtos
     ) {
-        return Optional.ofNullable(nonWorkingPeriodRequests)
+        return Optional.ofNullable(nonWorkingPeriodDtos)
             .orElse(List.of()) // null이면 빈 리스트
             .stream()
             .collect(Collectors.groupingBy(
-                NonWorkingPeriodRequest::getType,
+                NonWorkingPeriodDto::getType,
                 Collectors.mapping(
                     period -> new DatePeriod(
                         LocalDate.parse(period.getStartDate()),
@@ -54,5 +55,30 @@ public class AnnualLeaveMapper {
             ));
     }
 
+    public static List<NonWorkingPeriodDto> toDtoList(Map<Integer, List<DatePeriod>> nonWorkingPeriods) {
+        if (nonWorkingPeriods == null || nonWorkingPeriods.isEmpty()) {
+            return List.of();
+        }
+
+        return nonWorkingPeriods.entrySet().stream()
+            .flatMap(entry -> entry.getValue().stream()
+                .map(period -> NonWorkingPeriodDto.builder()
+                    .type(entry.getKey())
+                    .startDate(period.startDate().format(FORMATTER))
+                    .endDate(period.endDate().format(FORMATTER))
+                    .build()
+                )
+            )
+            .toList();
+    }
+
+    public static List<String> toStringList(List<LocalDate> dates) {
+        if (dates == null || dates.isEmpty()) {
+            return List.of();
+        }
+        return dates.stream()
+            .map(date -> date.format(FORMATTER)) // LocalDate → String
+            .toList();
+    }
 
 }

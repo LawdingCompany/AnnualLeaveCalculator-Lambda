@@ -11,7 +11,7 @@ public class ProratedCalculator implements LeaveCalculator<ProratedContext> {
 
     @Override
     public CalculationDetail calculate(ProratedContext context) {
-        double prescribeWorkingRatio = context.getPrescribeWorkingRatio();
+        double prescribeWorkingRatio = context.getPrescribedWorkingRatioForProrated();
         double proratedLeaveDays =
             formatDouble(BASE_ANNUAL_LEAVE * prescribeWorkingRatio);
 

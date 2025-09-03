@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class NonWorkingPeriodRequest {
+public class NonWorkingPeriodDto {
 
     @JsonProperty("type")
     private int type;
