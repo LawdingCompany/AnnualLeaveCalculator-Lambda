@@ -16,7 +16,7 @@ import lombok.ToString;
  * fiscalYear        회계연도(nullable)
  * hireDate          입사일
  * referenceDate     기준일(연차 산정 기준일)
- * nonWorkingPeriods 비근무 기간
+ * nonWorkingPeriods 비근무 기간(1 : 출근 처리, 2: 결근 처리, 3: 소정근로제외)
  * companyHolidays   회사 공휴일
  */
 @Getter

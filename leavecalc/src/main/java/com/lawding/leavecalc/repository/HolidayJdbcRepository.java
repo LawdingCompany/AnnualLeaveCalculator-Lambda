@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HolidayJdbcRepository {
 
@@ -20,7 +22,7 @@ public class HolidayJdbcRepository {
             WHERE holiday_date BETWEEN ? AND ?
         """;
 
-    public List<LocalDate> findWeekdayHolidays(DatePeriod period) {
+    public Set<LocalDate> findWeekdayHolidays(DatePeriod period) {
         try (Connection conn = RdsConnector.getConnection();
             PreparedStatement ps = conn.prepareStatement(SQL_FIND_HOLIDAYS)) {
 
@@ -28,7 +30,7 @@ public class HolidayJdbcRepository {
             ps.setDate(2, Date.valueOf(period.endDate().plusDays(1)));
 
             try (ResultSet rs = ps.executeQuery()) {
-                List<LocalDate> holidays = new ArrayList<>();
+                Set<LocalDate> holidays = new HashSet<>();
                 while (rs.next()) {
                     holidays.add(rs.getDate("holiday_date").toLocalDate());
                 }

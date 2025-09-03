@@ -1,4 +1,4 @@
-package com.lawding.leavecalc.dto;
+package com.lawding.leavecalc.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class NonWorkingPeriodRequest {
+public class NonWorkingPeriodDto {
 
     @JsonProperty("type")
     private int type;

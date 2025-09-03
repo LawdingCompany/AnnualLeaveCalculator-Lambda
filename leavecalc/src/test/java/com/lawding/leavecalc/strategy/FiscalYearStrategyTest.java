@@ -7,9 +7,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
-import com.lawding.leavecalc.domain.AnnualLeaveResult;
+import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.DatePeriod;
-import com.lawding.leavecalc.domain.detail.FullAnnualLeaveDetail;
 import com.lawding.leavecalc.repository.HolidayJdbcRepository;
 import java.time.LocalDate;
 import java.time.MonthDay;

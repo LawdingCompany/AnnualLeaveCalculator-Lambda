@@ -1,6 +1,6 @@
 package com.lawding.leavecalc.util;
 
-import com.lawding.leavecalc.dto.AnnualLeaveRequest;
+import com.lawding.leavecalc.dto.request.AnnualLeaveRequest;
 import com.lawding.leavecalc.exception.AnnualLeaveException;
 import com.lawding.leavecalc.exception.ErrorCode;
 
