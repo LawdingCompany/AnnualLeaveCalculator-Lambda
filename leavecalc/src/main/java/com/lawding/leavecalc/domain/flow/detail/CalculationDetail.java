@@ -15,5 +15,6 @@ public abstract class CalculationDetail {
     private final DatePeriod availablePeriod;
     private final Double attendanceRate;
     private final Double prescribedWorkingRatio;
+    private final int serviceYears;
     private final double totalLeaveDays;
 }

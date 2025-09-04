@@ -21,10 +21,13 @@ public class AnnualCalculator implements LeaveCalculator<AnnualContext> {
             totalLeaveDays = BASE_ANNUAL_LEAVE + additionalLeave;
         }
         return AnnualDetail.builder()
-            .additionalLeave(additionalLeave)
-            .totalLeaveDays(totalLeaveDays)
+            .accrualPeriod(context.getAccrualPeriod())
+            .availablePeriod(context.getAvailablePeriod())
             .attendanceRate(context.getAttendanceRate())
             .prescribedWorkingRatio(context.getPrescribedWorkingRatio())
+            .serviceYears(context.getServiceYears())
+            .additionalLeave(additionalLeave)
+            .totalLeaveDays(totalLeaveDays)
             .build();
     }
 }

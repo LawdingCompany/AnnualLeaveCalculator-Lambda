@@ -16,9 +16,12 @@ public class ProratedCalculator implements LeaveCalculator<ProratedContext> {
             formatDouble(BASE_ANNUAL_LEAVE * prescribeWorkingRatio);
 
         return ProratedDetail.builder()
-            .totalLeaveDays(proratedLeaveDays)
+            .accrualPeriod(context.getAccrualPeriod())
+            .availablePeriod(context.getAvailablePeriod())
             .attendanceRate(context.getAttendanceRate())
             .prescribedWorkingRatio(context.getPrescribedWorkingRatio())
+            .serviceYears(context.getServiceYears())
+            .totalLeaveDays(proratedLeaveDays)
             .build();
     }
 }
