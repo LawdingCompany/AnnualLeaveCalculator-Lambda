@@ -82,10 +82,13 @@ public class MonthlyCalculator implements LeaveCalculator<MonthlyContext> {
         }
 
         return MonthlyDetail.builder()
-            .records(records)
-            .totalLeaveDays(formatDouble(totalMonthlyLeaves))
+            .accrualPeriod(context.getAccrualPeriod())
+            .availablePeriod(context.getAvailablePeriod())
             .attendanceRate(context.getAttendanceRate())
             .prescribedWorkingRatio(context.getPrescribedWorkingRatio())
+            .serviceYears(context.getServiceYears())
+            .records(records)
+            .totalLeaveDays(formatDouble(totalMonthlyLeaves))
             .build();
     }
 }
