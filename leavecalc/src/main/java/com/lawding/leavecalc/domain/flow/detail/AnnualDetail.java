@@ -1,8 +1,7 @@
-package com.lawding.leavecalc.dto.detail;
+package com.lawding.leavecalc.domain.flow.detail;
 
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.BASE_ANNUAL_LEAVE;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;

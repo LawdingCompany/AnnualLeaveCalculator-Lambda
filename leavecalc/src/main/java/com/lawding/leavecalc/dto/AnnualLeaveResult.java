@@ -2,7 +2,7 @@ package com.lawding.leavecalc.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
 import com.lawding.leavecalc.dto.request.NonWorkingPeriodDto;
 import java.util.List;
 import lombok.Builder;

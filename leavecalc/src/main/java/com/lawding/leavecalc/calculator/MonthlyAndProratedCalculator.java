@@ -4,9 +4,9 @@ import com.lawding.leavecalc.domain.flow.context.CalculationContext;
 import com.lawding.leavecalc.domain.flow.context.MonthlyAndProratedContext;
 import com.lawding.leavecalc.domain.flow.context.MonthlyContext;
 import com.lawding.leavecalc.domain.flow.context.ProratedContext;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
-import com.lawding.leavecalc.dto.detail.MonthlyAndProratedDetail;
-import com.lawding.leavecalc.dto.detail.MonthlyDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.MonthlyAndProratedDetail;
+import com.lawding.leavecalc.domain.flow.detail.MonthlyDetail;
 import com.lawding.leavecalc.exception.AnnualLeaveException;
 import com.lawding.leavecalc.exception.ErrorCode;
 

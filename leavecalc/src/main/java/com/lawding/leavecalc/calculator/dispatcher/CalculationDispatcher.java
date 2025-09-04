@@ -9,7 +9,7 @@ import com.lawding.leavecalc.domain.flow.context.AnnualContext;
 import com.lawding.leavecalc.domain.flow.context.MonthlyAndProratedContext;
 import com.lawding.leavecalc.domain.flow.context.MonthlyContext;
 import com.lawding.leavecalc.domain.flow.context.ProratedContext;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
 
 public final class CalculationDispatcher {
 

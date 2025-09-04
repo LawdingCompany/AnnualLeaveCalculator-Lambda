@@ -1,7 +1,7 @@
 package com.lawding.leavecalc.calculator;
 
 import com.lawding.leavecalc.domain.flow.context.CalculationContext;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
 
 public interface LeaveCalculator<T extends  CalculationContext> {
 

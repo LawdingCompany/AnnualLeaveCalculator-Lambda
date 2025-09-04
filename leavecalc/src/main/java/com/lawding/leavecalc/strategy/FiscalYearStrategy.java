@@ -12,7 +12,7 @@ import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.flow.FlowResult;
 import com.lawding.leavecalc.resolver.ExplanationResolver;
 import com.lawding.leavecalc.dto.AnnualLeaveResult;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
 import com.lawding.leavecalc.dto.request.NonWorkingPeriodDto;
 import com.lawding.leavecalc.flow.CalculationFlow;
 import java.util.List;

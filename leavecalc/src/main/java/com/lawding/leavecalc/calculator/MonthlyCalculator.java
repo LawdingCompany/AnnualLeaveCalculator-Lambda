@@ -6,8 +6,8 @@ import static com.lawding.leavecalc.util.AnnualLeaveHelper.formatDouble;
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.MonthlyLeaveRecord;
 import com.lawding.leavecalc.domain.flow.context.MonthlyContext;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
-import com.lawding.leavecalc.dto.detail.MonthlyDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.MonthlyDetail;
 import com.lawding.leavecalc.util.AnnualLeaveHelper;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -83,7 +83,9 @@ public class MonthlyCalculator implements LeaveCalculator<MonthlyContext> {
 
         return MonthlyDetail.builder()
             .records(records)
-            .totalLeaveDays(totalMonthlyLeaves)
+            .totalLeaveDays(formatDouble(totalMonthlyLeaves))
+            .attendanceRate(context.getAttendanceRate())
+            .prescribedWorkingRatio(context.getPrescribedWorkingRatio())
             .build();
     }
 }
