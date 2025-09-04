@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class AnnualLeaveMapper {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     private AnnualLeaveMapper() {
     }
 

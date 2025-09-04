@@ -7,6 +7,7 @@ import java.util.List;
 
 public class DateParseUtils {
 
+    private static final DateTimeFormatter FISCAL_FORMATTER = DateTimeFormatter.ofPattern("MM-dd");
 
     /**
      * "MM-dd" 형식의 문자열을 {@link MonthDay}로 파싱합니다.
@@ -35,5 +36,15 @@ public class DateParseUtils {
         return dates.stream()
             .map(LocalDate::parse)
             .toList();
+    }
+
+    /**
+     * MonthDay -> "MM-dd" 문자열 변환
+     *
+     * @param fiscalYear 회계연도 시작일 (MonthDay)
+     * @return "MM-dd" 형식 문자열
+     */
+    public static String formatFiscalYear(MonthDay fiscalYear) {
+        return fiscalYear.format(FISCAL_FORMATTER);
     }
 }

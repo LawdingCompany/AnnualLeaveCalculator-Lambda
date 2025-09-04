@@ -5,6 +5,7 @@ import static com.lawding.leavecalc.resolver.ExplanationResolver.extractPWR;
 import static com.lawding.leavecalc.resolver.ExplanationResolver.resolveAll;
 import static com.lawding.leavecalc.mapper.AnnualLeaveMapper.toDtoList;
 import static com.lawding.leavecalc.mapper.AnnualLeaveMapper.toStringList;
+import static com.lawding.leavecalc.util.DateParseUtils.formatFiscalYear;
 
 import com.lawding.leavecalc.calculator.dispatcher.CalculationDispatcher;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
@@ -48,7 +49,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
 
         return AnnualLeaveResult.builder()
             .calculationType(context.getCalculationType().name())
-            .fiscalYear(context.getFiscalYear().toString())
+            .fiscalYear(formatFiscalYear(context.getFiscalYear()))
             .hireDate(context.getHireDate().toString())
             .referenceDate(context.getReferenceDate().toString())
             .nonWorkingPeriod(nonWorkingPeriod)
