@@ -9,6 +9,4 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public class AnnualContext extends CalculationContext {
-    private final DatePeriod accrualPeriod;
-    private final DatePeriod availablePeriod;
 }
