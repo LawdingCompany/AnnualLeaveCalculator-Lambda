@@ -11,8 +11,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public class MonthlyContext extends CalculationContext{
-    private final DatePeriod accrualPeriod;
-    private final DatePeriod availablePeriod;
     private final Set<LocalDate> absentDays;
     private final Set<LocalDate> excludedDays;
     private final Set<LocalDate> companyHolidays;

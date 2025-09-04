@@ -11,7 +11,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public class ProratedContext extends CalculationContext{
-    private final DatePeriod accrualPeriod;
-    private final DatePeriod availablePeriod;
     private final double prescribedWorkingRatioForProrated;
 }
