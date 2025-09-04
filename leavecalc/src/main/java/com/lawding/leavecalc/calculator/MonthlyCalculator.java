@@ -65,11 +65,11 @@ public class MonthlyCalculator implements LeaveCalculator<MonthlyContext> {
                 }
 
             }
-            granted = formatDouble(granted);
+
             records.add(
                 MonthlyLeaveRecord.builder()
                     .period(new DatePeriod(currentStart, currentEnd))
-                    .monthlyLeave(granted)
+                    .monthlyLeave(formatDouble(granted))
                     .build()
             );
 
