@@ -1,18 +1,17 @@
 package com.lawding.leavecalc.strategy;
 
 
-import static com.lawding.leavecalc.domain.resolver.ExplanationResolver.*;
 import static com.lawding.leavecalc.mapper.AnnualLeaveMapper.*;
+import static com.lawding.leavecalc.resolver.ExplanationResolver.*;
 
 import com.lawding.leavecalc.calculator.dispatcher.CalculationDispatcher;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
-import com.lawding.leavecalc.domain.resolver.ExplanationResolver;
+import com.lawding.leavecalc.resolver.ExplanationResolver;
 import com.lawding.leavecalc.dto.detail.CalculationDetail;
 import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.domain.flow.FlowResult;
 import com.lawding.leavecalc.dto.request.NonWorkingPeriodDto;
 import com.lawding.leavecalc.flow.CalculationFlow;
-import com.lawding.leavecalc.mapper.AnnualLeaveMapper;
 import java.util.List;
 
 
