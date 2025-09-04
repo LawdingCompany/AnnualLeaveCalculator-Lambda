@@ -1,4 +1,4 @@
-package com.lawding.leavecalc.domain.resolver;
+package com.lawding.leavecalc.resolver;
 
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.MINIMUM_WORK_RATIO;
 
@@ -99,9 +99,8 @@ public class ExplanationResolver {
                     String msg;
                     if (serviceYears > 0) {
                         msg = """
-                            근무기간이 1년 이상인 경우 :
                             결근일이 있으나, 연차산정기간(1년)간 출근율이 80%이상이라면 다음년도 연차유급휴가 발생에 영향을 주지 않습니다.
-                              """;
+                            """;
                     } else {
                         msg = """
                             근무기간이 1년 미만인 근로자에게 주어지는 월차는 개근한 월에만 주어지게 되므로, 결근일이 있는 월에 월차가 발생하지 않습니다.
@@ -121,16 +120,13 @@ public class ExplanationResolver {
                         msg =
                             """
                                 개인사유로 인한 휴직, 질병(산재X)휴직, 병역휴직 등의 경우 해당 기간을 “소정근로기간”에서 제외합니다(고용노동부유권해석_임금근로시간과-1818, 2021.8.12)
-                                                                   
                                 다만, 연차산정 단위기간에서 소정근로제외기간을 제외하였을 때 기간이 80% 미만이 된다면,
-                                                                   
                                 평상적인 근로관계에서 출근율이 80%이상일 때 산출되었을 연차휴가일수 * (실질 소정근로일/연간 소정근로일)로 비례하여 지급할 연차휴가를 산정하게 됩니다.
                                 """;
 
                     } else {
                         msg = """
                             개인사유로 인한 휴직, 질병(산재X)휴직, 병역휴직 등의 경우 해당 기간을 “소정근로기간”에서 제외합니다(고용노동부유권해석_임금근로시간과-1818, 2021.8.12)
-                                                        
                             다만, 연차산정 단위기간에서 소정근로제외기간을 제외한다 하더라도 80%이상 출근하였다면, 정상적으로 연차유급휴가를 부여합니다.
                             """;
                     }

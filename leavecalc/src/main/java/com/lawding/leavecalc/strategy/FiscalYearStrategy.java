@@ -1,20 +1,18 @@
 package com.lawding.leavecalc.strategy;
 
 
-import static com.lawding.leavecalc.domain.resolver.ExplanationResolver.extractPWR;
-import static com.lawding.leavecalc.domain.resolver.ExplanationResolver.resolveAll;
+import static com.lawding.leavecalc.resolver.ExplanationResolver.extractPWR;
+import static com.lawding.leavecalc.resolver.ExplanationResolver.resolveAll;
 import static com.lawding.leavecalc.mapper.AnnualLeaveMapper.toDtoList;
 import static com.lawding.leavecalc.mapper.AnnualLeaveMapper.toStringList;
 
 import com.lawding.leavecalc.calculator.dispatcher.CalculationDispatcher;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
 import com.lawding.leavecalc.domain.flow.FlowResult;
-import com.lawding.leavecalc.domain.resolver.ExplanationResolver;
+import com.lawding.leavecalc.resolver.ExplanationResolver;
 import com.lawding.leavecalc.dto.AnnualLeaveResult;
 import com.lawding.leavecalc.dto.detail.CalculationDetail;
 import com.lawding.leavecalc.dto.request.NonWorkingPeriodDto;
-import com.lawding.leavecalc.exception.AnnualLeaveException;
-import com.lawding.leavecalc.exception.ErrorCode;
 import com.lawding.leavecalc.flow.CalculationFlow;
 import java.util.List;
 
@@ -50,6 +48,7 @@ public final class FiscalYearStrategy implements CalculationStrategy {
 
         return AnnualLeaveResult.builder()
             .calculationType(context.getCalculationType().name())
+            .fiscalYear(context.getFiscalYear().toString())
             .hireDate(context.getHireDate().toString())
             .referenceDate(context.getReferenceDate().toString())
             .nonWorkingPeriod(nonWorkingPeriod)
