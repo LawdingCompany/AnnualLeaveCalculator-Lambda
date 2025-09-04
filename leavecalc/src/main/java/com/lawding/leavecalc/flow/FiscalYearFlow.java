@@ -127,10 +127,12 @@ public class FiscalYearFlow implements CalculationFlow {
         int prescribedWorkingDays = countPrescribedWorkingDays(accrualPeriod, statutoryHolidays);
         Set<LocalDate> absentDays = getWorkingDaysInPeriods(accrualPeriod, absentPeriods,
             statutoryHolidays); // 순수 결근처리일
-        Set<LocalDate> excludedDays = new HashSet<>(getWorkingDaysInPeriods(accrualPeriod, excludedPeriods,
-            statutoryHolidays)); // 순수 소정근로제외일
-        Set<LocalDate> companyHolidays = new HashSet<>(getWorkingDaysInCompanyHolidays(accrualPeriod,
-            companyHoliday, statutoryHolidays)); // 순수 회사자체휴일
+        Set<LocalDate> excludedDays = new HashSet<>(
+            getWorkingDaysInPeriods(accrualPeriod, excludedPeriods,
+                statutoryHolidays)); // 순수 소정근로제외일
+        Set<LocalDate> companyHolidays = new HashSet<>(
+            getWorkingDaysInCompanyHolidays(accrualPeriod,
+                companyHoliday, statutoryHolidays)); // 순수 회사자체휴일
         excludedDays.addAll(companyHolidays);
 
         double attendanceRate = calculateAttendanceRate(prescribedWorkingDays, absentDays.size(),
@@ -151,8 +153,8 @@ public class FiscalYearFlow implements CalculationFlow {
                 .excludedDays(excludedDays)
                 .companyHolidays(companyHolidays)
                 .statutoryHolidays(statutoryHolidays)
-                .attendanceRate(attendanceRate)
-                .prescribedWorkingRatio(prescribeWorkingRatio)
+                .attendanceRate(formatDouble(attendanceRate))
+                .prescribedWorkingRatio(formatDouble(prescribeWorkingRatio))
                 .build();
 
             return FlowResult.builder()
@@ -168,8 +170,8 @@ public class FiscalYearFlow implements CalculationFlow {
             .serviceYears(serviceYears)
             .accrualPeriod(accrualPeriod)
             .availablePeriod(availablePeriod)
-            .attendanceRate(attendanceRate)
-            .prescribedWorkingRatio(prescribeWorkingRatio)
+            .attendanceRate(formatDouble(attendanceRate))
+            .prescribedWorkingRatio(formatDouble(prescribeWorkingRatio))
             .build();
 
         return FlowResult.builder()
@@ -218,10 +220,12 @@ public class FiscalYearFlow implements CalculationFlow {
         int prescribedWorkingDays = countPrescribedWorkingDays(accrualPeriod, statutoryHolidays);
         Set<LocalDate> absentDays = getWorkingDaysInPeriods(accrualPeriod, absentPeriods,
             statutoryHolidays); // 순수 결근처리일
-        Set<LocalDate> excludedDays = new HashSet<>(getWorkingDaysInPeriods(accrualPeriod, excludedPeriods,
-            statutoryHolidays)); // 순수 소정근로제외일
-        Set<LocalDate> companyHolidays = new HashSet<>(getWorkingDaysInCompanyHolidays(accrualPeriod,
-            companyHoliday, statutoryHolidays)); // 순수 회사자체휴일
+        Set<LocalDate> excludedDays = new HashSet<>(
+            getWorkingDaysInPeriods(accrualPeriod, excludedPeriods,
+                statutoryHolidays)); // 순수 소정근로제외일
+        Set<LocalDate> companyHolidays = new HashSet<>(
+            getWorkingDaysInCompanyHolidays(accrualPeriod,
+                companyHoliday, statutoryHolidays)); // 순수 회사자체휴일
         excludedDays.addAll(companyHolidays);
 
         double attendanceRate = calculateAttendanceRate(prescribedWorkingDays, absentDays.size(),
@@ -229,7 +233,6 @@ public class FiscalYearFlow implements CalculationFlow {
 
         double prescribeWorkingRatio = calculatePrescribedWorkingRatio(prescribedWorkingDays,
             excludedDays.size());
-
 
         if (attendanceRate < MINIMUM_WORK_RATIO) {
             steps.add(FlowStep.UNDER_AR);
@@ -243,8 +246,8 @@ public class FiscalYearFlow implements CalculationFlow {
                 .excludedDays(excludedDays)
                 .companyHolidays(companyHolidays)
                 .statutoryHolidays(statutoryHolidays)
-                .attendanceRate(attendanceRate)
-                .prescribedWorkingRatio(prescribeWorkingRatio)
+                .attendanceRate(formatDouble(attendanceRate))
+                .prescribedWorkingRatio(formatDouble(prescribeWorkingRatio))
                 .build();
         } else {
             steps.add(FlowStep.OVER_AR);
@@ -257,8 +260,8 @@ public class FiscalYearFlow implements CalculationFlow {
                 .serviceYears(serviceYears)
                 .accrualPeriod(accrualPeriod)
                 .availablePeriod(availablePeriod)
-                .attendanceRate(attendanceRate)
-                .prescribedWorkingRatio(prescribeWorkingRatio)
+                .attendanceRate(formatDouble(attendanceRate))
+                .prescribedWorkingRatio(formatDouble(prescribeWorkingRatio))
                 .prescribedWorkingRatioForProrated(prescribedWorkingRatioForProrated)
                 .build();
         }

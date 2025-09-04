@@ -121,8 +121,8 @@ public class HireDateFlow implements CalculationFlow {
                 .excludedDays(excludedDays)
                 .companyHolidays(companyHolidays)
                 .statutoryHolidays(statutoryHolidays)
-                .attendanceRate(attendanceRate)
-                .prescribedWorkingRatio(prescribeWorkingRatio)
+                .attendanceRate(formatDouble(attendanceRate))
+                .prescribedWorkingRatio(formatDouble(prescribeWorkingRatio))
                 .build();
 
             return FlowResult.builder()
@@ -139,8 +139,8 @@ public class HireDateFlow implements CalculationFlow {
             .serviceYears(serviceYears)
             .accrualPeriod(accrualPeriod)
             .availablePeriod(availablePeriod)
-            .attendanceRate(attendanceRate)
-            .prescribedWorkingRatio(prescribeWorkingRatio)
+            .attendanceRate(formatDouble(attendanceRate))
+            .prescribedWorkingRatio(formatDouble(prescribeWorkingRatio))
             .build();
 
         return FlowResult.builder()
