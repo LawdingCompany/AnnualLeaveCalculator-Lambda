@@ -1,6 +1,7 @@
 package com.lawding.leavecalc.calculator;
 
 import static com.lawding.leavecalc.constant.AnnualLeaveConstants.MAX_MONTHLY_LEAVE;
+import static com.lawding.leavecalc.util.AnnualLeaveHelper.formatDouble;
 
 import com.lawding.leavecalc.domain.DatePeriod;
 import com.lawding.leavecalc.domain.MonthlyLeaveRecord;
@@ -68,7 +69,7 @@ public class MonthlyCalculator implements LeaveCalculator<MonthlyContext> {
             records.add(
                 MonthlyLeaveRecord.builder()
                     .period(new DatePeriod(currentStart, currentEnd))
-                    .monthlyLeave(granted)
+                    .monthlyLeave(formatDouble(granted))
                     .build()
             );
 
