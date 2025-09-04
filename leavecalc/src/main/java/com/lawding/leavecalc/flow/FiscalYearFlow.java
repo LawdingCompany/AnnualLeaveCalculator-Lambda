@@ -86,11 +86,19 @@ public class FiscalYearFlow implements CalculationFlow {
                     serviceYears, proratedLeaveStartDate, companyHolidays, absentPeriods,
                     excludedPeriods, steps);
 
-                return FlowResult.builder()
-                    .steps(steps)
-                    .leaveType(LeaveType.PRORATED)
-                    .context(context)
-                    .build();
+                if (context instanceof MonthlyContext) {
+                    return FlowResult.builder()
+                        .steps(steps)
+                        .leaveType(LeaveType.MONTHLY)
+                        .context(context)
+                        .build();
+                } else {
+                    return FlowResult.builder()
+                        .steps(steps)
+                        .leaveType(LeaveType.PRORATED)
+                        .context(context)
+                        .build();
+                }
 
             } else {
                 // 월차 + 비례연차가 발생하는 경우
@@ -249,6 +257,7 @@ public class FiscalYearFlow implements CalculationFlow {
                 .attendanceRate(formatDouble(attendanceRate))
                 .prescribedWorkingRatio(formatDouble(prescribeWorkingRatio))
                 .build();
+
         } else {
             steps.add(FlowStep.OVER_AR);
             steps.add(FlowStep.stepPWR(prescribeWorkingRatio));
