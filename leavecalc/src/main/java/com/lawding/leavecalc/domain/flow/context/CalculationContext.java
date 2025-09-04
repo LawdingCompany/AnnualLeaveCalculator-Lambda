@@ -9,4 +9,6 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public abstract class CalculationContext {
     private final int serviceYears;
+    private final Double attendanceRate;
+    private final Double prescribedWorkingRatio;
 }

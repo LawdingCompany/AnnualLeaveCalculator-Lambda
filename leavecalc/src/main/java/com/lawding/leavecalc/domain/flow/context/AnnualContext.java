@@ -11,6 +11,4 @@ import lombok.experimental.SuperBuilder;
 public class AnnualContext extends CalculationContext {
     private final DatePeriod accrualPeriod;
     private final DatePeriod availablePeriod;
-    private final double attendanceRate;
-    private final double prescribedWorkingRatio;
 }

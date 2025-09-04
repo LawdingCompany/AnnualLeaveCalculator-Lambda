@@ -5,8 +5,8 @@ import static com.lawding.leavecalc.constant.AnnualLeaveConstants.MINIMUM_WORK_R
 import static com.lawding.leavecalc.util.AnnualLeaveHelper.*;
 
 import com.lawding.leavecalc.domain.flow.context.AnnualContext;
-import com.lawding.leavecalc.dto.detail.AnnualDetail;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.AnnualDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
 
 public class AnnualCalculator implements LeaveCalculator<AnnualContext> {
 
@@ -23,6 +23,8 @@ public class AnnualCalculator implements LeaveCalculator<AnnualContext> {
         return AnnualDetail.builder()
             .additionalLeave(additionalLeave)
             .totalLeaveDays(totalLeaveDays)
+            .attendanceRate(context.getAttendanceRate())
+            .prescribedWorkingRatio(context.getPrescribedWorkingRatio())
             .build();
     }
 }

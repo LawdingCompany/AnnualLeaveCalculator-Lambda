@@ -1,6 +1,5 @@
-package com.lawding.leavecalc.dto.detail;
+package com.lawding.leavecalc.domain.flow.detail;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;

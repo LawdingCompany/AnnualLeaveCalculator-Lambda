@@ -4,8 +4,8 @@ import static com.lawding.leavecalc.constant.AnnualLeaveConstants.BASE_ANNUAL_LE
 import static com.lawding.leavecalc.util.AnnualLeaveHelper.formatDouble;
 
 import com.lawding.leavecalc.domain.flow.context.ProratedContext;
-import com.lawding.leavecalc.dto.detail.CalculationDetail;
-import com.lawding.leavecalc.dto.detail.ProratedDetail;
+import com.lawding.leavecalc.domain.flow.detail.CalculationDetail;
+import com.lawding.leavecalc.domain.flow.detail.ProratedDetail;
 
 public class ProratedCalculator implements LeaveCalculator<ProratedContext> {
 
@@ -17,6 +17,8 @@ public class ProratedCalculator implements LeaveCalculator<ProratedContext> {
 
         return ProratedDetail.builder()
             .totalLeaveDays(proratedLeaveDays)
+            .attendanceRate(context.getAttendanceRate())
+            .prescribedWorkingRatio(context.getPrescribedWorkingRatio())
             .build();
     }
 }
