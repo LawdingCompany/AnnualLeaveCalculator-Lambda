@@ -23,7 +23,7 @@ public class ProratedCalculator implements LeaveCalculator<ProratedContext> {
             .prescribedWorkingRatioForProrated(
                 formatDouble(context.getPrescribedWorkingRatioForProrated()))
             .serviceYears(context.getServiceYears())
-            .totalLeaveDays(formatDouble(proratedLeaveDays))
+            .totalLeaveDays(proratedLeaveDays)
             .build();
     }
 }
