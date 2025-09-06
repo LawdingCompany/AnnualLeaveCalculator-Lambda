@@ -20,6 +20,7 @@ public class ProratedCalculator implements LeaveCalculator<ProratedContext> {
             .availablePeriod(context.getAvailablePeriod())
             .attendanceRate(context.getAttendanceRate())
             .prescribedWorkingRatio(context.getPrescribedWorkingRatio())
+            .prescribedWorkingRatioForProrated(context.getPrescribedWorkingRatioForProrated())
             .serviceYears(context.getServiceYears())
             .totalLeaveDays(proratedLeaveDays)
             .build();
