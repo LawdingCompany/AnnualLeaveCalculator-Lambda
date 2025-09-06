@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6e4841c4-4841-4738-a94b-bfd93a95c3f9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/calculator/MonthlyAndProratedCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/calculator/MonthlyAndProratedCalculator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/calculator/ProratedCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/lawding/leavecalc/calculator/ProratedCalculator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -216,7 +217,8 @@
       <workItem from="1756611998312" duration="1138000" />
       <workItem from="1757195308573" duration="137000" />
       <workItem from="1757195469843" duration="1187000" />
-      <workItem from="1757197624900" duration="33000" />
+      <workItem from="1757197624900" duration="70000" />
+      <workItem from="1757197912766" duration="93000" />
     </task>
     <task id="LOCAL-00001" summary="feat : 산정방식(입사일, 회계연도) 로직 최종 수정">
       <created>1745988718717</created>

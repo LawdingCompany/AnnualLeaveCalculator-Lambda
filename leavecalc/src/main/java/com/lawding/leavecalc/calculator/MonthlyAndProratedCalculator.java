@@ -1,5 +1,7 @@
 package com.lawding.leavecalc.calculator;
 
+import static com.lawding.leavecalc.util.AnnualLeaveHelper.formatDouble;
+
 import com.lawding.leavecalc.domain.flow.context.CalculationContext;
 import com.lawding.leavecalc.domain.flow.context.MonthlyAndProratedContext;
 import com.lawding.leavecalc.domain.flow.context.MonthlyContext;
@@ -39,7 +41,7 @@ public class MonthlyAndProratedCalculator implements LeaveCalculator<MonthlyAndP
             monthlyDetail.getTotalLeaveDays() + proratedDetail.getTotalLeaveDays();
         return MonthlyAndProratedDetail
             .builder()
-            .totalLeaveDays(totalLeaveDays)
+            .totalLeaveDays(formatDouble(totalLeaveDays))
             .monthlyDetail(monthlyDetail)
             .proratedDetail(proratedDetail)
             .build();
