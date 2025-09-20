@@ -59,7 +59,7 @@ public class AnnualLeaveCalculatorLambdaHandler implements
             logger.info("헤더 검증 완료: X-Platform={}, testMode={}", platform, testMode);
             String requestBody = input.getBody();
 
-//            dailyUserService.recordUser(platform, testMode);
+            dailyUserService.recordUser(platform, testMode);
             logger.info("플랫폼 당 요청 수 카운트 반영: date={}, platform={}, testMode={}", LocalDate.now(),
                 platform, testMode);
 
