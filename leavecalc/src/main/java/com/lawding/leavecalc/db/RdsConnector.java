@@ -45,7 +45,8 @@ public class RdsConnector {
         } catch (SQLException e) {
             throw new AnnualLeaveException(
                 ErrorCode.DATABASE_CONNECTION_FAILED,
-                "DB 연결 실패: " + e.getMessage());
+                "SQLState=" + e.getSQLState() + ", VendorCode=" + e.getErrorCode() + ", Message=" + e.getMessage()
+            );
         }
     }
 
