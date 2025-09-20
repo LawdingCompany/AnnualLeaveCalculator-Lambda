@@ -7,7 +7,6 @@ import com.lawding.leavecalc.dto.request.NonWorkingPeriodDto;
 import java.util.List;
 import lombok.Builder;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Builder
 public record AnnualLeaveResult(
     String calculationType, // 산정 방식 : 입사일 | 회계연도

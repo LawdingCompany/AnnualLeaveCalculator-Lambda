@@ -1,8 +1,10 @@
 package com.lawding.leavecalc.exception;
 
 public enum ErrorCode {
-    INVALID_CALCULATION_TYPE("E001", "올바르지 않은 연차 산정 방식 코드입니다."),
-
+    INVALID_CALCULATION_TYPE("E001", "올바르지 않은 연차 산정 방식입니다."),
+    HEADER_REQUIRED("E1000","올바르지 않은 헤더 형식입니다."),
+    PLATFORM_REQUIRED("E1001","필수 헤더(플랫폼)이 누락되었습니다."),
+    INVALID_PLATFORM("E1002","유효하지 않은 헤더입니다."),
     HIRE_DATE_REQUIRED("E100","입사일은 필수 항목입니다."),
     REFERENCE_DATE_REQUIRED("E101","기준일은 필수 항목입니다."),
     FISCAL_YEAR_REQUIRED("E102","회계연도 방식일 경우, 회계연도 시작일은 필수입니다."),
@@ -23,7 +25,7 @@ public enum ErrorCode {
 
     PRORATED_TYPE_ERROR("E601","지원하지 않는 proratedContext 타입입니다."),
     INTERNAL_SERVER_ERROR("E"
-        + "999", "서버 오류가 발생했습니다.");
+                          + "999", "서버 오류가 발생했습니다.");
 
     private final String code;
     private final String message;

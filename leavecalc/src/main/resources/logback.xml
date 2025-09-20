@@ -1,15 +1,31 @@
 <configuration>
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>
-        [%d{yyyy-MM-dd HH:mm:ss.SSS}] [%level] [%X{requestId}] %logger{0} - %msg%n
-      </pattern>
+  <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+      <providers>
+        <!-- 타임스탬프 -->
+        <timestamp>
+          <timeZone>Asia/Seoul</timeZone>
+        </timestamp>
+        <!-- 로그 레벨 -->
+        <level />
+        <!-- 로거 이름 -->
+        <loggerName />
+        <!-- 쓰레드 이름 -->
+        <threadName />
+        <!-- 메시지 -->
+        <message />
+        <!-- 예외 스택 -->
+        <stackTrace />
+        <!-- MDC (requestId 등) -->
+        <mdc />
+      </providers>
     </encoder>
   </appender>
 
   <root level="${LOG_LEVEL:-INFO}">
-    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="JSON"/>
   </root>
 
+  <!-- 패키지별 로그 레벨도 가능 -->
   <logger name="com.lawding.leavecalc" level="DEBUG"/>
 </configuration>
