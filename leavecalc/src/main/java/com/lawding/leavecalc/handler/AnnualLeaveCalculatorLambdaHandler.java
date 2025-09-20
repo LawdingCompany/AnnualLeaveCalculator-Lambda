@@ -7,15 +7,21 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lawding.leavecalc.dto.request.AnnualLeaveRequest;
 import com.lawding.leavecalc.domain.AnnualLeaveContext;
+import com.lawding.leavecalc.dto.AnnualLeaveResponse;
 import com.lawding.leavecalc.dto.AnnualLeaveResult;
+import com.lawding.leavecalc.dto.request.AnnualLeaveRequest;
 import com.lawding.leavecalc.mapper.AnnualLeaveMapper;
+import com.lawding.leavecalc.repository.DailyUserJdbcRepository;
+import com.lawding.leavecalc.service.DailyUserService;
 import com.lawding.leavecalc.strategy.CalculationStrategy;
 import com.lawding.leavecalc.strategy.factory.CalculationStrategyFactory;
 import com.lawding.leavecalc.util.AnnualLeaveRequestValidator;
+import com.lawding.leavecalc.util.AnnualLeaveRequestValidator.HeaderInfo;
 import com.lawding.leavecalc.util.LogUtil;
+import java.time.LocalDate;
 import java.util.Map;
+import java.util.UUID;
 import org.slf4j.Logger;
 
 public class AnnualLeaveCalculatorLambdaHandler implements
@@ -24,6 +30,8 @@ public class AnnualLeaveCalculatorLambdaHandler implements
     private static final Logger logger = LogUtil.getLogger(
         AnnualLeaveCalculatorLambdaHandler.class);
     private final ObjectMapper mapper;
+    private static final DailyUserService dailyUserService =
+        new DailyUserService(new DailyUserJdbcRepository());
 
     public AnnualLeaveCalculatorLambdaHandler() {
         this.mapper = new ObjectMapper()
@@ -35,21 +43,33 @@ public class AnnualLeaveCalculatorLambdaHandler implements
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input,
         Context context) {
         String requestId = context.getAwsRequestId();
+        String calculationId = UUID.randomUUID().toString();
+
         LogUtil.setupLogging(requestId);
         logger.info("연차계산 요청 시작 : requestId={}", requestId);
 
         long startTime = LogUtil.startTimer();
 
         try {
+
+            HeaderInfo headerInfo = AnnualLeaveRequestValidator.validate(input.getHeaders());
+            String platform = headerInfo.platform();
+            boolean testMode = headerInfo.testMode();
+
+            logger.info("헤더 검증 완료: X-Platform={}, testMode={}", platform, testMode);
             String requestBody = input.getBody();
+
+            dailyUserService.recordUser(platform, testMode);
+            logger.info("플랫폼 당 요청 수 카운트 반영: date={}, platform={}, testMode={}", LocalDate.now(),
+                platform, testMode);
 
             logger.debug("요청 객체 변환 시작");
             AnnualLeaveRequest request = mapper.readValue(requestBody, AnnualLeaveRequest.class);
             logger.debug("요청 객체 변환 완료: {}", request);
 
-            logger.info("유효성 검증 시작");
+            logger.debug("유효성 검증 시작");
             AnnualLeaveRequestValidator.validate(request);
-            logger.info("유효성 검증 완료");
+            logger.debug("유효성 검증 완료");
 
             logger.debug("컨텍스트 변환 시작");
             AnnualLeaveContext annualLeaveContext = AnnualLeaveMapper.toContext(request);
@@ -61,8 +81,11 @@ public class AnnualLeaveCalculatorLambdaHandler implements
             logger.info("계산 전략 결정 완료: {}", calculationStrategy.getClass().getSimpleName());
 
             logger.info("연차 계산 시작");
-            AnnualLeaveResult response = calculationStrategy.annualLeaveCalculate(annualLeaveContext);
-            logger.info("연차 계산 완료: {}", response);
+            AnnualLeaveResult result = calculationStrategy.annualLeaveCalculate(annualLeaveContext);
+            logger.info("연차 계산 완료: {}", result);
+
+            AnnualLeaveResponse response = AnnualLeaveResponse.of(result, calculationId);
+            logger.info("응답 객체 생성 완료: {}", response);
 
             String responseBody = mapper.writeValueAsString(response);
             logger.debug("응답 JSON 변환 완료: {}", responseBody);
