@@ -28,7 +28,7 @@ public class AnnualLeaveRequestValidator {
      * X-Platform 검증 (필수, web | ios 만 허용)
      */
     private static String validatePlatform(Map<String, String> headers) {
-        String platform = headers.get("X-Platform");
+        String platform = headers.get("x-platform");
         if (platform == null || platform.isBlank()) {
             throw new AnnualLeaveException(ErrorCode.PLATFORM_REQUIRED);
         }
@@ -45,7 +45,7 @@ public class AnnualLeaveRequestValidator {
      * X-Test 검증 (선택, 값이 true일 때만 testMode 활성화)
      */
     private static boolean validateTestMode(Map<String, String> headers) {
-        String testHeader = headers.get("X-Test");
+        String testHeader = headers.get("x-test");
         return "true".equalsIgnoreCase(testHeader);
     }
 
