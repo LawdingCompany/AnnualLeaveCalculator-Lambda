@@ -2,9 +2,12 @@ package com.lawding.leavecalc.db;
 
 import com.lawding.leavecalc.exception.AnnualLeaveException;
 import com.lawding.leavecalc.exception.ErrorCode;
+import com.lawding.leavecalc.handler.AnnualLeaveCalculatorLambdaHandler;
+import com.lawding.leavecalc.util.LogUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.slf4j.Logger;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.rds.RdsUtilities;
@@ -18,6 +21,9 @@ public class RdsConnector {
     private static final String RDS_DATABASE ;
     private static final String RDS_USERNAME ;
     private static final String REGION ;
+
+    private static final Logger logger = LogUtil.getLogger(
+        AnnualLeaveCalculatorLambdaHandler.class);
 
     static {
         try {
@@ -39,6 +45,7 @@ public class RdsConnector {
     public static Connection getConnection() {
         try {
             String authToken = generateAuthToken();
+            logger.info("New IAM token issued: {}", authToken.substring(0,15));
             String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s",
                 RDS_HOSTNAME, RDS_PORT, RDS_DATABASE);
             return DriverManager.getConnection(jdbcUrl, RDS_USERNAME, authToken);

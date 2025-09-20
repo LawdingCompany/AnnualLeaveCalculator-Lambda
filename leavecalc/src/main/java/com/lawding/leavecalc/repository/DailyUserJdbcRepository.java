@@ -10,6 +10,9 @@ import java.time.LocalDate;
 
 public class DailyUserJdbcRepository {
 
+    public DailyUserJdbcRepository() {
+        // ✅ 생성자에서는 DB 연결하지 않음
+    }
     private static final String SQL_UPSERT_WEB= """
         INSERT INTO daily_user (record_date, web)
         VALUES(?,1)
