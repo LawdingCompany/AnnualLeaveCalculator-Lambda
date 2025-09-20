@@ -45,7 +45,6 @@ public class RdsConnector {
     public static Connection getConnection() {
         try {
             String authToken = generateAuthToken();
-            logger.info("New IAM token issued: {}", authToken.substring(0,15));
             String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s",
                 RDS_HOSTNAME, RDS_PORT, RDS_DATABASE);
             return DriverManager.getConnection(jdbcUrl, RDS_USERNAME, authToken);
