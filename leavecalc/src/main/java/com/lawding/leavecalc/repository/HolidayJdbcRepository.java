@@ -17,9 +17,6 @@ import java.util.Set;
 
 public class HolidayJdbcRepository {
 
-    public HolidayJdbcRepository() {
-        // ✅ 생성자에서는 아무 것도 하지 않는다.
-    }
     private static final String SQL_FIND_HOLIDAYS = """
             SELECT DISTINCT holiday_date FROM holidays
             WHERE holiday_date BETWEEN ? AND ?
