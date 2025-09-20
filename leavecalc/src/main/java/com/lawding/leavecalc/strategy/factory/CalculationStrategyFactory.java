@@ -11,15 +11,12 @@ import com.lawding.leavecalc.strategy.HireDateStrategy;
 public class CalculationStrategyFactory {
 
     private static final HolidayJdbcRepository holidayRepository = new HolidayJdbcRepository();
-    private static final HireDateStrategy HIRE_DATE_STRATEGY = new HireDateStrategy(
-        new HireDateFlow(holidayRepository));
-    private static final FiscalYearStrategy FISCAL_YEAR_STRATEGY = new FiscalYearStrategy(
-        new FiscalYearFlow(holidayRepository));
-
     public static CalculationStrategy from(AnnualLeaveContext context) {
         return switch (context.getCalculationType()) {
-            case HIRE_DATE -> HIRE_DATE_STRATEGY;
-            case FISCAL_YEAR -> FISCAL_YEAR_STRATEGY;
+            case HIRE_DATE ->
+                new HireDateStrategy(new HireDateFlow(holidayRepository));
+            case FISCAL_YEAR ->
+                new FiscalYearStrategy(new FiscalYearFlow(holidayRepository));
         };
     }
 
