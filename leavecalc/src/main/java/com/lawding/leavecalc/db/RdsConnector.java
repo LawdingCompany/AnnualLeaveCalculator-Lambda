@@ -43,7 +43,10 @@ public class RdsConnector {
                 RDS_HOSTNAME, RDS_PORT, RDS_DATABASE);
             return DriverManager.getConnection(jdbcUrl, RDS_USERNAME, authToken);
         } catch (SQLException e) {
-            throw new AnnualLeaveException(ErrorCode.DATABASE_CONNECTION_FAILED);
+//            throw new AnnualLeaveException(ErrorCode.DATABASE_CONNECTION_FAILED);
+            throw new AnnualLeaveException(
+                ErrorCode.DATABASE_CONNECTION_FAILED,
+                "DB 연결 실패: " + e.getMessage());
         }
     }
 

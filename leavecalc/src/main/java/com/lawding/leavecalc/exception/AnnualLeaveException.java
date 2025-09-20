@@ -11,5 +11,8 @@ public class AnnualLeaveException extends RuntimeException {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
-
+    public AnnualLeaveException(ErrorCode errorCode, String detailMessage) {
+        super(errorCode.getMessage() + " - " + detailMessage);
+        this.errorCode = errorCode;
+    }
 }
